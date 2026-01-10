@@ -30,9 +30,47 @@ from backend.src.database.models import (
     DoctorExpertise, DoctorCaseHistory, TicketAssignment, PatientHistorySummary
 )
 
+# Import password hashing function
+from backend.src.services.auth_service import get_password_hash
+
 load_dotenv()
 
+# Get DATABASE_URL from environment
 DATABASE_URL = os.getenv("DATABASE_URL", "postgresql+asyncpg://postgres:postgres@localhost:5432/hospital_ai_assistant")
+
+# Validate DATABASE_URL format - must be a proper PostgreSQL connection string
+is_valid = (
+    DATABASE_URL.startswith(("postgresql://", "postgresql+asyncpg://", "postgres://")) and
+    "@" in DATABASE_URL and
+    "/" in DATABASE_URL.split("@")[-1]  # Must have database name after @
+)
+
+if not is_valid:
+    print("=" * 70)
+    print("ERROR: Invalid DATABASE_URL format!")
+    print("=" * 70)
+    print(f"Current DATABASE_URL: {DATABASE_URL}")
+    print()
+    print("DATABASE_URL must be in one of these formats:")
+    print("  postgresql+asyncpg://user:password@host:port/database")
+    print("  postgresql://user:password@host:port/database")
+    print()
+    print("Example:")
+    print("  postgresql+asyncpg://postgres:postgres@localhost:5432/hospital_ai_assistant")
+    print()
+    print("Common issues:")
+    print("  - Missing protocol (postgresql:// or postgresql+asyncpg://)")
+    print("  - Missing username:password@")
+    print("  - Missing database name after /")
+    print()
+    print("To fix:")
+    print("  1. Check your .env file in the project root")
+    print("  2. Or unset the environment variable:")
+    print("     PowerShell: Remove-Item Env:\\DATABASE_URL")
+    print("     Then the script will use the default connection string")
+    print("=" * 70)
+    sys.exit(1)
+
 DATA_DIR = project_root / "backend" / "src" / "data" / "generated"
 
 
@@ -109,6 +147,11 @@ async def insert_patients(session: AsyncSession, data: List[Dict[str, Any]], ski
             skipped += 1
             continue
         
+        # Hash password if provided
+        password_hash = None
+        if "password" in record and record["password"]:
+            password_hash = get_password_hash(record["password"])
+        
         patient = Patient(
             patient_id=patient_id,
             name=record["name"],
@@ -120,6 +163,7 @@ async def insert_patients(session: AsyncSession, data: List[Dict[str, Any]], ski
             emergency_contact=record.get("emergency_contact"),
             blood_group=record.get("blood_group"),
             medical_history=record.get("medical_history"),
+            password=password_hash,
             created_at=parse_datetime(record.get("created_at")),
             updated_at=parse_datetime(record.get("updated_at"))
         )
@@ -143,11 +187,19 @@ async def insert_admins(session: AsyncSession, data: List[Dict[str, Any]], skip_
             skipped += 1
             continue
         
+        # Hash password if provided (using SHA256)
+        password_hash = None
+        if "password" in record and record["password"]:
+            password_hash = get_password_hash(record["password"])
+        elif "password_hash" in record and record["password_hash"]:
+            # Backward compatibility: if password_hash exists, use it directly
+            password_hash = record["password_hash"]
+        
         admin = Admin(
             admin_id=admin_id,
             username=record["username"],
             email=record["email"],
-            password_hash=record["password_hash"],
+            password_hash=password_hash,
             role=record["role"],
             is_active=record.get("is_active", True),
             created_at=parse_datetime(record.get("created_at"))
@@ -172,11 +224,19 @@ async def insert_service_persons(session: AsyncSession, data: List[Dict[str, Any
             skipped += 1
             continue
         
+        # Hash password if provided (using SHA256)
+        password_hash = None
+        if "password" in record and record["password"]:
+            password_hash = get_password_hash(record["password"])
+        elif "password_hash" in record and record["password_hash"]:
+            # Backward compatibility: if password_hash exists, use it directly
+            password_hash = record["password_hash"]
+        
         service_person = ServicePerson(
             service_person_id=service_person_id,
             username=record["username"],
             email=record["email"],
-            password_hash=record["password_hash"],
+            password_hash=password_hash,
             name=record["name"],
             service_type=record["service_type"],
             specialization=record.get("specialization"),
@@ -259,6 +319,11 @@ async def insert_conversations(session: AsyncSession, data: List[Dict[str, Any]]
     await session.commit()
     return inserted, skipped
 
+
+# Message model removed - messages are now handled by LangGraph checkpointer
+# async def insert_messages(session: AsyncSession, data: List[Dict[str, Any]], skip_existing: bool = True) -> tuple:
+#     """Insert message records."""
+#     pass
 
 
 async def insert_tickets(session: AsyncSession, data: List[Dict[str, Any]], skip_existing: bool = True) -> tuple:
@@ -506,7 +571,12 @@ async def main():
     print("=" * 70)
     print("Inserting Generated Data into Database")
     print("=" * 70)
-    print(f"Database URL: {DATABASE_URL.split('@')[1] if '@' in DATABASE_URL else 'hidden'}")
+    # Show database info (hide password)
+    if '@' in DATABASE_URL:
+        db_info = DATABASE_URL.split('@')[1]
+    else:
+        db_info = DATABASE_URL
+    print(f"Database: {db_info}")
     print(f"Data directory: {DATA_DIR}")
     print()
     
@@ -547,45 +617,50 @@ async def main():
             print(f"   ✓ Inserted: {inserted}, Skipped: {skipped}, Total: {len(conversations_data)}")
             print()
             
-            print("6. skipping messages...")
+            # Messages are now handled by LangGraph checkpointer, not stored in database
+            # print("6. Inserting messages...")
+            # messages_data = load_json_file("messages.json")
+            # inserted, skipped = await insert_messages(session, messages_data)
+            # print(f"   ✓ Inserted: {inserted}, Skipped: {skipped}, Total: {len(messages_data)}")
+            # print()
             
-            print("7. Inserting tickets...")
+            print("6. Inserting tickets...")
             tickets_data = load_json_file("tickets.json")
             inserted, skipped = await insert_tickets(session, tickets_data)
             print(f"   ✓ Inserted: {inserted}, Skipped: {skipped}, Total: {len(tickets_data)}")
             print()
             
-            print("8. Inserting ticket assignments...")
+            print("7. Inserting ticket assignments...")
             assignments_data = load_json_file("ticket_assignments.json")
             inserted, skipped = await insert_ticket_assignments(session, assignments_data)
             print(f"   ✓ Inserted: {inserted}, Skipped: {skipped}, Total: {len(assignments_data)}")
             print()
             
-            print("9. Inserting appointments...")
+            print("8. Inserting appointments...")
             appointments_data = load_json_file("appointments.json")
             inserted, skipped = await insert_appointments(session, appointments_data)
             print(f"   ✓ Inserted: {inserted}, Skipped: {skipped}, Total: {len(appointments_data)}")
             print()
             
-            print("10. Inserting patient history...")
+            print("9. Inserting patient history...")
             history_data = load_json_file("patient_history.json")
             inserted, skipped = await insert_patient_history(session, history_data)
             print(f"   ✓ Inserted: {inserted}, Skipped: {skipped}, Total: {len(history_data)}")
             print()
             
-            print("11. Inserting doctor case history...")
+            print("10. Inserting doctor case history...")
             case_history_data = load_json_file("doctor_case_history.json")
             inserted, skipped = await insert_doctor_case_history(session, case_history_data)
             print(f"   ✓ Inserted: {inserted}, Skipped: {skipped}, Total: {len(case_history_data)}")
             print()
             
-            print("12. Inserting ticket updates...")
+            print("11. Inserting ticket updates...")
             updates_data = load_json_file("ticket_updates.json")
             inserted, skipped = await insert_ticket_updates(session, updates_data)
             print(f"   ✓ Inserted: {inserted}, Skipped: {skipped}, Total: {len(updates_data)}")
             print()
             
-            print("13. Inserting patient history summaries...")
+            print("12. Inserting patient history summaries...")
             summaries_data = load_json_file("patient_history_summaries.json")
             inserted, skipped = await insert_patient_history_summaries(session, summaries_data)
             print(f"   ✓ Inserted: {inserted}, Skipped: {skipped}, Total: {len(summaries_data)}")

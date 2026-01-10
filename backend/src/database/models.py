@@ -21,6 +21,7 @@ class Patient(Base):
     emergency_contact = Column(JSON, nullable=True)
     blood_group = Column(String, nullable=True)
     medical_history = Column(JSON, nullable=True)
+    password = Column(String, nullable=True)
     created_at = Column(TIMESTAMP, server_default=func.now())
     updated_at = Column(TIMESTAMP, server_default=func.now(), onupdate=func.now())
 

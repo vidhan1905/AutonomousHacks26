@@ -38,7 +38,19 @@ async def create_database_if_not_exists():
     port = parsed.port or 5432
     database_name = parsed.path.lstrip("/") or "hospital_ai_assistant"
     
-    print(f"Connecting to PostgreSQL server at {host}:{port}...")
+    # Show connection info (mask password)
+    masked_url = DATABASE_URL
+    if "@" in masked_url and ":" in masked_url.split("@")[0]:
+        # Mask password in URL
+        parts = masked_url.split("@")
+        if len(parts) == 2:
+            auth_part = parts[0]
+            if ":" in auth_part:
+                user_part = auth_part.split(":")[0]
+                masked_url = f"{user_part}:***@{parts[1]}"
+    
+    print(f"Using DATABASE_URL: {masked_url}")
+    print(f"Connecting to PostgreSQL server at {host}:{port} as user '{user}'...")
     
     try:
         # Connect to PostgreSQL server (not to a specific database)
@@ -81,15 +93,48 @@ async def create_database_if_not_exists():
         return True
         
     except asyncpg.exceptions.InvalidPasswordError:
-        print(f"Error: Invalid password for user '{user}'")
+        print(f"❌ Error: Invalid password for user '{user}'")
+        print()
         print("Please check your DATABASE_URL in .env file")
+        print()
+        print("Expected format:")
+        print("  DATABASE_URL=postgresql+asyncpg://username:password@host:port/database_name")
+        print()
+        print("Example:")
+        print("  DATABASE_URL=postgresql+asyncpg://postgres:your_password@localhost:5432/hospital_ai_assistant")
+        print()
+        print("To fix this:")
+        print("  1. Check your PostgreSQL password (default is often 'postgres' if you haven't changed it)")
+        print("  2. Update the .env file with the correct password")
+        print("  3. If you don't know your PostgreSQL password, you can:")
+        print("     - Reset it in PostgreSQL configuration")
+        print("     - Or use a different user with correct credentials")
+        print()
         return False
     except asyncpg.exceptions.ConnectionDoesNotExistError:
-        print(f"Error: Could not connect to PostgreSQL server at {host}:{port}")
-        print("Please ensure PostgreSQL is running and accessible")
+        print(f"❌ Error: Could not connect to PostgreSQL server at {host}:{port}")
+        print()
+        print("Please ensure:")
+        print("  1. PostgreSQL is installed and running")
+        print("  2. PostgreSQL is accessible at the specified host and port")
+        print("  3. Your DATABASE_URL in .env file is correct")
+        print()
+        print("To check if PostgreSQL is running:")
+        print("  - Windows: Check Services or run 'pg_ctl status'")
+        print("  - Linux/Mac: Run 'sudo systemctl status postgresql' or 'brew services list'")
+        print()
         return False
     except Exception as e:
-        print(f"Error: {str(e)}")
+        error_msg = str(e)
+        print(f"❌ Error: {error_msg}")
+        print()
+        if "password" in error_msg.lower() or "authentication" in error_msg.lower():
+            print("This appears to be an authentication error.")
+            print("Please check your DATABASE_URL in .env file and ensure:")
+            print("  - Username is correct")
+            print("  - Password is correct")
+            print("  - Database exists or can be created")
+            print()
         return False
 
 

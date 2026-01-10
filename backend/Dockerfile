@@ -8,14 +8,18 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y \
     gcc \
     postgresql-client \
+    curl \
     && rm -rf /var/lib/apt/lists/*
+
+# Install uv
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh
+ENV PATH="/root/.cargo/bin:$PATH"
 
 # Copy dependency files and README (required by pyproject.toml)
 COPY pyproject.toml README.md ./
 
-# Install Python dependencies
-RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir -e .
+# Install Python dependencies using uv
+RUN uv pip install --system --no-cache -e .
 
 # Copy alembic configuration
 COPY alembic.ini ./
@@ -25,6 +29,12 @@ COPY scripts/ ./scripts/
 
 # Copy backend source code
 COPY backend/ ./backend/
+
+# Copy generated data files to the location expected by insert_generated_data.py
+# The script expects: backend/src/data/generated/
+# Files are located at: backend/data/generated/
+RUN mkdir -p ./backend/src/data/generated && \
+    cp -r ./backend/data/generated/* ./backend/src/data/generated/ 2>/dev/null || true
 
 # Set Python path
 ENV PYTHONPATH=/app

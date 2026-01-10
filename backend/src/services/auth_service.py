@@ -2,23 +2,39 @@
 from datetime import datetime, timedelta
 from typing import Optional
 from jose import JWTError, jwt
-from passlib.context import CryptContext
+import hashlib
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from backend.src.database.models import Patient, ServicePerson, Admin
 from backend.src.config import settings
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+def get_password_hash(password: str) -> str:
+    """Hash a password using SHA256.
+    
+    Passwords are truncated to 72 bytes before hashing to ensure compatibility.
+    """
+    # Truncate password to 72 bytes (not characters) to handle multi-byte characters
+    if isinstance(password, str):
+        password_bytes = password.encode('utf-8')
+        if len(password_bytes) > 72:
+            password = password_bytes[:72].decode('utf-8', errors='ignore')
+        else:
+            password = password
+    # Hash with SHA256
+    return hashlib.sha256(f"salt_{password}".encode('utf-8')).hexdigest()
 
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
-    """Verify a password against a hash."""
-    return pwd_context.verify(plain_password, hashed_password)
-
-
-def get_password_hash(password: str) -> str:
-    """Hash a password."""
-    return pwd_context.hash(password)
+    """Verify a password against a SHA256 hash."""
+    # Truncate password to 72 bytes before hashing
+    if isinstance(plain_password, str):
+        password_bytes = plain_password.encode('utf-8')
+        if len(password_bytes) > 72:
+            plain_password = password_bytes[:72].decode('utf-8', errors='ignore')
+    # Hash and compare
+    computed_hash = hashlib.sha256(f"salt_{plain_password}".encode('utf-8')).hexdigest()
+    return computed_hash == hashed_password
 
 
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:
