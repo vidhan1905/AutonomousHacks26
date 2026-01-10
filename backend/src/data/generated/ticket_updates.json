@@ -1,0 +1,3762 @@
+[
+  {
+    "update_id": "c992f293-b76a-493e-8fc3-ad8b114acb55",
+    "ticket_id": "4f985149-ed1f-4ef0-ac12-93730ed12dfd",
+    "updated_by": "c971acd2-c60f-43ab-b370-3fdd3d620722",
+    "update_type": "status_change",
+    "old_value": "assigned",
+    "new_value": "in_progress",
+    "comment": "Laboriosam doloribus est debitis quisquam dignissimos dicta. Minima eos commodi praesentium.",
+    "created_at": "2026-01-09T17:16:40.752292"
+  },
+  {
+    "update_id": "17f8a50c-8c0f-43c8-b77e-fe5ca4108ba5",
+    "ticket_id": "ebb6cbdb-fbba-4b30-93de-78c2951eb41c",
+    "updated_by": "0ae60cdf-89bf-433d-9910-31210c332113",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": "Provident nesciunt odio.",
+    "created_at": "2026-01-10T10:16:40.753238"
+  },
+  {
+    "update_id": "7f4e70c1-b05e-4749-ad0d-3d1bf5a818f6",
+    "ticket_id": "43367a59-ad0a-492c-b2f8-b9b8af0f42b7",
+    "updated_by": "4c9fcdcb-51c8-41cc-8f5d-7bb90b053729",
+    "update_type": "status_change",
+    "old_value": "completed",
+    "new_value": "offered",
+    "comment": "Dicta deserunt aut explicabo. Itaque repellendus modi doloribus. Reprehenderit vitae expedita.",
+    "created_at": "2026-01-09T07:16:40.753238"
+  },
+  {
+    "update_id": "4fedb516-55e8-43e7-9619-d290a92f7890",
+    "ticket_id": "c609ea86-fdc7-4da4-8ad8-b85d7e62a2a8",
+    "updated_by": "8f90e246-a596-4e07-9fcf-d6820c5e05c6",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": "Necessitatibus voluptate recusandae.",
+    "created_at": "2026-01-09T22:16:40.753238"
+  },
+  {
+    "update_id": "6272ffde-f05e-4b77-a933-f0f2efd09fd5",
+    "ticket_id": "c609ea86-fdc7-4da4-8ad8-b85d7e62a2a8",
+    "updated_by": "2162fda3-f59d-452c-8b84-3753596b0e37",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": null,
+    "created_at": "2026-01-10T03:16:40.753238"
+  },
+  {
+    "update_id": "c66f9d37-0022-40fe-8414-71ccaed0dd93",
+    "ticket_id": "8517044c-8181-4324-8ff9-506070581af7",
+    "updated_by": "5606a09e-c663-4954-8363-9ee017b710f3",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": null,
+    "created_at": "2026-01-09T17:16:40.753238"
+  },
+  {
+    "update_id": "88d743d9-531b-454f-abd3-c46acd129489",
+    "ticket_id": "8517044c-8181-4324-8ff9-506070581af7",
+    "updated_by": "0e67953d-2492-472f-931b-dcfa314195c5",
+    "update_type": "status_change",
+    "old_value": "assigned",
+    "new_value": "in_progress",
+    "comment": null,
+    "created_at": "2026-01-10T10:16:40.753238"
+  },
+  {
+    "update_id": "a6733183-bda2-4fca-9dc3-16813055532a",
+    "ticket_id": "6336dee1-326c-4a77-9d47-def968b59fbc",
+    "updated_by": "701729af-5fd8-46a2-a906-2dee8db10106",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": null,
+    "created_at": "2026-01-09T06:16:40.753238"
+  },
+  {
+    "update_id": "ace95353-66c7-4e47-be1f-e818e06f023d",
+    "ticket_id": "5345089e-8bb7-494b-bf8f-131a6347002f",
+    "updated_by": "89f74197-efc9-47a6-9e76-fb3957fa9d40",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": "Enim ea eum voluptatum consectetur ratione. Quidem omnis vitae corporis reprehenderit.",
+    "created_at": "2026-01-09T07:16:40.753238"
+  },
+  {
+    "update_id": "e8518293-9209-4e01-a117-e0dc7c6cbcd5",
+    "ticket_id": "5345089e-8bb7-494b-bf8f-131a6347002f",
+    "updated_by": "dae52668-34ad-45d5-a9ea-02b858e484a9",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": "Earum dolorem debitis doloribus libero. Vel mollitia maiores vel cumque.",
+    "created_at": "2026-01-09T17:16:40.753238"
+  },
+  {
+    "update_id": "cb6774d7-c863-4631-94e3-2fa5edb1aa69",
+    "ticket_id": "c995f988-0eca-468c-939f-211505594ef1",
+    "updated_by": "cb1cb664-9569-4cb5-b1c1-f28d60a1ae58",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": null,
+    "created_at": "2026-01-08T21:16:40.753238"
+  },
+  {
+    "update_id": "19904522-ce80-451b-9825-d5f6a7c7270d",
+    "ticket_id": "1c6b2358-db2e-4cc0-adec-af55f3428896",
+    "updated_by": "c1da56a7-a99f-4569-8740-179d2980b31c",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": "Exercitationem laboriosam vel vel eaque. Eius consequuntur recusandae ipsa.",
+    "created_at": "2026-01-09T10:16:40.753238"
+  },
+  {
+    "update_id": "732a6f38-589d-4e73-9a51-48d0a64f6ee1",
+    "ticket_id": "1c6b2358-db2e-4cc0-adec-af55f3428896",
+    "updated_by": "1d43cd3f-f3f1-4856-a400-bf6219966d1e",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": null,
+    "created_at": "2026-01-09T20:16:40.753238"
+  },
+  {
+    "update_id": "3ed2a662-0734-4487-b0cc-5f1641be571c",
+    "ticket_id": "959d47a8-b396-4483-b148-fe1a7da5a60f",
+    "updated_by": "3637a3be-81df-4826-b2b2-9203800de8f4",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": "Reiciendis quis qui possimus ducimus. Ex laboriosam dolor sapiente deserunt ut laborum.",
+    "created_at": "2026-01-09T12:16:40.753238"
+  },
+  {
+    "update_id": "5edc9857-04bf-4849-9fac-3df82304df69",
+    "ticket_id": "ea0ebdd2-3c7c-48f8-8ec3-0f3e91ceaf98",
+    "updated_by": "c458ae70-47ff-43e6-a326-005621cecd75",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": null,
+    "created_at": "2026-01-09T21:16:40.753238"
+  },
+  {
+    "update_id": "efb97046-d9b1-43e5-8372-22d571fd3fac",
+    "ticket_id": "9aedc0fe-3563-48e1-915c-0bbf258332cc",
+    "updated_by": "89f74197-efc9-47a6-9e76-fb3957fa9d40",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": null,
+    "created_at": "2026-01-09T15:16:40.753238"
+  },
+  {
+    "update_id": "3d5fb92b-6e4c-480f-a793-c1b428939818",
+    "ticket_id": "dfd61dd5-0cc5-442c-aecc-05acfc6af181",
+    "updated_by": "d30bc5fc-4288-42f8-8db7-645454d8876d",
+    "update_type": "status_change",
+    "old_value": "cancelled",
+    "new_value": "completed",
+    "comment": null,
+    "created_at": "2026-01-10T10:16:40.753238"
+  },
+  {
+    "update_id": "d59b3a2e-922b-4565-a706-212e19d168c4",
+    "ticket_id": "dfd61dd5-0cc5-442c-aecc-05acfc6af181",
+    "updated_by": "ef5cf0dd-7157-4996-bd7f-d5844c695b85",
+    "update_type": "status_change",
+    "old_value": "cancelled",
+    "new_value": "completed",
+    "comment": null,
+    "created_at": "2026-01-10T14:16:40.753238"
+  },
+  {
+    "update_id": "3e4acbc2-b07f-4ef9-b4c3-37b260449427",
+    "ticket_id": "9a0288c7-14ab-461a-b034-1f1b2224a900",
+    "updated_by": "9f675785-2e0b-4477-aa29-61222a460655",
+    "update_type": "status_change",
+    "old_value": "in_progress",
+    "new_value": "completed",
+    "comment": "Corporis quaerat praesentium blanditiis dolorum tenetur. Dolores ab vero maiores veniam optio.",
+    "created_at": "2026-01-09T23:16:40.753238"
+  },
+  {
+    "update_id": "3cb60ac1-072d-4efc-814d-99abadcf5bf1",
+    "ticket_id": "b060aad5-2125-4947-bf69-2ba98328ebcd",
+    "updated_by": "606785c8-ee9d-46c8-b14a-9132a9c7d6b4",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": "Modi minima repellat sint. Quae aperiam cum totam sit.",
+    "created_at": "2026-01-10T13:16:40.753238"
+  },
+  {
+    "update_id": "597e8614-61c3-4786-a7db-942a89f054a0",
+    "ticket_id": "b060aad5-2125-4947-bf69-2ba98328ebcd",
+    "updated_by": "b51c767c-5ba5-47ba-b95b-aed4ceaefb6a",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": "Natus quasi assumenda enim at. Neque iusto ad sapiente accusamus consequatur atque.",
+    "created_at": "2026-01-10T07:16:40.753238"
+  },
+  {
+    "update_id": "83e9fa0b-5191-4c75-8c75-168de1133e3a",
+    "ticket_id": "927bac20-a039-432b-bc53-675a93fbf1b0",
+    "updated_by": "9f675785-2e0b-4477-aa29-61222a460655",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": null,
+    "created_at": "2026-01-10T14:16:40.753238"
+  },
+  {
+    "update_id": "cef24afb-f14e-4110-bc84-cf0fd1611875",
+    "ticket_id": "782aff54-3b57-46ad-941d-aa3b3e763620",
+    "updated_by": "07dcb2de-845d-4261-9632-476d9bd0885f",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": null,
+    "created_at": "2026-01-10T18:16:40.753238"
+  },
+  {
+    "update_id": "31193699-47e6-4c45-8270-4f65e5caf7c3",
+    "ticket_id": "c2196e70-88da-4927-8552-93f096f43988",
+    "updated_by": "cce8585d-eec3-4a70-a520-a5f254ec9956",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": null,
+    "created_at": "2026-01-10T15:16:40.753238"
+  },
+  {
+    "update_id": "51ba20e0-8fb3-4c24-9df0-14fd24fe8b6a",
+    "ticket_id": "c2196e70-88da-4927-8552-93f096f43988",
+    "updated_by": "f6a741eb-22f0-4349-8eaf-59ae545a3248",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": "Asperiores nesciunt error rerum dolor. Pariatur dolorum nesciunt in.",
+    "created_at": "2026-01-08T22:16:40.753238"
+  },
+  {
+    "update_id": "3b803554-a168-4a78-bcf8-b911d44ee9b3",
+    "ticket_id": "769446df-b16d-42e6-b669-513b308bd2ce",
+    "updated_by": "3c702d21-642a-4277-8070-885f9d8a6337",
+    "update_type": "status_change",
+    "old_value": "completed",
+    "new_value": "offered",
+    "comment": null,
+    "created_at": "2026-01-08T23:16:40.753238"
+  },
+  {
+    "update_id": "cf9809d7-c389-4b52-88de-0600d7c9c2cd",
+    "ticket_id": "85ba8583-7255-4834-9676-62e0f79a11ca",
+    "updated_by": "04b63096-4f2e-4629-a042-f4ae36e08aa0",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": "Tempore iste dolore. Ad minima corporis iste exercitationem soluta ipsum.",
+    "created_at": "2026-01-09T13:16:40.753238"
+  },
+  {
+    "update_id": "bc681eeb-1766-4ca0-b5df-4a203610e055",
+    "ticket_id": "85ba8583-7255-4834-9676-62e0f79a11ca",
+    "updated_by": "1b264cb7-ae18-453f-9a02-71e713dc405e",
+    "update_type": "status_change",
+    "old_value": "in_progress",
+    "new_value": "open",
+    "comment": null,
+    "created_at": "2026-01-10T10:16:40.753238"
+  },
+  {
+    "update_id": "adf33f75-2101-4df3-96bc-c3b6b4b5543c",
+    "ticket_id": "ed97da83-466c-4e64-95a7-354f9d2242cd",
+    "updated_by": "5633578f-c46a-4d5f-8af0-f237ed3da083",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": "Ipsam officiis totam non earum vero. Alias veritatis animi eligendi ab in porro.",
+    "created_at": "2026-01-09T10:16:40.753238"
+  },
+  {
+    "update_id": "7bfdb7b8-d5c3-45e1-8ab0-5533c0bb3c46",
+    "ticket_id": "1a495d35-0923-45e1-89fc-c802aff95413",
+    "updated_by": "c971acd2-c60f-43ab-b370-3fdd3d620722",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": null,
+    "created_at": "2026-01-09T17:16:40.753238"
+  },
+  {
+    "update_id": "b2366eae-fd52-4552-ac45-7b364f02a360",
+    "ticket_id": "1a495d35-0923-45e1-89fc-c802aff95413",
+    "updated_by": "1d43cd3f-f3f1-4856-a400-bf6219966d1e",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": null,
+    "created_at": "2026-01-09T15:16:40.753238"
+  },
+  {
+    "update_id": "d5145971-b6ed-4422-9d68-3930c36e91e3",
+    "ticket_id": "42e26d6d-3374-4fa5-97b8-4747b58936f2",
+    "updated_by": "3637a3be-81df-4826-b2b2-9203800de8f4",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": "Corrupti nam optio. Cumque amet exercitationem quasi.",
+    "created_at": "2026-01-09T00:16:40.753238"
+  },
+  {
+    "update_id": "7ff9e147-5199-4830-aa12-9007d96e5dee",
+    "ticket_id": "42e26d6d-3374-4fa5-97b8-4747b58936f2",
+    "updated_by": "c2fd7e31-a6fe-4d24-ae81-82b51efa922a",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": null,
+    "created_at": "2026-01-09T17:16:40.753238"
+  },
+  {
+    "update_id": "7350ba04-10f6-4d61-895d-588478a0c64c",
+    "ticket_id": "566d92a9-23eb-41cb-9bfa-946f6f46909b",
+    "updated_by": "3761ead2-7a29-4482-aeb6-8c8cb6487b5b",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": "Illum blanditiis vero soluta.",
+    "created_at": "2026-01-09T02:16:40.753238"
+  },
+  {
+    "update_id": "f09f3070-98a4-40ff-81d4-392c1b0a61d5",
+    "ticket_id": "566d92a9-23eb-41cb-9bfa-946f6f46909b",
+    "updated_by": "cb1cb664-9569-4cb5-b1c1-f28d60a1ae58",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": "Ipsam quasi unde ipsa. Quis modi eveniet dignissimos voluptas voluptatem.",
+    "created_at": "2026-01-10T15:16:40.753238"
+  },
+  {
+    "update_id": "16c3706a-2415-4543-8a9a-4451942b5719",
+    "ticket_id": "98e1fa92-c89f-4847-8180-e5c13282eea0",
+    "updated_by": "e3478990-7673-49d4-ada7-5d3ce10629ff",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": null,
+    "created_at": "2026-01-08T22:16:40.753238"
+  },
+  {
+    "update_id": "ce5ca39f-654b-4fa8-9534-6f371e460cc5",
+    "ticket_id": "98e1fa92-c89f-4847-8180-e5c13282eea0",
+    "updated_by": "89f74197-efc9-47a6-9e76-fb3957fa9d40",
+    "update_type": "status_change",
+    "old_value": "assigned",
+    "new_value": "cancelled",
+    "comment": "Repudiandae iure nostrum quos ratione similique non.",
+    "created_at": "2026-01-10T05:16:40.753238"
+  },
+  {
+    "update_id": "a9f41433-ae2d-4631-b859-edc09b9c5f9a",
+    "ticket_id": "863de872-f8b3-4ac9-b581-9e8c7c234e3c",
+    "updated_by": "a9e72d90-5ceb-4f82-8747-a37e56fc884b",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": "Distinctio molestiae atque ut. Quasi ullam ab dicta nisi recusandae.",
+    "created_at": "2026-01-10T17:16:40.753238"
+  },
+  {
+    "update_id": "0dab5287-9312-4cf2-a8c6-01afa8c51e07",
+    "ticket_id": "c8858668-0dc8-4ff8-aaf2-9a41ae8b0b0a",
+    "updated_by": "1c547cef-957f-4284-bd91-f6d6ee423a5f",
+    "update_type": "status_change",
+    "old_value": "open",
+    "new_value": "cancelled",
+    "comment": null,
+    "created_at": "2026-01-10T13:16:40.753238"
+  },
+  {
+    "update_id": "39b8e850-92f9-490a-b94c-cb99c02843df",
+    "ticket_id": "c8858668-0dc8-4ff8-aaf2-9a41ae8b0b0a",
+    "updated_by": "0ae60cdf-89bf-433d-9910-31210c332113",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": "Magni id saepe omnis. Nostrum asperiores repellat quae.",
+    "created_at": "2026-01-09T23:16:40.753238"
+  },
+  {
+    "update_id": "306709bb-c096-4716-a0fc-a70ad43f2729",
+    "ticket_id": "2815d111-37e3-4493-9d61-ec07456e9560",
+    "updated_by": "1c547cef-957f-4284-bd91-f6d6ee423a5f",
+    "update_type": "status_change",
+    "old_value": "offered",
+    "new_value": "open",
+    "comment": null,
+    "created_at": "2026-01-09T13:16:40.753238"
+  },
+  {
+    "update_id": "b1bfee92-a932-4ced-8e2e-e39852b2ce53",
+    "ticket_id": "1260b1ac-6559-442e-a2f9-5c8f78510f23",
+    "updated_by": "65fde7cf-bb86-4ddc-ba5a-bcbc07c5615c",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": "Quasi ea necessitatibus aperiam commodi. Odit libero cum non voluptatum deleniti dolore.",
+    "created_at": "2026-01-09T21:16:40.753238"
+  },
+  {
+    "update_id": "0169f6ec-635f-4989-9e93-f466b28b6f87",
+    "ticket_id": "50f4a225-6cd8-45cc-b59f-3c6253bc4b27",
+    "updated_by": "9f675785-2e0b-4477-aa29-61222a460655",
+    "update_type": "status_change",
+    "old_value": "cancelled",
+    "new_value": "assigned",
+    "comment": null,
+    "created_at": "2026-01-09T04:16:40.753238"
+  },
+  {
+    "update_id": "85ff94f3-553a-43a1-abff-9b4d5b955c8b",
+    "ticket_id": "50f4a225-6cd8-45cc-b59f-3c6253bc4b27",
+    "updated_by": "84c42ce6-1d1b-4792-9c0f-19957eaacc07",
+    "update_type": "status_change",
+    "old_value": "cancelled",
+    "new_value": "assigned",
+    "comment": "Praesentium possimus soluta occaecati ex. Impedit hic doloremque voluptas.",
+    "created_at": "2026-01-10T09:16:40.753238"
+  },
+  {
+    "update_id": "cc9dd233-30e2-4556-a585-8cccdcdc1ae8",
+    "ticket_id": "f4a9e084-be78-4f76-83d6-ffe2486e2df1",
+    "updated_by": "04061767-ed41-4a5b-9830-12569d27866c",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": "Sit expedita nobis vel. Adipisci odio occaecati perspiciatis.",
+    "created_at": "2026-01-08T21:16:40.753238"
+  },
+  {
+    "update_id": "162c2ab0-aaf1-4037-8626-21ab705f5fc8",
+    "ticket_id": "f4a9e084-be78-4f76-83d6-ffe2486e2df1",
+    "updated_by": "d30bc5fc-4288-42f8-8db7-645454d8876d",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": null,
+    "created_at": "2026-01-09T12:16:40.753238"
+  },
+  {
+    "update_id": "18426d64-c8ee-40b7-a271-ecfebaccd2e5",
+    "ticket_id": "02f3b4fe-b186-4f11-8a63-4bf0e67798b1",
+    "updated_by": "2e427378-88a0-4a51-85cf-023438df4b3e",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": "Assumenda error numquam fuga. Mollitia occaecati blanditiis ratione aperiam.",
+    "created_at": "2026-01-10T05:16:40.753238"
+  },
+  {
+    "update_id": "9e3dfe54-c560-4579-bae3-532fabc53382",
+    "ticket_id": "6d7e605e-6d36-4c67-ba46-1d26631476f3",
+    "updated_by": "28fd9fab-525b-4d98-897a-125aa6a4fe7b",
+    "update_type": "status_change",
+    "old_value": "cancelled",
+    "new_value": "completed",
+    "comment": null,
+    "created_at": "2026-01-09T15:16:40.753238"
+  },
+  {
+    "update_id": "975c2711-2580-4893-924d-859bfea0294f",
+    "ticket_id": "2de25f0a-0d74-4870-943c-30c530c8d1a1",
+    "updated_by": "9bd371e1-5e67-4dfa-bc2f-a050abec2c44",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": "Non quo totam pariatur unde. Ea nulla eum. Fugit eveniet fugit ea illum.",
+    "created_at": "2026-01-10T08:16:40.754286"
+  },
+  {
+    "update_id": "c8bb30da-9efb-4a67-a887-b7f8d0f6e263",
+    "ticket_id": "9c9a9493-f91f-4c0a-9425-c5914ee45a47",
+    "updated_by": "2e427378-88a0-4a51-85cf-023438df4b3e",
+    "update_type": "status_change",
+    "old_value": "offered",
+    "new_value": "cancelled",
+    "comment": "Nam maxime cum ratione expedita magnam. Neque fugiat necessitatibus necessitatibus.",
+    "created_at": "2026-01-09T23:16:40.754286"
+  },
+  {
+    "update_id": "461443a6-d9d5-43b8-98ea-58d712fa1c3c",
+    "ticket_id": "9c9a9493-f91f-4c0a-9425-c5914ee45a47",
+    "updated_by": "181ed817-1e00-4d4a-ba59-1a49227d2a81",
+    "update_type": "status_change",
+    "old_value": "offered",
+    "new_value": "open",
+    "comment": "In amet ut neque aut. Labore doloribus delectus consequatur. Autem error et error optio cupiditate.",
+    "created_at": "2026-01-10T15:16:40.754286"
+  },
+  {
+    "update_id": "b699d147-c7e4-4330-b22a-74bd28b7831c",
+    "ticket_id": "39fe9058-cdc3-443d-bd31-f0c1566c7b81",
+    "updated_by": "903506f4-5021-4b40-bc7f-119ed349c963",
+    "update_type": "status_change",
+    "old_value": "cancelled",
+    "new_value": "assigned",
+    "comment": "Aliquid rem quod esse pariatur. Unde ratione iure nobis.",
+    "created_at": "2026-01-09T17:16:40.754286"
+  },
+  {
+    "update_id": "5c3cfa57-cae3-4f52-b05e-c4cf486b4feb",
+    "ticket_id": "90dbe690-3e34-4209-ae50-0b77e856aeeb",
+    "updated_by": "0ae60cdf-89bf-433d-9910-31210c332113",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": null,
+    "created_at": "2026-01-09T00:16:40.754286"
+  },
+  {
+    "update_id": "ebb1b141-d944-41a6-a716-b3ad36bf2955",
+    "ticket_id": "90dbe690-3e34-4209-ae50-0b77e856aeeb",
+    "updated_by": "16451223-95ee-447d-b772-26f3b883b6b1",
+    "update_type": "status_change",
+    "old_value": "completed",
+    "new_value": "offered",
+    "comment": "Fuga harum laboriosam. Rem officiis quas ex eos iste. In excepturi tempore necessitatibus.",
+    "created_at": "2026-01-10T19:16:40.754286"
+  },
+  {
+    "update_id": "089a1971-9ec0-472d-a7d5-ed39d9f2aa52",
+    "ticket_id": "9dc1a9cf-d831-4219-86f7-58983d9d7211",
+    "updated_by": "8dd01887-9818-4f47-ac15-f7d2db2b8382",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": "Accusamus labore in animi hic delectus modi. Veniam quae recusandae et minus non dolore.",
+    "created_at": "2026-01-08T22:16:40.754286"
+  },
+  {
+    "update_id": "54d61398-dc80-4ff8-bb9a-4291f1d0226e",
+    "ticket_id": "e21d2245-14a8-4e6d-9da0-e457a4697570",
+    "updated_by": "811885ec-4647-417b-aaf1-5f92ce82d41f",
+    "update_type": "status_change",
+    "old_value": "assigned",
+    "new_value": "cancelled",
+    "comment": null,
+    "created_at": "2026-01-09T16:16:40.754286"
+  },
+  {
+    "update_id": "d3cb7d51-eae5-4b1c-8022-a2098ab65fdb",
+    "ticket_id": "8184d0af-ac9d-4b6e-958f-799c215db4bb",
+    "updated_by": "48746fda-a687-4f8a-960c-4c582088036c",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": null,
+    "created_at": "2026-01-10T15:16:40.754286"
+  },
+  {
+    "update_id": "d48f4000-ab1f-4315-8694-2fb12ffec5e7",
+    "ticket_id": "3846cf0e-e2da-4eb5-9512-6325716ef3de",
+    "updated_by": "c1da56a7-a99f-4569-8740-179d2980b31c",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": null,
+    "created_at": "2026-01-08T23:16:40.754286"
+  },
+  {
+    "update_id": "940189eb-34d4-4ea9-90e0-be39d80ed202",
+    "ticket_id": "3846cf0e-e2da-4eb5-9512-6325716ef3de",
+    "updated_by": "484b0cc5-b785-4895-92dd-2557dd36b49d",
+    "update_type": "status_change",
+    "old_value": "offered",
+    "new_value": "in_progress",
+    "comment": "Recusandae quam sit quod.",
+    "created_at": "2026-01-08T22:16:40.754286"
+  },
+  {
+    "update_id": "a03c4df4-246a-4bbb-b30e-b6a6ac4c4400",
+    "ticket_id": "98c1d5b1-263e-456f-9f25-21d4fa3f5e29",
+    "updated_by": "8f90e246-a596-4e07-9fcf-d6820c5e05c6",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": null,
+    "created_at": "2026-01-10T09:16:40.754286"
+  },
+  {
+    "update_id": "e98a6e44-5f33-4a55-b0e8-9bc5785dcc1f",
+    "ticket_id": "98c1d5b1-263e-456f-9f25-21d4fa3f5e29",
+    "updated_by": "5c0b9bad-4b74-4a69-8a8f-5aa7132b4be1",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": "Repellendus quae nostrum beatae optio magni. Molestias provident libero assumenda cum.",
+    "created_at": "2026-01-08T23:16:40.754286"
+  },
+  {
+    "update_id": "de49639d-0f91-4b81-bee1-8f2da499552d",
+    "ticket_id": "9d243d08-21ea-411b-aad3-64ffa01a68be",
+    "updated_by": "bd7ab506-795c-4f27-a6aa-414a73794a89",
+    "update_type": "status_change",
+    "old_value": "cancelled",
+    "new_value": "open",
+    "comment": null,
+    "created_at": "2026-01-09T02:16:40.754286"
+  },
+  {
+    "update_id": "92830bdc-9ff1-4f98-892b-e9a7e833a3db",
+    "ticket_id": "9d243d08-21ea-411b-aad3-64ffa01a68be",
+    "updated_by": "16451223-95ee-447d-b772-26f3b883b6b1",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": "Magnam maiores earum molestias minima. Ipsa earum hic id blanditiis.",
+    "created_at": "2026-01-10T15:16:40.754286"
+  },
+  {
+    "update_id": "6373b76f-9f08-44a1-bae1-8158c552754a",
+    "ticket_id": "0e11f101-ca99-4b5f-a001-45ed6801c980",
+    "updated_by": "181ed817-1e00-4d4a-ba59-1a49227d2a81",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": "Nemo blanditiis accusantium magnam. Voluptatem rerum qui minus laudantium optio.",
+    "created_at": "2026-01-10T08:16:40.754286"
+  },
+  {
+    "update_id": "c97f537e-4579-48a7-85a1-60b173b553b0",
+    "ticket_id": "0e11f101-ca99-4b5f-a001-45ed6801c980",
+    "updated_by": "65fde7cf-bb86-4ddc-ba5a-bcbc07c5615c",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": null,
+    "created_at": "2026-01-08T20:16:40.754286"
+  },
+  {
+    "update_id": "99650e0f-e703-481f-8be6-1f326702cfad",
+    "ticket_id": "339eae9d-88e3-4763-beda-c209b028c7db",
+    "updated_by": "a9e72d90-5ceb-4f82-8747-a37e56fc884b",
+    "update_type": "status_change",
+    "old_value": "cancelled",
+    "new_value": "completed",
+    "comment": "Autem corrupti minus ut eos quam cum. Facere rerum odit error numquam illo.",
+    "created_at": "2026-01-09T05:16:40.754286"
+  },
+  {
+    "update_id": "50d0d24d-311a-4471-8412-746152e2f296",
+    "ticket_id": "339eae9d-88e3-4763-beda-c209b028c7db",
+    "updated_by": "dae52668-34ad-45d5-a9ea-02b858e484a9",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": null,
+    "created_at": "2026-01-10T03:16:40.754286"
+  },
+  {
+    "update_id": "28050427-b8bc-4325-9152-26e9b6a7aff1",
+    "ticket_id": "1c8c70b8-c9d9-42bb-8e26-1ea8800d8415",
+    "updated_by": "9499b880-9cb9-436b-b73c-e53320e06713",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": null,
+    "created_at": "2026-01-09T06:16:40.754286"
+  },
+  {
+    "update_id": "9085f4c6-9e44-4db6-90d4-bc3cf2b44e40",
+    "ticket_id": "1c8c70b8-c9d9-42bb-8e26-1ea8800d8415",
+    "updated_by": "48746fda-a687-4f8a-960c-4c582088036c",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": "Explicabo quo veritatis eius deleniti. Quisquam rem culpa commodi autem.",
+    "created_at": "2026-01-08T23:16:40.754286"
+  },
+  {
+    "update_id": "44c4acbe-af20-4775-b355-27cbde1fed8d",
+    "ticket_id": "3423ad8d-3486-47dc-a082-1dbc87f6fe32",
+    "updated_by": "c971acd2-c60f-43ab-b370-3fdd3d620722",
+    "update_type": "status_change",
+    "old_value": "in_progress",
+    "new_value": "assigned",
+    "comment": "Deleniti rerum architecto hic. Sit itaque similique.",
+    "created_at": "2026-01-10T05:16:40.754286"
+  },
+  {
+    "update_id": "71c20059-30be-462b-bff3-f5db374d3c7c",
+    "ticket_id": "4533ee21-235e-47a8-9081-4222167b8ea7",
+    "updated_by": "fe7950fd-059f-489f-96e8-d85f7ce0ae30",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": null,
+    "created_at": "2026-01-10T13:16:40.754286"
+  },
+  {
+    "update_id": "354ea530-490f-4d56-9bf1-1bc7280428e8",
+    "ticket_id": "4533ee21-235e-47a8-9081-4222167b8ea7",
+    "updated_by": "4ca7e197-d0e2-4a4c-aa38-6030173f5564",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": "Dolor a porro doloremque nesciunt. Debitis aut non similique.",
+    "created_at": "2026-01-08T20:16:40.754286"
+  },
+  {
+    "update_id": "e93dc34a-83f9-44f5-b7a7-6fd741036685",
+    "ticket_id": "8d96e152-6e1b-4025-9474-ffe1ebb10a9c",
+    "updated_by": "d2b876fb-e45e-4827-8143-af00200b72d3",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": null,
+    "created_at": "2026-01-09T23:16:40.754286"
+  },
+  {
+    "update_id": "756e4bc3-ad21-4683-b941-144a8f49dec2",
+    "ticket_id": "8d96e152-6e1b-4025-9474-ffe1ebb10a9c",
+    "updated_by": "d2b876fb-e45e-4827-8143-af00200b72d3",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": null,
+    "created_at": "2026-01-08T23:16:40.754286"
+  },
+  {
+    "update_id": "84b88756-249a-4368-8412-7b373de56766",
+    "ticket_id": "ac37937a-fba2-4f1e-b934-fba345b9049d",
+    "updated_by": "0e67953d-2492-472f-931b-dcfa314195c5",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": null,
+    "created_at": "2026-01-10T10:16:40.754286"
+  },
+  {
+    "update_id": "afccd8b5-ffb1-409a-9c5f-6bf919e1864f",
+    "ticket_id": "938666fe-6e45-4268-ada6-cacb13ab2f66",
+    "updated_by": "84c42ce6-1d1b-4792-9c0f-19957eaacc07",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": "Voluptatem aut ut. Eius repellendus nemo sequi. Ab consectetur molestias incidunt veritatis illo.",
+    "created_at": "2026-01-09T17:16:40.754286"
+  },
+  {
+    "update_id": "9142e429-0294-4583-8c31-854f9fa8a3b9",
+    "ticket_id": "64191b41-f67b-4d39-81b7-7fa312943541",
+    "updated_by": "4c9fcdcb-51c8-41cc-8f5d-7bb90b053729",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": null,
+    "created_at": "2026-01-10T08:16:40.754286"
+  },
+  {
+    "update_id": "7c5427f8-7165-4da0-85cd-5de0bf12fb4c",
+    "ticket_id": "64191b41-f67b-4d39-81b7-7fa312943541",
+    "updated_by": "5606a09e-c663-4954-8363-9ee017b710f3",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": null,
+    "created_at": "2026-01-10T15:16:40.754286"
+  },
+  {
+    "update_id": "541ac827-8920-4de7-8320-505b85ff58ef",
+    "ticket_id": "b7dd9aac-1c0e-4e12-bd5b-085a6e3830c8",
+    "updated_by": "2162fda3-f59d-452c-8b84-3753596b0e37",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": null,
+    "created_at": "2026-01-09T19:16:40.754286"
+  },
+  {
+    "update_id": "b034af03-4122-45cb-871b-e64fd705f9ac",
+    "ticket_id": "7704c532-df27-4d55-b892-2e6533bfba12",
+    "updated_by": "28fd9fab-525b-4d98-897a-125aa6a4fe7b",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": "Praesentium iste possimus sequi explicabo. Molestiae officia et in.",
+    "created_at": "2026-01-08T21:16:40.754286"
+  },
+  {
+    "update_id": "1a5f5d7b-c724-4c1f-9a61-c5a143804b13",
+    "ticket_id": "b2c048f2-9651-4d39-90a2-480befc4850a",
+    "updated_by": "04b63096-4f2e-4629-a042-f4ae36e08aa0",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": "Ut alias corporis facilis. A dolores deleniti sit atque minima. Quasi magnam commodi.",
+    "created_at": "2026-01-08T20:16:40.754286"
+  },
+  {
+    "update_id": "72340b46-a67d-41a3-8858-54b651e33b86",
+    "ticket_id": "b2c048f2-9651-4d39-90a2-480befc4850a",
+    "updated_by": "89f74197-efc9-47a6-9e76-fb3957fa9d40",
+    "update_type": "status_change",
+    "old_value": "assigned",
+    "new_value": "open",
+    "comment": "Libero repellat a doloribus. Exercitationem harum ullam unde incidunt atque.\nLabore beatae earum.",
+    "created_at": "2026-01-08T21:16:40.754286"
+  },
+  {
+    "update_id": "58ef8e4a-e4f9-49f7-a655-0360c88bfd5e",
+    "ticket_id": "67c93d04-1cca-4e5f-b12e-cfb14312741e",
+    "updated_by": "fd2be318-92b2-412b-b627-a9b4405dea57",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": "Corporis recusandae nisi quod quis est. Necessitatibus ut est sequi amet eos fugiat.",
+    "created_at": "2026-01-10T16:16:40.754286"
+  },
+  {
+    "update_id": "c7e02a13-e0d2-4ecf-809e-62c9cf3064e9",
+    "ticket_id": "7245c4ed-d847-4a45-bef8-fef050e7adb9",
+    "updated_by": "de54bd73-a45b-4d17-bb06-ccf00b696560",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": "Inventore numquam ex delectus explicabo error laborum. Quos earum veritatis voluptates.",
+    "created_at": "2026-01-10T12:16:40.754286"
+  },
+  {
+    "update_id": "7b7f2984-b6df-46b5-ad5f-245532b064b6",
+    "ticket_id": "ca04242f-c4d9-4dba-a835-2c5a10e81f88",
+    "updated_by": "9499b880-9cb9-436b-b73c-e53320e06713",
+    "update_type": "status_change",
+    "old_value": "completed",
+    "new_value": "cancelled",
+    "comment": null,
+    "created_at": "2026-01-09T00:16:40.754286"
+  },
+  {
+    "update_id": "31107a1c-460e-413f-ae94-65747b663d5a",
+    "ticket_id": "ca04242f-c4d9-4dba-a835-2c5a10e81f88",
+    "updated_by": "dae52668-34ad-45d5-a9ea-02b858e484a9",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": "Incidunt nam incidunt voluptatem fugiat dolores. Culpa laboriosam optio quaerat vero adipisci.",
+    "created_at": "2026-01-10T17:16:40.754286"
+  },
+  {
+    "update_id": "e3acfed9-d1c0-4a2a-8fe9-d2eb4bd397d5",
+    "ticket_id": "5264b41e-e8f7-47c3-a3fc-1dd8ce25db91",
+    "updated_by": "2162fda3-f59d-452c-8b84-3753596b0e37",
+    "update_type": "status_change",
+    "old_value": "in_progress",
+    "new_value": "cancelled",
+    "comment": "Magni eligendi autem aut laboriosam. Non temporibus provident quam minus.",
+    "created_at": "2026-01-09T05:16:40.754286"
+  },
+  {
+    "update_id": "1105b693-88ad-49d1-ac35-bf7a80c54f09",
+    "ticket_id": "c0dcbb8c-33da-4214-8edc-4604a2dfc169",
+    "updated_by": "fe7950fd-059f-489f-96e8-d85f7ce0ae30",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": null,
+    "created_at": "2026-01-09T15:16:40.754286"
+  },
+  {
+    "update_id": "0ccc4301-afeb-4771-bcac-e45f87172753",
+    "ticket_id": "b44901bf-84d0-4f36-9e09-854e7ff2b829",
+    "updated_by": "635c8d20-a20b-42e4-b92e-68575af1ed0c",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": null,
+    "created_at": "2026-01-10T05:16:40.754286"
+  },
+  {
+    "update_id": "c10cfe45-cfc3-4aca-92bd-16eb3eef6576",
+    "ticket_id": "b44901bf-84d0-4f36-9e09-854e7ff2b829",
+    "updated_by": "c2fd7e31-a6fe-4d24-ae81-82b51efa922a",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": "Esse quidem at ad. Blanditiis veritatis cum fuga ipsum eos.",
+    "created_at": "2026-01-09T01:16:40.754286"
+  },
+  {
+    "update_id": "ca877002-c13d-4109-8e36-d494e3548f32",
+    "ticket_id": "3cec5e12-ada1-42b5-85d3-dd6851f31b39",
+    "updated_by": "484b0cc5-b785-4895-92dd-2557dd36b49d",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": null,
+    "created_at": "2026-01-09T16:16:40.754286"
+  },
+  {
+    "update_id": "23257ff9-898e-43b6-9819-7803ec175b1b",
+    "ticket_id": "ca6a362b-84ef-4438-8221-ddf5a2f38522",
+    "updated_by": "3c702d21-642a-4277-8070-885f9d8a6337",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": null,
+    "created_at": "2026-01-09T13:16:40.754286"
+  },
+  {
+    "update_id": "c62bd88e-bf55-46be-b1ea-ffffba1604dc",
+    "ticket_id": "d0167b00-2e8b-4cd5-a690-1cc888312f5b",
+    "updated_by": "0e67953d-2492-472f-931b-dcfa314195c5",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": "Soluta ducimus quod. Explicabo sint saepe reprehenderit commodi aliquam repellat.",
+    "created_at": "2026-01-10T14:16:40.754286"
+  },
+  {
+    "update_id": "d19b5605-ec11-4e57-9afb-ef6098737d7d",
+    "ticket_id": "d0167b00-2e8b-4cd5-a690-1cc888312f5b",
+    "updated_by": "a4517eca-224a-46ac-b55c-e0b67138a075",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": "Sequi maxime facilis quasi. Non tempore quidem earum ipsam.",
+    "created_at": "2026-01-09T11:16:40.754286"
+  },
+  {
+    "update_id": "4fb57b50-d25f-4d42-9fde-766b4202c292",
+    "ticket_id": "8137da72-92cf-4c2c-9d1b-8a90a3303582",
+    "updated_by": "c1d5de97-6a78-4e94-95a4-4edbd7db907e",
+    "update_type": "status_change",
+    "old_value": "cancelled",
+    "new_value": "open",
+    "comment": null,
+    "created_at": "2026-01-10T14:16:40.754286"
+  },
+  {
+    "update_id": "d49e8830-89ad-4ba4-acc1-3dba3b8ec6e5",
+    "ticket_id": "e8a05add-c7e2-4ecd-94be-56792faa9656",
+    "updated_by": "d30bc5fc-4288-42f8-8db7-645454d8876d",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": null,
+    "created_at": "2026-01-10T14:16:40.754286"
+  },
+  {
+    "update_id": "600f40ef-5a16-43d9-a7bd-74a102c9c42f",
+    "ticket_id": "6657c4e1-eb74-43ab-abae-621ad30f98cb",
+    "updated_by": "ab2de880-385b-401d-a337-2e860d7d8ff4",
+    "update_type": "status_change",
+    "old_value": "open",
+    "new_value": "in_progress",
+    "comment": null,
+    "created_at": "2026-01-09T04:16:40.754286"
+  },
+  {
+    "update_id": "61c3a578-aa6a-4207-8603-c061fa68df5e",
+    "ticket_id": "2c54b835-3c03-49ec-b435-3c4b4382b596",
+    "updated_by": "28fd9fab-525b-4d98-897a-125aa6a4fe7b",
+    "update_type": "status_change",
+    "old_value": "assigned",
+    "new_value": "open",
+    "comment": "Impedit veritatis ea ab asperiores laudantium. Laborum consequuntur dolorem at cumque.",
+    "created_at": "2026-01-09T14:16:40.754286"
+  },
+  {
+    "update_id": "cb275a30-dc78-4d03-96c9-c214abb25a35",
+    "ticket_id": "1cc7f20a-2971-4e4c-8ec3-6794ace16461",
+    "updated_by": "4c9fcdcb-51c8-41cc-8f5d-7bb90b053729",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": "Distinctio rem quisquam itaque quo explicabo tempora. Quia aliquam voluptate excepturi.",
+    "created_at": "2026-01-10T08:16:40.754286"
+  },
+  {
+    "update_id": "fcebe8db-c5a4-43bd-882e-962db87a2ad2",
+    "ticket_id": "1cc7f20a-2971-4e4c-8ec3-6794ace16461",
+    "updated_by": "ab2de880-385b-401d-a337-2e860d7d8ff4",
+    "update_type": "status_change",
+    "old_value": "cancelled",
+    "new_value": "offered",
+    "comment": "Totam necessitatibus velit recusandae quam. Nostrum necessitatibus sequi vitae sit.",
+    "created_at": "2026-01-08T22:16:40.754286"
+  },
+  {
+    "update_id": "ee127f5f-d1b1-44b0-84b3-5f7fe7f33a11",
+    "ticket_id": "2a68d5d1-6d10-4fb2-bc76-4c478d51d19b",
+    "updated_by": "15217537-fd51-4f9f-9ad6-046ac857b445",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": "Natus ipsam similique fugiat et eligendi. Natus ipsam itaque optio.",
+    "created_at": "2026-01-09T22:16:40.754286"
+  },
+  {
+    "update_id": "67926a22-b7fe-48f9-99a1-943483bb683a",
+    "ticket_id": "2a68d5d1-6d10-4fb2-bc76-4c478d51d19b",
+    "updated_by": "2e427378-88a0-4a51-85cf-023438df4b3e",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": null,
+    "created_at": "2026-01-10T00:16:40.754286"
+  },
+  {
+    "update_id": "a85903f5-5a09-44e7-9362-d230e6c3d4d3",
+    "ticket_id": "b619c2c7-9960-40a8-8251-acee89735860",
+    "updated_by": "98dcb9af-2c8b-4203-b722-cddec1980c37",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": null,
+    "created_at": "2026-01-09T22:16:40.754286"
+  },
+  {
+    "update_id": "bb902a21-8a40-457f-ba6a-54663ec313b8",
+    "ticket_id": "b619c2c7-9960-40a8-8251-acee89735860",
+    "updated_by": "028a926a-32f3-4b29-a9bf-92313d77d083",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": "Minus expedita in dolores necessitatibus. Eaque nihil debitis sit blanditiis explicabo.",
+    "created_at": "2026-01-08T20:16:40.754286"
+  },
+  {
+    "update_id": "ebf14c60-3a49-4dc5-934d-ce1076192b46",
+    "ticket_id": "ed16fafb-c96c-4c14-807e-5ad738276d5e",
+    "updated_by": "cce8585d-eec3-4a70-a520-a5f254ec9956",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": "Laborum cupiditate minima. A recusandae debitis nesciunt repellendus.",
+    "created_at": "2026-01-09T15:16:40.754286"
+  },
+  {
+    "update_id": "80594227-69c0-4b2e-ada7-c6dbbd516f75",
+    "ticket_id": "82b9135f-6367-4fa2-af63-1f2d8a605415",
+    "updated_by": "2e427378-88a0-4a51-85cf-023438df4b3e",
+    "update_type": "status_change",
+    "old_value": "in_progress",
+    "new_value": "cancelled",
+    "comment": "Voluptas rerum nihil nemo. Et at pariatur.",
+    "created_at": "2026-01-10T09:16:40.754286"
+  },
+  {
+    "update_id": "9ce1bbdd-7a77-48ed-b269-dc3945af80e1",
+    "ticket_id": "82b9135f-6367-4fa2-af63-1f2d8a605415",
+    "updated_by": "865ffe0d-aff0-48b1-a0e3-ce64634cd68a",
+    "update_type": "status_change",
+    "old_value": "in_progress",
+    "new_value": "assigned",
+    "comment": "Aut doloribus aut officiis. Blanditiis quos incidunt ab.",
+    "created_at": "2026-01-09T13:16:40.754286"
+  },
+  {
+    "update_id": "94585fda-0757-44bb-8b5f-f0f725ea3b76",
+    "ticket_id": "f0453dc1-92c9-44f2-a44a-b103f15d1ece",
+    "updated_by": "9499b880-9cb9-436b-b73c-e53320e06713",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": "Vel facilis aliquid reiciendis cupiditate. Nesciunt maxime ipsa et repudiandae delectus.",
+    "created_at": "2026-01-10T06:16:40.754286"
+  },
+  {
+    "update_id": "395088d0-486a-4c43-bcd5-33d7f0be7ac4",
+    "ticket_id": "d103a313-319c-46b7-aa78-341353a50763",
+    "updated_by": "b51c767c-5ba5-47ba-b95b-aed4ceaefb6a",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": "Quos sint magni accusantium soluta magni iusto numquam.\nSed incidunt incidunt sapiente.",
+    "created_at": "2026-01-10T02:16:40.754286"
+  },
+  {
+    "update_id": "ca6bfe16-d3ad-4e0e-911f-f3662c2eaba8",
+    "ticket_id": "d103a313-319c-46b7-aa78-341353a50763",
+    "updated_by": "0e67953d-2492-472f-931b-dcfa314195c5",
+    "update_type": "status_change",
+    "old_value": "in_progress",
+    "new_value": "open",
+    "comment": null,
+    "created_at": "2026-01-09T11:16:40.754286"
+  },
+  {
+    "update_id": "aa501f7e-d280-475f-bd76-e1136adff398",
+    "ticket_id": "d18d2263-eecf-48f1-b88c-a16b0037871a",
+    "updated_by": "606785c8-ee9d-46c8-b14a-9132a9c7d6b4",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": "Magnam debitis magnam debitis inventore debitis.\nCulpa occaecati placeat.",
+    "created_at": "2026-01-09T17:16:40.754286"
+  },
+  {
+    "update_id": "56c64c12-2a23-4cd2-b44b-232c929d2154",
+    "ticket_id": "ababd7f0-b793-4973-9c81-6c9c8e07fa2e",
+    "updated_by": "ab2de880-385b-401d-a337-2e860d7d8ff4",
+    "update_type": "status_change",
+    "old_value": "assigned",
+    "new_value": "completed",
+    "comment": "Quo similique architecto.\nMaxime fugiat blanditiis ipsa. Itaque nisi illum id voluptates.",
+    "created_at": "2026-01-10T12:16:40.754286"
+  },
+  {
+    "update_id": "17343469-d008-4edc-a316-815912673b7e",
+    "ticket_id": "ababd7f0-b793-4973-9c81-6c9c8e07fa2e",
+    "updated_by": "bd7ab506-795c-4f27-a6aa-414a73794a89",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": null,
+    "created_at": "2026-01-08T22:16:40.754286"
+  },
+  {
+    "update_id": "51f54842-3506-4793-9979-64fdbc1e309c",
+    "ticket_id": "91c30ec5-537c-4e42-9423-a5976ff1f280",
+    "updated_by": "98dcb9af-2c8b-4203-b722-cddec1980c37",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": null,
+    "created_at": "2026-01-09T20:16:40.754286"
+  },
+  {
+    "update_id": "475d8278-a589-4f4b-8f34-a99eed4b7526",
+    "ticket_id": "91c30ec5-537c-4e42-9423-a5976ff1f280",
+    "updated_by": "701729af-5fd8-46a2-a906-2dee8db10106",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": "Consequuntur incidunt commodi inventore. Id fuga itaque modi ab aliquam eveniet.",
+    "created_at": "2026-01-08T23:16:40.754286"
+  },
+  {
+    "update_id": "aaca8e79-ef0c-4964-bc1a-6c2fd53d16af",
+    "ticket_id": "61c6b1e4-8768-4f43-b3d6-28b376ce9fe3",
+    "updated_by": "5633578f-c46a-4d5f-8af0-f237ed3da083",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": null,
+    "created_at": "2026-01-08T21:16:40.754286"
+  },
+  {
+    "update_id": "85c1f13a-5aef-4bfa-a476-b53d78cc0182",
+    "ticket_id": "61c6b1e4-8768-4f43-b3d6-28b376ce9fe3",
+    "updated_by": "c5130d73-b391-48fc-8f69-d6ed12ce9ddc",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": null,
+    "created_at": "2026-01-09T05:16:40.754286"
+  },
+  {
+    "update_id": "44f797fe-5cbc-48b6-b48d-798ad7160894",
+    "ticket_id": "199df83a-3ab4-4c04-a9d7-de762d8bf551",
+    "updated_by": "0e67953d-2492-472f-931b-dcfa314195c5",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": null,
+    "created_at": "2026-01-09T13:16:40.754286"
+  },
+  {
+    "update_id": "fb18a0cb-f008-4145-9494-04f79786f604",
+    "ticket_id": "199df83a-3ab4-4c04-a9d7-de762d8bf551",
+    "updated_by": "865ffe0d-aff0-48b1-a0e3-ce64634cd68a",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": "Doloremque dolorum deserunt eaque vel ea expedita. Labore nam reiciendis ipsa ipsam expedita.",
+    "created_at": "2026-01-10T05:16:40.754286"
+  },
+  {
+    "update_id": "f20decd7-f1ed-45e4-9241-d1303293b081",
+    "ticket_id": "003ef01b-c3d1-49fd-9b47-82d61b17ee73",
+    "updated_by": "fd2be318-92b2-412b-b627-a9b4405dea57",
+    "update_type": "status_change",
+    "old_value": "offered",
+    "new_value": "in_progress",
+    "comment": "Omnis perspiciatis iste magnam occaecati. Architecto at facilis veniam quia.",
+    "created_at": "2026-01-09T08:16:40.754286"
+  },
+  {
+    "update_id": "502df7b6-ddcc-4ece-81dd-400a05ba7471",
+    "ticket_id": "264c6ebc-e443-46ea-bc44-db61a3dc41f5",
+    "updated_by": "3637a3be-81df-4826-b2b2-9203800de8f4",
+    "update_type": "status_change",
+    "old_value": "in_progress",
+    "new_value": "cancelled",
+    "comment": "Quis molestias ab facere accusamus quo. Ipsa at iste voluptas ullam.",
+    "created_at": "2026-01-08T22:16:40.754286"
+  },
+  {
+    "update_id": "771d52b3-371f-450b-b917-26df50fedb4b",
+    "ticket_id": "bd80cad0-4373-4c93-a1e0-8b3ff67e0784",
+    "updated_by": "04b63096-4f2e-4629-a042-f4ae36e08aa0",
+    "update_type": "status_change",
+    "old_value": "cancelled",
+    "new_value": "offered",
+    "comment": null,
+    "created_at": "2026-01-09T02:16:40.754286"
+  },
+  {
+    "update_id": "c3cb7627-0e28-455d-bb30-628d026d3c39",
+    "ticket_id": "bd80cad0-4373-4c93-a1e0-8b3ff67e0784",
+    "updated_by": "2162fda3-f59d-452c-8b84-3753596b0e37",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": "Iure aspernatur consequatur possimus placeat. Rerum corrupti rem enim.",
+    "created_at": "2026-01-09T20:16:40.754286"
+  },
+  {
+    "update_id": "5f68d9bf-8c65-444a-aec4-7d1f6cdbbf64",
+    "ticket_id": "1043e7cb-cc25-4537-8c3d-16753a7adb39",
+    "updated_by": "865ffe0d-aff0-48b1-a0e3-ce64634cd68a",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": null,
+    "created_at": "2026-01-10T11:16:40.754286"
+  },
+  {
+    "update_id": "1f5012dc-2f42-4902-a994-d02ceb127159",
+    "ticket_id": "1043e7cb-cc25-4537-8c3d-16753a7adb39",
+    "updated_by": "9f675785-2e0b-4477-aa29-61222a460655",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": null,
+    "created_at": "2026-01-09T05:16:40.754286"
+  },
+  {
+    "update_id": "f17c2326-a2fc-4f6c-874f-a89efc193eec",
+    "ticket_id": "9d94f0f9-c156-4548-b186-8427f21b54be",
+    "updated_by": "181ed817-1e00-4d4a-ba59-1a49227d2a81",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": "Harum molestias quam esse odit. Dolore esse dolores nam.",
+    "created_at": "2026-01-09T07:16:40.754286"
+  },
+  {
+    "update_id": "f9df0565-ad36-4863-ab58-9b77115b0e9e",
+    "ticket_id": "9d94f0f9-c156-4548-b186-8427f21b54be",
+    "updated_by": "811885ec-4647-417b-aaf1-5f92ce82d41f",
+    "update_type": "status_change",
+    "old_value": "open",
+    "new_value": "cancelled",
+    "comment": null,
+    "created_at": "2026-01-08T21:16:40.754286"
+  },
+  {
+    "update_id": "af7e55e7-0e8a-4b60-8f46-b88521cc3865",
+    "ticket_id": "4c04949b-e3b5-4d80-8530-b1475691a30b",
+    "updated_by": "028a926a-32f3-4b29-a9bf-92313d77d083",
+    "update_type": "status_change",
+    "old_value": "in_progress",
+    "new_value": "open",
+    "comment": "Error delectus et expedita.\nIncidunt dicta eius totam praesentium.",
+    "created_at": "2026-01-10T16:16:40.754286"
+  },
+  {
+    "update_id": "03d13da5-6f20-4c0e-bb9a-3f3c0d61a781",
+    "ticket_id": "4c04949b-e3b5-4d80-8530-b1475691a30b",
+    "updated_by": "2162fda3-f59d-452c-8b84-3753596b0e37",
+    "update_type": "status_change",
+    "old_value": "in_progress",
+    "new_value": "open",
+    "comment": "Quae minus dolore provident. Accusantium quidem quae voluptas.",
+    "created_at": "2026-01-09T00:16:40.754286"
+  },
+  {
+    "update_id": "99adec83-7fcd-410b-ad6f-2e0490f46400",
+    "ticket_id": "d288c7a4-7e8c-4c38-b68e-624d5f5fcb4b",
+    "updated_by": "04b63096-4f2e-4629-a042-f4ae36e08aa0",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": null,
+    "created_at": "2026-01-09T19:16:40.754286"
+  },
+  {
+    "update_id": "0acbe129-f241-49e0-8024-8a82e6907488",
+    "ticket_id": "ec00731e-98da-4cb4-b1bc-b26af49a3ec7",
+    "updated_by": "9499b880-9cb9-436b-b73c-e53320e06713",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": "Dignissimos excepturi officiis sed nisi. Pariatur blanditiis excepturi exercitationem ea.",
+    "created_at": "2026-01-10T17:16:40.754286"
+  },
+  {
+    "update_id": "14471bb8-f7ce-46e0-aaaf-940369c39e2c",
+    "ticket_id": "c0a14ab9-e1cc-459e-84e5-b13c5c52843f",
+    "updated_by": "837f422b-53c8-49cd-bfd5-ccac62beaa94",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": null,
+    "created_at": "2026-01-10T11:16:40.754286"
+  },
+  {
+    "update_id": "6b5e94f5-8762-41df-81f5-de3159e244b1",
+    "ticket_id": "da267c2c-d617-442f-855e-3fc985672d17",
+    "updated_by": "903506f4-5021-4b40-bc7f-119ed349c963",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": "Facere suscipit suscipit odit exercitationem. Rem quibusdam autem fuga ad soluta.",
+    "created_at": "2026-01-10T00:16:40.754286"
+  },
+  {
+    "update_id": "a98e3bdd-ea47-424f-b9d7-3f5e2cf9e40a",
+    "ticket_id": "615d6b82-4e9e-4450-9059-00f5acef72e6",
+    "updated_by": "fd2be318-92b2-412b-b627-a9b4405dea57",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": null,
+    "created_at": "2026-01-09T12:16:40.754286"
+  },
+  {
+    "update_id": "e616391c-c260-4749-837a-4dc5d95b4f5c",
+    "ticket_id": "13591d53-58d2-4012-a5b0-7ecb45a9598e",
+    "updated_by": "c1d5de97-6a78-4e94-95a4-4edbd7db907e",
+    "update_type": "status_change",
+    "old_value": "completed",
+    "new_value": "offered",
+    "comment": null,
+    "created_at": "2026-01-10T19:16:40.754286"
+  },
+  {
+    "update_id": "490cce8d-b573-4841-b258-e34951baf5a4",
+    "ticket_id": "3ebce580-e1ee-44b3-9106-deb91170e2bc",
+    "updated_by": "89f74197-efc9-47a6-9e76-fb3957fa9d40",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": null,
+    "created_at": "2026-01-10T14:16:40.754286"
+  },
+  {
+    "update_id": "ea19dfdb-cc05-4124-9a3b-777db3af8294",
+    "ticket_id": "737d39e3-a087-4c08-961c-2207ee4b85dd",
+    "updated_by": "6d32bc8a-bd82-4a1c-a28a-daa1b929a558",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": null,
+    "created_at": "2026-01-10T06:16:40.754286"
+  },
+  {
+    "update_id": "27c7a49a-faa7-4bc1-8338-2d3e14c3d3be",
+    "ticket_id": "3c057797-ce1e-41e0-86c3-29ae639bf322",
+    "updated_by": "ab2de880-385b-401d-a337-2e860d7d8ff4",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": "Molestias autem officia tenetur. Ratione labore nobis suscipit. Sed reiciendis beatae sit eaque.",
+    "created_at": "2026-01-10T16:16:40.755901"
+  },
+  {
+    "update_id": "9767c2a9-f0ba-43b8-acab-0da88bfcb144",
+    "ticket_id": "e3d9b502-7527-4dd5-a7a4-1b02dde0da18",
+    "updated_by": "3c702d21-642a-4277-8070-885f9d8a6337",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": "Ullam voluptatem delectus adipisci. Animi molestias inventore illo iure.",
+    "created_at": "2026-01-10T01:16:40.755901"
+  },
+  {
+    "update_id": "f47a54ef-0815-43ea-8f23-d529c0723167",
+    "ticket_id": "a568f486-d716-44c5-ac10-e25446c66156",
+    "updated_by": "2e427378-88a0-4a51-85cf-023438df4b3e",
+    "update_type": "status_change",
+    "old_value": "assigned",
+    "new_value": "offered",
+    "comment": null,
+    "created_at": "2026-01-08T20:16:40.755901"
+  },
+  {
+    "update_id": "10680d3c-5063-4db6-a698-4ca842ec8fb6",
+    "ticket_id": "69bbfebb-f69a-4104-82f9-2f6d2f4dc249",
+    "updated_by": "3637a3be-81df-4826-b2b2-9203800de8f4",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": "Sed iste velit. Deleniti velit qui ex fugit soluta hic. Ullam fugit hic incidunt.",
+    "created_at": "2026-01-10T06:16:40.755901"
+  },
+  {
+    "update_id": "3e348112-42de-49b1-86e8-6ba04726440c",
+    "ticket_id": "69bbfebb-f69a-4104-82f9-2f6d2f4dc249",
+    "updated_by": "811885ec-4647-417b-aaf1-5f92ce82d41f",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": "Libero non doloremque vitae. Itaque laboriosam incidunt temporibus.",
+    "created_at": "2026-01-10T09:16:40.755901"
+  },
+  {
+    "update_id": "c25f32f9-584f-4506-ae79-fe742a478924",
+    "ticket_id": "80182e98-1fe2-4f13-b121-4d503646dcb2",
+    "updated_by": "0ae60cdf-89bf-433d-9910-31210c332113",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": null,
+    "created_at": "2026-01-10T18:16:40.755901"
+  },
+  {
+    "update_id": "7870ca8f-9462-4b8c-88ac-7562816f228b",
+    "ticket_id": "08a27187-28b0-4b27-8a7d-5456bbf13339",
+    "updated_by": "3cd0f889-5103-4236-aac4-adb81086977a",
+    "update_type": "status_change",
+    "old_value": "offered",
+    "new_value": "completed",
+    "comment": null,
+    "created_at": "2026-01-10T02:16:40.755901"
+  },
+  {
+    "update_id": "f51a57fc-cde3-4223-9303-76fdaf274e7e",
+    "ticket_id": "aac4b59b-7cce-4fcd-8d89-7be5d9916647",
+    "updated_by": "1aff5cec-a79a-4e0f-9e20-020c060df054",
+    "update_type": "status_change",
+    "old_value": "completed",
+    "new_value": "cancelled",
+    "comment": null,
+    "created_at": "2026-01-09T17:16:40.755901"
+  },
+  {
+    "update_id": "1b8e34bf-8043-4082-b33a-6afef2c6e777",
+    "ticket_id": "aac4b59b-7cce-4fcd-8d89-7be5d9916647",
+    "updated_by": "9bd371e1-5e67-4dfa-bc2f-a050abec2c44",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": "Sunt voluptate soluta voluptates veniam ipsa harum. Doloribus praesentium dicta maiores.",
+    "created_at": "2026-01-10T09:16:40.755901"
+  },
+  {
+    "update_id": "1bbb1d15-0403-4037-a681-98015c6f885a",
+    "ticket_id": "b57c892d-ad17-4e71-b5a0-0805cc46521e",
+    "updated_by": "04b63096-4f2e-4629-a042-f4ae36e08aa0",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": null,
+    "created_at": "2026-01-09T16:16:40.755901"
+  },
+  {
+    "update_id": "7629040a-1375-47a5-bd81-36d3d5d974a2",
+    "ticket_id": "b57c892d-ad17-4e71-b5a0-0805cc46521e",
+    "updated_by": "16451223-95ee-447d-b772-26f3b883b6b1",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": null,
+    "created_at": "2026-01-09T21:16:40.755901"
+  },
+  {
+    "update_id": "674303aa-1ae8-4888-be6a-00da65ec6194",
+    "ticket_id": "5ee6b13f-948f-42d0-858f-01e39f602ddc",
+    "updated_by": "6cdeb9ee-c64a-4c95-987b-6a4f51cdc9d7",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": "Iusto dolorum sunt esse vero ducimus odio voluptatibus. Temporibus voluptate optio cum beatae.",
+    "created_at": "2026-01-08T20:16:40.755901"
+  },
+  {
+    "update_id": "c7373447-9631-4477-8b90-706b3520b4b0",
+    "ticket_id": "34246436-92a3-43ed-85d8-b4f0f4b5bc9b",
+    "updated_by": "9bd371e1-5e67-4dfa-bc2f-a050abec2c44",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": null,
+    "created_at": "2026-01-10T17:16:40.755901"
+  },
+  {
+    "update_id": "fb184222-c449-4f8b-843c-8df8b74bb809",
+    "ticket_id": "34246436-92a3-43ed-85d8-b4f0f4b5bc9b",
+    "updated_by": "ab2de880-385b-401d-a337-2e860d7d8ff4",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": null,
+    "created_at": "2026-01-09T17:16:40.755901"
+  },
+  {
+    "update_id": "3045c455-4938-4580-a68a-d4d15fe7b7a0",
+    "ticket_id": "906ab97c-565c-4c3e-8173-44c18a8274c0",
+    "updated_by": "1b264cb7-ae18-453f-9a02-71e713dc405e",
+    "update_type": "status_change",
+    "old_value": "assigned",
+    "new_value": "completed",
+    "comment": null,
+    "created_at": "2026-01-08T23:16:40.755901"
+  },
+  {
+    "update_id": "7cac2cdb-fc96-4e3b-9d89-982d76230b01",
+    "ticket_id": "906ab97c-565c-4c3e-8173-44c18a8274c0",
+    "updated_by": "1aff5cec-a79a-4e0f-9e20-020c060df054",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": null,
+    "created_at": "2026-01-09T14:16:40.755901"
+  },
+  {
+    "update_id": "74c0af7b-0132-411c-b81e-f8f2015c1604",
+    "ticket_id": "6416d4b2-0d63-497a-8ee4-d4214e498e9a",
+    "updated_by": "d30bc5fc-4288-42f8-8db7-645454d8876d",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": "Est esse nesciunt aperiam officia. Suscipit enim aspernatur iste repudiandae.",
+    "created_at": "2026-01-10T18:16:40.755901"
+  },
+  {
+    "update_id": "1bc33113-4fb5-467f-8c16-9a669ce38417",
+    "ticket_id": "ad99e108-43a8-4e8e-8b3f-d7082585dbff",
+    "updated_by": "d2b876fb-e45e-4827-8143-af00200b72d3",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": null,
+    "created_at": "2026-01-10T06:16:40.755901"
+  },
+  {
+    "update_id": "49682b91-fa9f-494e-90a7-6ac037c3a338",
+    "ticket_id": "ad99e108-43a8-4e8e-8b3f-d7082585dbff",
+    "updated_by": "9f675785-2e0b-4477-aa29-61222a460655",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": null,
+    "created_at": "2026-01-10T02:16:40.755901"
+  },
+  {
+    "update_id": "601d18a6-c222-46ff-8e7e-d78fb5eff0d3",
+    "ticket_id": "2a3c1413-c1e2-4b67-a77d-0971bceacc13",
+    "updated_by": "48746fda-a687-4f8a-960c-4c582088036c",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": null,
+    "created_at": "2026-01-10T19:16:40.755901"
+  },
+  {
+    "update_id": "1493410a-3cd4-4e77-8c79-56fc17e4136b",
+    "ticket_id": "2a3c1413-c1e2-4b67-a77d-0971bceacc13",
+    "updated_by": "230c219b-ccd7-42fa-ac87-47d7593d7cb8",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": "Reiciendis doloribus ipsum incidunt itaque numquam necessitatibus.",
+    "created_at": "2026-01-10T16:16:40.755901"
+  },
+  {
+    "update_id": "560c07f1-38e2-467d-bdc9-98f2c8065359",
+    "ticket_id": "94ff3229-2e71-46a0-98bc-dbf0807105c5",
+    "updated_by": "ef5cf0dd-7157-4996-bd7f-d5844c695b85",
+    "update_type": "status_change",
+    "old_value": "in_progress",
+    "new_value": "offered",
+    "comment": "Minus at et quis. Vitae quos exercitationem tempore quaerat.",
+    "created_at": "2026-01-10T08:16:40.755901"
+  },
+  {
+    "update_id": "f065774b-3bda-4a53-9a6e-29b70befae85",
+    "ticket_id": "6dc5b97f-7a88-4cf4-81cf-03af864da384",
+    "updated_by": "04b63096-4f2e-4629-a042-f4ae36e08aa0",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": "Natus voluptatem consectetur vitae perspiciatis. Incidunt dolores hic fugit.",
+    "created_at": "2026-01-10T05:16:40.755901"
+  },
+  {
+    "update_id": "10bc7096-330e-41dc-acf6-2c13fe1e8629",
+    "ticket_id": "785e997c-de89-453e-ba84-b96d130771a0",
+    "updated_by": "c971acd2-c60f-43ab-b370-3fdd3d620722",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": null,
+    "created_at": "2026-01-09T19:16:40.755901"
+  },
+  {
+    "update_id": "2fa7d626-e571-4027-9b00-5c4987089003",
+    "ticket_id": "1dff6253-3b85-480e-9b6b-691dc4ef72b6",
+    "updated_by": "484b0cc5-b785-4895-92dd-2557dd36b49d",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": "Aspernatur magni placeat ad sint reiciendis. Et a esse.",
+    "created_at": "2026-01-09T23:16:40.755901"
+  },
+  {
+    "update_id": "6bb6642c-6b50-4df0-a2f9-8db9e9e18f92",
+    "ticket_id": "10804d26-8169-4d2e-990b-ebf86538cdd7",
+    "updated_by": "af68381c-069e-41cc-86f8-36460320749d",
+    "update_type": "status_change",
+    "old_value": "open",
+    "new_value": "assigned",
+    "comment": "Ipsa possimus quae vitae ducimus optio suscipit eaque. Non nisi at.",
+    "created_at": "2026-01-10T07:16:40.755901"
+  },
+  {
+    "update_id": "d93be4ee-def9-4491-9722-0c22de46ac7c",
+    "ticket_id": "daefe333-2885-458e-b0ed-785b2b275cb1",
+    "updated_by": "0ae60cdf-89bf-433d-9910-31210c332113",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": null,
+    "created_at": "2026-01-09T15:16:40.755901"
+  },
+  {
+    "update_id": "fa23ac11-7d24-489d-8a52-dd0ec9d6de90",
+    "ticket_id": "0460d453-b90c-47d0-9867-64e30f60a7ae",
+    "updated_by": "6cdeb9ee-c64a-4c95-987b-6a4f51cdc9d7",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": "Nesciunt minima voluptas sunt. Earum voluptatibus beatae.",
+    "created_at": "2026-01-10T09:16:40.755901"
+  },
+  {
+    "update_id": "aa9f09ca-4bf7-45c4-8d16-c05ff8a42290",
+    "ticket_id": "0460d453-b90c-47d0-9867-64e30f60a7ae",
+    "updated_by": "4ca7e197-d0e2-4a4c-aa38-6030173f5564",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": "Voluptates eos expedita minima vitae numquam fugiat. Rerum possimus sint id quaerat.",
+    "created_at": "2026-01-09T23:16:40.755901"
+  },
+  {
+    "update_id": "73cd2693-4aef-4844-bb76-a931e2b6a8b8",
+    "ticket_id": "5def040f-0d09-416e-a6d0-b262bb2f8d1e",
+    "updated_by": "48746fda-a687-4f8a-960c-4c582088036c",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": "Consequatur optio laboriosam modi impedit aut sit veritatis. Qui quia fugit aliquid accusamus.",
+    "created_at": "2026-01-10T19:16:40.755901"
+  },
+  {
+    "update_id": "c10e06e9-5a37-4af7-8380-837f041c0d8f",
+    "ticket_id": "17f51f23-8c59-4cc7-a93e-3dd65016c952",
+    "updated_by": "181ed817-1e00-4d4a-ba59-1a49227d2a81",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": null,
+    "created_at": "2026-01-10T06:16:40.755901"
+  },
+  {
+    "update_id": "b2eaf975-77bd-4846-b8b2-ec5a7235eb1e",
+    "ticket_id": "a95e1029-3d9d-45db-8be9-be4686d5921c",
+    "updated_by": "4c9fcdcb-51c8-41cc-8f5d-7bb90b053729",
+    "update_type": "status_change",
+    "old_value": "cancelled",
+    "new_value": "completed",
+    "comment": null,
+    "created_at": "2026-01-09T15:16:40.755901"
+  },
+  {
+    "update_id": "9da25f22-6264-4f82-9408-29ff72b15f38",
+    "ticket_id": "a95e1029-3d9d-45db-8be9-be4686d5921c",
+    "updated_by": "e558d614-df80-47e1-a888-f6c89bdc9681",
+    "update_type": "status_change",
+    "old_value": "cancelled",
+    "new_value": "open",
+    "comment": "Officia numquam est. Ut ea illum fugiat.",
+    "created_at": "2026-01-10T11:16:40.755901"
+  },
+  {
+    "update_id": "4cd1f753-b152-423a-8745-9fbbc77c48c8",
+    "ticket_id": "fa61cd84-e2ee-4423-bb04-30beaa38b5a5",
+    "updated_by": "a4517eca-224a-46ac-b55c-e0b67138a075",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": null,
+    "created_at": "2026-01-09T22:16:40.755901"
+  },
+  {
+    "update_id": "58c920ae-239f-4358-8976-e66e4d803027",
+    "ticket_id": "fa61cd84-e2ee-4423-bb04-30beaa38b5a5",
+    "updated_by": "181ed817-1e00-4d4a-ba59-1a49227d2a81",
+    "update_type": "status_change",
+    "old_value": "offered",
+    "new_value": "open",
+    "comment": null,
+    "created_at": "2026-01-09T10:16:40.755901"
+  },
+  {
+    "update_id": "f9fb9236-f134-447e-8607-a779a7fdc711",
+    "ticket_id": "c6eca340-9633-4c1f-9f5a-5562efb740d7",
+    "updated_by": "4ca7e197-d0e2-4a4c-aa38-6030173f5564",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": "Soluta cum repudiandae tempora.",
+    "created_at": "2026-01-09T21:16:40.755901"
+  },
+  {
+    "update_id": "821d5c3f-55f5-4121-a9ad-33adb27bafa2",
+    "ticket_id": "f718d6d6-fc55-4619-8b8f-36a7cc25cd9b",
+    "updated_by": "2162fda3-f59d-452c-8b84-3753596b0e37",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": null,
+    "created_at": "2026-01-09T05:16:40.755901"
+  },
+  {
+    "update_id": "315b42af-ce30-431c-a1dd-4d19827ed83c",
+    "ticket_id": "f718d6d6-fc55-4619-8b8f-36a7cc25cd9b",
+    "updated_by": "c1d5de97-6a78-4e94-95a4-4edbd7db907e",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": "Quis quaerat rem voluptatum vero illum adipisci ad. Aut amet similique voluptatem omnis doloribus.",
+    "created_at": "2026-01-08T20:16:40.755901"
+  },
+  {
+    "update_id": "3708db15-0ef3-4b99-9fd1-a8ab14c59cdb",
+    "ticket_id": "2d6e408d-ede0-4c58-bfa1-03add835ce18",
+    "updated_by": "d2b876fb-e45e-4827-8143-af00200b72d3",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": "Vero deleniti nulla labore. Hic quia sapiente.",
+    "created_at": "2026-01-08T22:16:40.755901"
+  },
+  {
+    "update_id": "bb264571-6de7-4bb8-baf2-d359ea17aa3b",
+    "ticket_id": "2d6e408d-ede0-4c58-bfa1-03add835ce18",
+    "updated_by": "ef5cf0dd-7157-4996-bd7f-d5844c695b85",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": "Quos veritatis eaque. Quasi odit occaecati corporis accusantium. Veniam corrupti officia.",
+    "created_at": "2026-01-09T20:16:40.755901"
+  },
+  {
+    "update_id": "944daa65-6e8b-4a6e-ba21-6d61722b2d1e",
+    "ticket_id": "8aa1a6d2-37b5-4d18-a3de-eacd10bcfd29",
+    "updated_by": "c1d5de97-6a78-4e94-95a4-4edbd7db907e",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": "Culpa vel quae facere. Non quidem consequuntur. Id quam molestiae delectus optio laboriosam.",
+    "created_at": "2026-01-10T10:16:40.755901"
+  },
+  {
+    "update_id": "29abc1d7-5794-463f-9cfd-911fa08baaf7",
+    "ticket_id": "52c6cbd8-b151-4fbb-bebd-dc4187246f5e",
+    "updated_by": "028a926a-32f3-4b29-a9bf-92313d77d083",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": "Laborum dolorum eveniet. Velit tenetur iste. Vero eligendi unde quibusdam exercitationem hic.",
+    "created_at": "2026-01-10T12:16:40.755901"
+  },
+  {
+    "update_id": "1a7b4c08-8349-4fd8-8445-c9e6001f5356",
+    "ticket_id": "b5370543-1132-4b5a-9228-3e4c6e833873",
+    "updated_by": "837f422b-53c8-49cd-bfd5-ccac62beaa94",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": null,
+    "created_at": "2026-01-09T18:16:40.755901"
+  },
+  {
+    "update_id": "d40b2508-f0d4-4a25-980e-c4f695e86ec5",
+    "ticket_id": "ea1fd6f1-30f2-467f-8928-3f5254db7554",
+    "updated_by": "c1d5de97-6a78-4e94-95a4-4edbd7db907e",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": null,
+    "created_at": "2026-01-10T19:16:40.755901"
+  },
+  {
+    "update_id": "258b622e-5cbb-456c-af61-e386196f5a73",
+    "ticket_id": "982f8c95-2510-41fd-9a9c-306515da5598",
+    "updated_by": "9bd371e1-5e67-4dfa-bc2f-a050abec2c44",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": null,
+    "created_at": "2026-01-09T03:16:40.755901"
+  },
+  {
+    "update_id": "210c79ec-3646-41e6-8335-360a5ea04b80",
+    "ticket_id": "982f8c95-2510-41fd-9a9c-306515da5598",
+    "updated_by": "606785c8-ee9d-46c8-b14a-9132a9c7d6b4",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": null,
+    "created_at": "2026-01-08T20:16:40.755901"
+  },
+  {
+    "update_id": "8d3e331d-d5ca-47fc-bec4-bfca0342527a",
+    "ticket_id": "9e74ab38-051e-40ac-8fdc-0ef81cdd23b4",
+    "updated_by": "7f6ab6c2-c56d-4f57-bacf-c59f16f38a62",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": null,
+    "created_at": "2026-01-09T04:16:40.755901"
+  },
+  {
+    "update_id": "c69a5cb5-59c3-4398-8cca-dc5e72b304d7",
+    "ticket_id": "9e74ab38-051e-40ac-8fdc-0ef81cdd23b4",
+    "updated_by": "7f6ab6c2-c56d-4f57-bacf-c59f16f38a62",
+    "update_type": "status_change",
+    "old_value": "in_progress",
+    "new_value": "assigned",
+    "comment": "Nemo cum alias mollitia molestiae accusamus.",
+    "created_at": "2026-01-09T22:16:40.755901"
+  },
+  {
+    "update_id": "c98d7414-0e6e-4330-914d-02fbffb71f4f",
+    "ticket_id": "fda32d18-e1ad-491f-a296-0e5e16762f26",
+    "updated_by": "5633578f-c46a-4d5f-8af0-f237ed3da083",
+    "update_type": "status_change",
+    "old_value": "offered",
+    "new_value": "assigned",
+    "comment": null,
+    "created_at": "2026-01-10T17:16:40.755901"
+  },
+  {
+    "update_id": "8108a958-b067-4b3f-a7a6-85251c234aa5",
+    "ticket_id": "fda32d18-e1ad-491f-a296-0e5e16762f26",
+    "updated_by": "07dcb2de-845d-4261-9632-476d9bd0885f",
+    "update_type": "status_change",
+    "old_value": "offered",
+    "new_value": "assigned",
+    "comment": null,
+    "created_at": "2026-01-09T00:16:40.755901"
+  },
+  {
+    "update_id": "2d65fe86-3547-4883-ad60-fef09513c0e6",
+    "ticket_id": "2a1e509c-63bb-4806-be7a-8186ae5da965",
+    "updated_by": "a9e72d90-5ceb-4f82-8747-a37e56fc884b",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": null,
+    "created_at": "2026-01-10T13:16:40.755901"
+  },
+  {
+    "update_id": "986306ec-ff39-4057-ade6-5fae0c17f0f3",
+    "ticket_id": "2a1e509c-63bb-4806-be7a-8186ae5da965",
+    "updated_by": "3761ead2-7a29-4482-aeb6-8c8cb6487b5b",
+    "update_type": "status_change",
+    "old_value": "assigned",
+    "new_value": "completed",
+    "comment": "In deleniti maiores quia deserunt optio doloremque.",
+    "created_at": "2026-01-10T18:16:40.755901"
+  },
+  {
+    "update_id": "2699a59a-b22e-4507-99de-150ccd14ac0f",
+    "ticket_id": "9233b5ba-8e0b-4317-a931-3d62be3ef4f7",
+    "updated_by": "230c219b-ccd7-42fa-ac87-47d7593d7cb8",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": "Officiis ratione doloremque vitae fugit dolor sequi. Omnis vel iusto beatae.",
+    "created_at": "2026-01-10T07:16:40.755901"
+  },
+  {
+    "update_id": "e0acb5dc-cddc-48bb-8cbf-fa2b5c26d4d8",
+    "ticket_id": "9233b5ba-8e0b-4317-a931-3d62be3ef4f7",
+    "updated_by": "5c0b9bad-4b74-4a69-8a8f-5aa7132b4be1",
+    "update_type": "status_change",
+    "old_value": "open",
+    "new_value": "in_progress",
+    "comment": null,
+    "created_at": "2026-01-09T23:16:40.755901"
+  },
+  {
+    "update_id": "9263ad49-cabb-4fec-b1c7-3b4c5117a641",
+    "ticket_id": "cd95b86e-8243-406e-b2d8-90276fe89df5",
+    "updated_by": "606785c8-ee9d-46c8-b14a-9132a9c7d6b4",
+    "update_type": "status_change",
+    "old_value": "offered",
+    "new_value": "open",
+    "comment": null,
+    "created_at": "2026-01-10T05:16:40.755901"
+  },
+  {
+    "update_id": "eb3d1f94-185c-44fc-8392-f8cd773bd0c7",
+    "ticket_id": "cd95b86e-8243-406e-b2d8-90276fe89df5",
+    "updated_by": "c458ae70-47ff-43e6-a326-005621cecd75",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": null,
+    "created_at": "2026-01-10T15:16:40.755901"
+  },
+  {
+    "update_id": "be464a05-b447-4554-8ed7-961b31e72776",
+    "ticket_id": "20bf6803-8646-4cfa-8ebb-e9942e683725",
+    "updated_by": "d30bc5fc-4288-42f8-8db7-645454d8876d",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": null,
+    "created_at": "2026-01-08T21:16:40.755901"
+  },
+  {
+    "update_id": "f81bac61-e733-4162-9084-faea4ce947ec",
+    "ticket_id": "20bf6803-8646-4cfa-8ebb-e9942e683725",
+    "updated_by": "f6a741eb-22f0-4349-8eaf-59ae545a3248",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": null,
+    "created_at": "2026-01-09T11:16:40.755901"
+  },
+  {
+    "update_id": "73195481-1865-46e7-9c94-988860f6cf1b",
+    "ticket_id": "297f2e40-39e4-4f8b-a007-9d0c8596c114",
+    "updated_by": "89f74197-efc9-47a6-9e76-fb3957fa9d40",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": null,
+    "created_at": "2026-01-10T01:16:40.755901"
+  },
+  {
+    "update_id": "039a7ee9-b59e-4843-b599-98650bc22b95",
+    "ticket_id": "c027c79e-e39c-4832-8a28-410fcc47ed0b",
+    "updated_by": "fd2be318-92b2-412b-b627-a9b4405dea57",
+    "update_type": "status_change",
+    "old_value": "offered",
+    "new_value": "completed",
+    "comment": null,
+    "created_at": "2026-01-09T03:16:40.755901"
+  },
+  {
+    "update_id": "2e1be276-f4ab-400c-9959-2ef0c3865215",
+    "ticket_id": "c027c79e-e39c-4832-8a28-410fcc47ed0b",
+    "updated_by": "07dcb2de-845d-4261-9632-476d9bd0885f",
+    "update_type": "status_change",
+    "old_value": "offered",
+    "new_value": "in_progress",
+    "comment": "Molestias eos similique laudantium. Neque sapiente corrupti. Soluta aliquam unde quos sit ullam.",
+    "created_at": "2026-01-09T13:16:40.756916"
+  },
+  {
+    "update_id": "f2100c2b-5da7-4499-b770-bca62137b321",
+    "ticket_id": "6d57640f-c442-451e-80ae-97d4f81c3a2d",
+    "updated_by": "89f74197-efc9-47a6-9e76-fb3957fa9d40",
+    "update_type": "status_change",
+    "old_value": "offered",
+    "new_value": "assigned",
+    "comment": null,
+    "created_at": "2026-01-09T15:16:40.756916"
+  },
+  {
+    "update_id": "20015061-03de-4c22-bf20-3c9b5e2ad3bb",
+    "ticket_id": "bea88665-4130-481a-a7c9-90f77cc1dbaa",
+    "updated_by": "c458ae70-47ff-43e6-a326-005621cecd75",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": null,
+    "created_at": "2026-01-10T12:16:40.756916"
+  },
+  {
+    "update_id": "78730121-3174-4bf3-b872-408260cfd0a9",
+    "ticket_id": "bea88665-4130-481a-a7c9-90f77cc1dbaa",
+    "updated_by": "a4517eca-224a-46ac-b55c-e0b67138a075",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": "Accusamus cumque asperiores aspernatur veritatis. Quibusdam mollitia aliquam dolores quaerat.",
+    "created_at": "2026-01-10T19:16:40.756916"
+  },
+  {
+    "update_id": "1bb47647-9180-47df-b199-32266b9fbe6e",
+    "ticket_id": "91b039f6-b7df-472c-a92b-702e1bee83ba",
+    "updated_by": "0e67953d-2492-472f-931b-dcfa314195c5",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": "Quidem tenetur incidunt dicta amet. Tempora saepe nam deleniti dolore.",
+    "created_at": "2026-01-09T03:16:40.756916"
+  },
+  {
+    "update_id": "0abacb54-f0e3-45d4-af46-04a5da6bc425",
+    "ticket_id": "91b039f6-b7df-472c-a92b-702e1bee83ba",
+    "updated_by": "fd2be318-92b2-412b-b627-a9b4405dea57",
+    "update_type": "status_change",
+    "old_value": "open",
+    "new_value": "cancelled",
+    "comment": null,
+    "created_at": "2026-01-10T07:16:40.756916"
+  },
+  {
+    "update_id": "a873577a-7a46-4bc4-b316-ec58ec8b472d",
+    "ticket_id": "e0894863-f60a-4941-85ba-f685290800c5",
+    "updated_by": "7f6ab6c2-c56d-4f57-bacf-c59f16f38a62",
+    "update_type": "status_change",
+    "old_value": "offered",
+    "new_value": "open",
+    "comment": "Ipsum nulla tenetur sequi labore illum illo.",
+    "created_at": "2026-01-09T20:16:40.756916"
+  },
+  {
+    "update_id": "f0c23646-76ff-4df0-801a-6e5f79883a8c",
+    "ticket_id": "01bf8833-3d45-4505-b2e1-f58fd2d2507a",
+    "updated_by": "9499b880-9cb9-436b-b73c-e53320e06713",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": null,
+    "created_at": "2026-01-09T02:16:40.756916"
+  },
+  {
+    "update_id": "0d6cd9d5-d429-4d1a-909b-f71bdad7ecda",
+    "ticket_id": "01bf8833-3d45-4505-b2e1-f58fd2d2507a",
+    "updated_by": "6cdeb9ee-c64a-4c95-987b-6a4f51cdc9d7",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": "Laudantium ipsam saepe ex unde. Odio dignissimos maiores. Quam quia sint quis accusantium.",
+    "created_at": "2026-01-09T23:16:40.756916"
+  },
+  {
+    "update_id": "63114d54-c82a-4a7b-817a-7c444595ee5b",
+    "ticket_id": "1947147c-46b4-4f72-a9c4-fd99ddb8cc97",
+    "updated_by": "0ae60cdf-89bf-433d-9910-31210c332113",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": "Amet maiores at quos nisi.\nEx debitis et fugit. Nisi impedit tenetur amet nostrum qui.",
+    "created_at": "2026-01-10T02:16:40.756916"
+  },
+  {
+    "update_id": "8783e1f8-581d-42c5-9c2d-956daf3bac85",
+    "ticket_id": "ec88f528-51f3-454e-b652-fe6e5ed5bdb8",
+    "updated_by": "c1da56a7-a99f-4569-8740-179d2980b31c",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": "Laboriosam at vel veniam. Iusto alias earum a quas officia.",
+    "created_at": "2026-01-08T21:16:40.756916"
+  },
+  {
+    "update_id": "c8437122-6d8d-49b5-9ca2-e320a808faf2",
+    "ticket_id": "ec88f528-51f3-454e-b652-fe6e5ed5bdb8",
+    "updated_by": "9bd371e1-5e67-4dfa-bc2f-a050abec2c44",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": null,
+    "created_at": "2026-01-10T19:16:40.756916"
+  },
+  {
+    "update_id": "46fc07d2-a755-47ac-aad0-76a2ebac0f0c",
+    "ticket_id": "a3213b00-befd-42af-98cb-74e4a5673f29",
+    "updated_by": "5633578f-c46a-4d5f-8af0-f237ed3da083",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": null,
+    "created_at": "2026-01-09T17:16:40.756916"
+  },
+  {
+    "update_id": "975531ab-be81-459f-90a4-9c64f689b953",
+    "ticket_id": "a3213b00-befd-42af-98cb-74e4a5673f29",
+    "updated_by": "230c219b-ccd7-42fa-ac87-47d7593d7cb8",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": null,
+    "created_at": "2026-01-09T08:16:40.756916"
+  },
+  {
+    "update_id": "6c3edf26-f4d1-4bb0-acd7-cb664275b301",
+    "ticket_id": "fd1d4f70-6cd9-4148-9315-da6a4e813c21",
+    "updated_by": "04061767-ed41-4a5b-9830-12569d27866c",
+    "update_type": "status_change",
+    "old_value": "offered",
+    "new_value": "open",
+    "comment": "Consequatur deleniti labore corporis. Libero neque nam iure veritatis accusantium commodi.",
+    "created_at": "2026-01-08T21:16:40.756916"
+  },
+  {
+    "update_id": "dc818f03-ab8d-452e-88a0-ed09c6c98757",
+    "ticket_id": "00363218-f7de-4fb3-8606-60783b1b55f3",
+    "updated_by": "16451223-95ee-447d-b772-26f3b883b6b1",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": null,
+    "created_at": "2026-01-10T07:16:40.756916"
+  },
+  {
+    "update_id": "575ec9f4-a4eb-470e-87b5-28dedc29d819",
+    "ticket_id": "00363218-f7de-4fb3-8606-60783b1b55f3",
+    "updated_by": "1d43cd3f-f3f1-4856-a400-bf6219966d1e",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": null,
+    "created_at": "2026-01-09T22:16:40.756916"
+  },
+  {
+    "update_id": "6d17cbd7-f6cf-4cb2-9b7f-93fc6bf864a6",
+    "ticket_id": "0224c39d-ffcc-439d-b7a3-84e5c4cad366",
+    "updated_by": "3cd0f889-5103-4236-aac4-adb81086977a",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": "Nihil eius laborum quo recusandae esse vel. Impedit eaque sequi fugit cum.",
+    "created_at": "2026-01-10T17:16:40.756916"
+  },
+  {
+    "update_id": "fa773e1a-9042-4303-87c2-2ff2687abd33",
+    "ticket_id": "3a92f6f4-302c-4445-ab71-773aca2a2dc0",
+    "updated_by": "2e427378-88a0-4a51-85cf-023438df4b3e",
+    "update_type": "status_change",
+    "old_value": "open",
+    "new_value": "cancelled",
+    "comment": null,
+    "created_at": "2026-01-09T20:16:40.756916"
+  },
+  {
+    "update_id": "cf4e28f6-479a-4621-bdc3-f49661ac4288",
+    "ticket_id": "3a92f6f4-302c-4445-ab71-773aca2a2dc0",
+    "updated_by": "d30bc5fc-4288-42f8-8db7-645454d8876d",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": null,
+    "created_at": "2026-01-09T05:16:40.756916"
+  },
+  {
+    "update_id": "80c7c446-b92d-48ea-aea6-417f64a03a64",
+    "ticket_id": "f6f45488-8b46-4040-bdae-a4c954ac3234",
+    "updated_by": "d30bc5fc-4288-42f8-8db7-645454d8876d",
+    "update_type": "status_change",
+    "old_value": "assigned",
+    "new_value": "offered",
+    "comment": "Maxime consectetur molestiae quisquam consectetur. Magnam consequuntur velit voluptatibus sint.",
+    "created_at": "2026-01-10T09:16:40.756916"
+  },
+  {
+    "update_id": "d42c72e2-1c34-4d87-9c2d-6cb539a5dd05",
+    "ticket_id": "27ee9a13-719b-4f1a-aaa2-38dcd711d151",
+    "updated_by": "8dd01887-9818-4f47-ac15-f7d2db2b8382",
+    "update_type": "status_change",
+    "old_value": "offered",
+    "new_value": "cancelled",
+    "comment": null,
+    "created_at": "2026-01-09T02:16:40.756916"
+  },
+  {
+    "update_id": "505b9319-7ec5-4e12-80e5-b98f5deec941",
+    "ticket_id": "27ee9a13-719b-4f1a-aaa2-38dcd711d151",
+    "updated_by": "c2fd7e31-a6fe-4d24-ae81-82b51efa922a",
+    "update_type": "status_change",
+    "old_value": "offered",
+    "new_value": "in_progress",
+    "comment": null,
+    "created_at": "2026-01-08T23:16:40.756916"
+  },
+  {
+    "update_id": "fa9f34e8-54b6-4deb-b135-c1c87e8a27f9",
+    "ticket_id": "ab945ca1-6001-45ea-bf5b-964af33ae210",
+    "updated_by": "6d32bc8a-bd82-4a1c-a28a-daa1b929a558",
+    "update_type": "status_change",
+    "old_value": "in_progress",
+    "new_value": "cancelled",
+    "comment": null,
+    "created_at": "2026-01-09T16:16:40.756916"
+  },
+  {
+    "update_id": "ab7bf33c-a857-42fd-9043-6c4a786e3f83",
+    "ticket_id": "ab945ca1-6001-45ea-bf5b-964af33ae210",
+    "updated_by": "a9e72d90-5ceb-4f82-8747-a37e56fc884b",
+    "update_type": "status_change",
+    "old_value": "in_progress",
+    "new_value": "assigned",
+    "comment": null,
+    "created_at": "2026-01-09T18:16:40.756916"
+  },
+  {
+    "update_id": "ae0e2275-3200-4cd3-a330-ce98b86a2671",
+    "ticket_id": "c4136b9b-b78a-434e-998f-840edc0cd6e2",
+    "updated_by": "b51c767c-5ba5-47ba-b95b-aed4ceaefb6a",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": null,
+    "created_at": "2026-01-10T06:16:40.756916"
+  },
+  {
+    "update_id": "72689529-8d64-45e2-8f02-aaa9a049c1a5",
+    "ticket_id": "c4136b9b-b78a-434e-998f-840edc0cd6e2",
+    "updated_by": "0ae60cdf-89bf-433d-9910-31210c332113",
+    "update_type": "status_change",
+    "old_value": "assigned",
+    "new_value": "open",
+    "comment": null,
+    "created_at": "2026-01-09T08:16:40.756916"
+  },
+  {
+    "update_id": "cb469209-52e2-4f6f-bef5-d47097413ad8",
+    "ticket_id": "431658b6-64ba-42cc-8310-01ca8165c870",
+    "updated_by": "04b63096-4f2e-4629-a042-f4ae36e08aa0",
+    "update_type": "status_change",
+    "old_value": "offered",
+    "new_value": "open",
+    "comment": "Laudantium architecto corrupti aliquam sapiente dignissimos illum ad. Iste a eaque.",
+    "created_at": "2026-01-09T03:16:40.756916"
+  },
+  {
+    "update_id": "444c6590-f000-40f9-abc6-fd5d0badf81e",
+    "ticket_id": "b424a6c9-421e-49aa-8de0-a0fd843e03a0",
+    "updated_by": "4ca7e197-d0e2-4a4c-aa38-6030173f5564",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": "Suscipit quia impedit fugit natus nisi dolorum. Iusto autem eos reprehenderit sunt iure.",
+    "created_at": "2026-01-10T10:16:40.756916"
+  },
+  {
+    "update_id": "2f9db6a3-4160-4f9c-af1d-9d0691f05f60",
+    "ticket_id": "b424a6c9-421e-49aa-8de0-a0fd843e03a0",
+    "updated_by": "837f422b-53c8-49cd-bfd5-ccac62beaa94",
+    "update_type": "status_change",
+    "old_value": "offered",
+    "new_value": "open",
+    "comment": "Beatae unde facilis libero.",
+    "created_at": "2026-01-09T08:16:40.756916"
+  },
+  {
+    "update_id": "303670fa-a47d-4c0d-9e12-5dea718c8543",
+    "ticket_id": "02cf157e-3c77-45e5-a9b4-71a452ba6416",
+    "updated_by": "04b63096-4f2e-4629-a042-f4ae36e08aa0",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": "Dolore non dolorem numquam. Culpa repellendus ratione repudiandae nobis odit occaecati.",
+    "created_at": "2026-01-09T10:16:40.756916"
+  },
+  {
+    "update_id": "ccec3f7a-fe81-4096-8167-2c6bdb9ac927",
+    "ticket_id": "02cf157e-3c77-45e5-a9b4-71a452ba6416",
+    "updated_by": "606785c8-ee9d-46c8-b14a-9132a9c7d6b4",
+    "update_type": "status_change",
+    "old_value": "assigned",
+    "new_value": "completed",
+    "comment": null,
+    "created_at": "2026-01-09T00:16:40.756916"
+  },
+  {
+    "update_id": "f0087e45-d53d-474b-86dd-9b1deac2e1c1",
+    "ticket_id": "a327c43a-90f5-4355-94c2-256fd77e76eb",
+    "updated_by": "cce8585d-eec3-4a70-a520-a5f254ec9956",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": "Dolore sint tenetur minus maxime. Quia ad tempore nostrum. Dolorem soluta unde fugit sint nisi.",
+    "created_at": "2026-01-10T19:16:40.756916"
+  },
+  {
+    "update_id": "13ea89bc-b008-438f-9087-79fa6f787d18",
+    "ticket_id": "77a8257f-584f-41d1-858f-53d894325958",
+    "updated_by": "c1da56a7-a99f-4569-8740-179d2980b31c",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": null,
+    "created_at": "2026-01-09T21:16:40.756916"
+  },
+  {
+    "update_id": "b57fb084-b98a-42dc-ad1a-02d5851fd718",
+    "ticket_id": "318cc775-69ed-4f7c-b535-abc98a10b4a7",
+    "updated_by": "3cd0f889-5103-4236-aac4-adb81086977a",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": null,
+    "created_at": "2026-01-08T22:16:40.756916"
+  },
+  {
+    "update_id": "66e3fd4f-3b2c-4595-8d4d-6dd0f3d5d5fb",
+    "ticket_id": "b8426bed-6d02-4c33-81d9-0fd06ddb7373",
+    "updated_by": "8dd01887-9818-4f47-ac15-f7d2db2b8382",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": null,
+    "created_at": "2026-01-10T07:16:40.756916"
+  },
+  {
+    "update_id": "9b77de3d-e673-4089-b5c2-c35869888c81",
+    "ticket_id": "153be0dd-3aba-4f62-b206-ed435853bab7",
+    "updated_by": "028a926a-32f3-4b29-a9bf-92313d77d083",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": "Sint perspiciatis tempore nulla libero architecto quaerat. Impedit expedita ea odit.",
+    "created_at": "2026-01-09T06:16:40.756916"
+  },
+  {
+    "update_id": "6782bc22-3d83-43c2-aee7-eb43f4dc8628",
+    "ticket_id": "153be0dd-3aba-4f62-b206-ed435853bab7",
+    "updated_by": "53e21cc0-ea94-406c-bd10-75ff55c9d3f0",
+    "update_type": "status_change",
+    "old_value": "offered",
+    "new_value": "in_progress",
+    "comment": "Earum accusantium maiores tempore. Qui officiis ipsam doloremque.",
+    "created_at": "2026-01-09T02:16:40.756916"
+  },
+  {
+    "update_id": "9795080d-cb16-4b62-9af6-f0c3d7e2e2f8",
+    "ticket_id": "f93f875a-ac66-4ba9-90e2-8bff1d96842c",
+    "updated_by": "c1d5de97-6a78-4e94-95a4-4edbd7db907e",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": null,
+    "created_at": "2026-01-10T12:16:40.756916"
+  },
+  {
+    "update_id": "066382f0-abf5-436a-9d3a-dab20ac58276",
+    "ticket_id": "f93f875a-ac66-4ba9-90e2-8bff1d96842c",
+    "updated_by": "cb1cb664-9569-4cb5-b1c1-f28d60a1ae58",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": "Dolorem assumenda iure. Eaque quidem quasi nesciunt debitis provident officia.",
+    "created_at": "2026-01-10T03:16:40.756916"
+  },
+  {
+    "update_id": "55cd836b-5b43-4cbb-b804-5402c5236dcb",
+    "ticket_id": "f3416481-5ca5-4111-849b-8388535dc085",
+    "updated_by": "8dd01887-9818-4f47-ac15-f7d2db2b8382",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": "Numquam quisquam autem earum. Et vitae quia laborum dolorum. Corporis quod natus vero.",
+    "created_at": "2026-01-09T22:16:40.756916"
+  },
+  {
+    "update_id": "b5c3dcb0-d60f-4baf-bf50-6127f6d479d9",
+    "ticket_id": "744ca65c-b0ac-425d-b11d-617b0d8a794a",
+    "updated_by": "1d43cd3f-f3f1-4856-a400-bf6219966d1e",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": "Architecto enim at voluptatem.",
+    "created_at": "2026-01-10T19:16:40.756916"
+  },
+  {
+    "update_id": "0dc9fda3-3616-4d94-9501-5227a24d1453",
+    "ticket_id": "3af9ed58-949a-4113-b11a-0b9acd67fc28",
+    "updated_by": "6cdeb9ee-c64a-4c95-987b-6a4f51cdc9d7",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": null,
+    "created_at": "2026-01-09T06:16:40.756916"
+  },
+  {
+    "update_id": "f81e5c5d-5d3c-4fac-b6a8-c7efb17307a6",
+    "ticket_id": "b3165ad6-3f93-45af-b969-72f4397eaba9",
+    "updated_by": "15217537-fd51-4f9f-9ad6-046ac857b445",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": "Culpa laudantium nostrum expedita animi quia. Vitae assumenda cupiditate.",
+    "created_at": "2026-01-09T23:16:40.756916"
+  },
+  {
+    "update_id": "1106b70f-86e3-41d7-8334-dc44e46e64a9",
+    "ticket_id": "b3165ad6-3f93-45af-b969-72f4397eaba9",
+    "updated_by": "b51c767c-5ba5-47ba-b95b-aed4ceaefb6a",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": null,
+    "created_at": "2026-01-10T17:16:40.756916"
+  },
+  {
+    "update_id": "7538640f-fedf-4794-a3d1-26fa2e51fb05",
+    "ticket_id": "6912b662-a687-4eca-905b-45aaa2114bdc",
+    "updated_by": "f6a741eb-22f0-4349-8eaf-59ae545a3248",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": null,
+    "created_at": "2026-01-09T16:16:40.756916"
+  },
+  {
+    "update_id": "89e11a8d-5de9-4543-b623-f85f8f89d592",
+    "ticket_id": "08d8dbcd-d3ea-4beb-a5fe-baa3ad5af179",
+    "updated_by": "61177adb-a938-40c3-b04d-eee76875ff2a",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": null,
+    "created_at": "2026-01-09T17:16:40.756916"
+  },
+  {
+    "update_id": "b791abf7-f0cf-4a6e-8290-5a335be633de",
+    "ticket_id": "08d8dbcd-d3ea-4beb-a5fe-baa3ad5af179",
+    "updated_by": "61177adb-a938-40c3-b04d-eee76875ff2a",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": null,
+    "created_at": "2026-01-10T15:16:40.756916"
+  },
+  {
+    "update_id": "4b043e71-b911-4775-8157-68ea50b8bde2",
+    "ticket_id": "19682081-0691-4b56-94e9-efb0367c7af7",
+    "updated_by": "dae52668-34ad-45d5-a9ea-02b858e484a9",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": "Eius doloribus consequuntur. Natus ratione totam distinctio non minima tempora.",
+    "created_at": "2026-01-10T09:16:40.756916"
+  },
+  {
+    "update_id": "065f0d11-6972-46a4-9c05-8029c7f4bc47",
+    "ticket_id": "19682081-0691-4b56-94e9-efb0367c7af7",
+    "updated_by": "cb1cb664-9569-4cb5-b1c1-f28d60a1ae58",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": "Quibusdam sunt iusto molestiae illo consequuntur dolores. Tenetur beatae doloremque harum.",
+    "created_at": "2026-01-10T09:16:40.756916"
+  },
+  {
+    "update_id": "644cd61b-a3e5-452a-a462-78be0b17b9f1",
+    "ticket_id": "f0264702-dd65-41e6-bb59-3ada28eaafff",
+    "updated_by": "04b63096-4f2e-4629-a042-f4ae36e08aa0",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": "Voluptatum hic occaecati. Placeat nisi itaque.",
+    "created_at": "2026-01-09T22:16:40.756916"
+  },
+  {
+    "update_id": "229a735d-7d5b-435d-81b8-8793ca95f72a",
+    "ticket_id": "f0264702-dd65-41e6-bb59-3ada28eaafff",
+    "updated_by": "89f74197-efc9-47a6-9e76-fb3957fa9d40",
+    "update_type": "status_change",
+    "old_value": "cancelled",
+    "new_value": "assigned",
+    "comment": "Modi enim blanditiis amet asperiores quibusdam. Nesciunt voluptatibus nam beatae voluptatibus.",
+    "created_at": "2026-01-10T13:16:40.756916"
+  },
+  {
+    "update_id": "4f67747d-5fcd-40e1-9b57-751f34dc93a2",
+    "ticket_id": "a37942f8-2c61-4a2c-b2e1-74741c59796d",
+    "updated_by": "fe7950fd-059f-489f-96e8-d85f7ce0ae30",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": "Nisi sed accusantium id corporis voluptas. Debitis dolore odio laborum blanditiis.",
+    "created_at": "2026-01-10T15:16:40.756916"
+  },
+  {
+    "update_id": "09513fe5-0ace-4e89-bf37-55562e3d7656",
+    "ticket_id": "a37942f8-2c61-4a2c-b2e1-74741c59796d",
+    "updated_by": "837f422b-53c8-49cd-bfd5-ccac62beaa94",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": null,
+    "created_at": "2026-01-10T04:16:40.756916"
+  },
+  {
+    "update_id": "4959de87-ed53-4ed3-b468-1be0c3dfd686",
+    "ticket_id": "e67b3671-01ca-44a4-80f5-5840bbf04448",
+    "updated_by": "c458ae70-47ff-43e6-a326-005621cecd75",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": "Nihil iste odio similique rem sint commodi. Deleniti animi mollitia animi pariatur.",
+    "created_at": "2026-01-08T23:16:40.756916"
+  },
+  {
+    "update_id": "9716ba34-a2e3-4df6-b379-4e048f8acab6",
+    "ticket_id": "e67b3671-01ca-44a4-80f5-5840bbf04448",
+    "updated_by": "1c547cef-957f-4284-bd91-f6d6ee423a5f",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": "Assumenda quos consequatur quaerat nisi qui. Ab vel molestias qui debitis temporibus iusto.",
+    "created_at": "2026-01-09T17:16:40.756916"
+  },
+  {
+    "update_id": "c74a33a4-741a-4692-8336-142b2627fd75",
+    "ticket_id": "db57449a-5ec2-4b20-b5bc-7f85d19feb43",
+    "updated_by": "9f675785-2e0b-4477-aa29-61222a460655",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": null,
+    "created_at": "2026-01-09T13:16:40.756916"
+  },
+  {
+    "update_id": "9a45519f-4668-4acd-9ac4-1a7793883dad",
+    "ticket_id": "db57449a-5ec2-4b20-b5bc-7f85d19feb43",
+    "updated_by": "a4517eca-224a-46ac-b55c-e0b67138a075",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": null,
+    "created_at": "2026-01-10T09:16:40.756916"
+  },
+  {
+    "update_id": "67286d84-295b-46cb-b6dd-6bd848ab7e83",
+    "ticket_id": "9ff5ccb0-3881-4031-9f43-873957e50eaa",
+    "updated_by": "2e427378-88a0-4a51-85cf-023438df4b3e",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": "Consequatur ex quod rerum quae tenetur corporis. Nisi commodi id possimus iure culpa.",
+    "created_at": "2026-01-09T18:16:40.756916"
+  },
+  {
+    "update_id": "626adcb8-7c2d-42f6-9817-b1f2a64fa184",
+    "ticket_id": "9ff5ccb0-3881-4031-9f43-873957e50eaa",
+    "updated_by": "9499b880-9cb9-436b-b73c-e53320e06713",
+    "update_type": "status_change",
+    "old_value": "open",
+    "new_value": "assigned",
+    "comment": "Officiis quis consequatur temporibus culpa. Hic eaque magnam deserunt culpa eaque.",
+    "created_at": "2026-01-08T21:16:40.756916"
+  },
+  {
+    "update_id": "489649f8-86e6-4306-9e7e-b11af738af7f",
+    "ticket_id": "1baf01e4-9465-4d0c-98a4-5b23ae1453d3",
+    "updated_by": "5633578f-c46a-4d5f-8af0-f237ed3da083",
+    "update_type": "status_change",
+    "old_value": "open",
+    "new_value": "completed",
+    "comment": "Ipsum laudantium molestiae vitae enim. Sint temporibus a ab.",
+    "created_at": "2026-01-09T20:16:40.756916"
+  },
+  {
+    "update_id": "ca0d415e-2848-4a4d-b841-4c4691bfeef0",
+    "ticket_id": "1baf01e4-9465-4d0c-98a4-5b23ae1453d3",
+    "updated_by": "a4517eca-224a-46ac-b55c-e0b67138a075",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": "Incidunt aliquid consectetur quam ab nulla reiciendis ratione. Fugit porro harum inventore.",
+    "created_at": "2026-01-09T02:16:40.758002"
+  },
+  {
+    "update_id": "96b963ae-55eb-45da-a71c-1fb44364401b",
+    "ticket_id": "c2e2d6ea-ed0f-4449-bd8e-b6e88cf72553",
+    "updated_by": "028a926a-32f3-4b29-a9bf-92313d77d083",
+    "update_type": "status_change",
+    "old_value": "offered",
+    "new_value": "cancelled",
+    "comment": "Molestias possimus officia aspernatur magni. Architecto eum consequatur at optio ea.",
+    "created_at": "2026-01-09T02:16:40.758002"
+  },
+  {
+    "update_id": "2f883436-88d9-45d9-bdbd-958600b4b5b2",
+    "ticket_id": "c2e2d6ea-ed0f-4449-bd8e-b6e88cf72553",
+    "updated_by": "53e21cc0-ea94-406c-bd10-75ff55c9d3f0",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": null,
+    "created_at": "2026-01-09T08:16:40.758002"
+  },
+  {
+    "update_id": "7915f80d-9b51-40de-929f-e30cdc012d9e",
+    "ticket_id": "94956510-5619-4551-bf9a-e5d16a678217",
+    "updated_by": "65fde7cf-bb86-4ddc-ba5a-bcbc07c5615c",
+    "update_type": "status_change",
+    "old_value": "assigned",
+    "new_value": "completed",
+    "comment": null,
+    "created_at": "2026-01-10T07:16:40.758002"
+  },
+  {
+    "update_id": "88a8d291-2e4f-46fb-a49e-5f2d23bfa2c8",
+    "ticket_id": "74692405-b503-4c9e-8b3d-d3d680e76734",
+    "updated_by": "16451223-95ee-447d-b772-26f3b883b6b1",
+    "update_type": "status_change",
+    "old_value": "cancelled",
+    "new_value": "assigned",
+    "comment": null,
+    "created_at": "2026-01-10T05:16:40.758002"
+  },
+  {
+    "update_id": "bd858ca2-edf9-4cab-9d16-87102f44a94a",
+    "ticket_id": "a7e0cc3d-c8e8-4e53-ad4a-6d27647acb53",
+    "updated_by": "230c219b-ccd7-42fa-ac87-47d7593d7cb8",
+    "update_type": "status_change",
+    "old_value": "open",
+    "new_value": "assigned",
+    "comment": null,
+    "created_at": "2026-01-09T20:16:40.758002"
+  },
+  {
+    "update_id": "fb3a6a3a-50fb-463f-b3d3-282e7c916734",
+    "ticket_id": "a7e0cc3d-c8e8-4e53-ad4a-6d27647acb53",
+    "updated_by": "5c0b9bad-4b74-4a69-8a8f-5aa7132b4be1",
+    "update_type": "status_change",
+    "old_value": "open",
+    "new_value": "assigned",
+    "comment": null,
+    "created_at": "2026-01-09T14:16:40.758002"
+  },
+  {
+    "update_id": "beacac4b-fd73-475c-8644-9275fab51687",
+    "ticket_id": "087d4a95-3fb4-4ff2-9c52-89b500cfdbf5",
+    "updated_by": "84c42ce6-1d1b-4792-9c0f-19957eaacc07",
+    "update_type": "status_change",
+    "old_value": "assigned",
+    "new_value": "completed",
+    "comment": "Rerum illo amet adipisci aliquid. Voluptates exercitationem ea voluptate voluptatibus.",
+    "created_at": "2026-01-09T12:16:40.758002"
+  },
+  {
+    "update_id": "a695cc2b-0f85-49ad-b29d-3fcfa1fe6d04",
+    "ticket_id": "087d4a95-3fb4-4ff2-9c52-89b500cfdbf5",
+    "updated_by": "e3478990-7673-49d4-ada7-5d3ce10629ff",
+    "update_type": "status_change",
+    "old_value": "assigned",
+    "new_value": "completed",
+    "comment": "Rerum illum tenetur voluptatem soluta. Pariatur tempore ipsum distinctio veniam.",
+    "created_at": "2026-01-10T06:16:40.758002"
+  },
+  {
+    "update_id": "1573ff53-fc46-45b7-8d7e-49f8abe74b09",
+    "ticket_id": "0946b4eb-acc5-4564-b456-9865e1a892f8",
+    "updated_by": "89f74197-efc9-47a6-9e76-fb3957fa9d40",
+    "update_type": "status_change",
+    "old_value": "offered",
+    "new_value": "in_progress",
+    "comment": null,
+    "created_at": "2026-01-10T02:16:40.758002"
+  },
+  {
+    "update_id": "8632c9bc-b271-4f19-9cc6-32108c49679b",
+    "ticket_id": "0946b4eb-acc5-4564-b456-9865e1a892f8",
+    "updated_by": "48746fda-a687-4f8a-960c-4c582088036c",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": "Sint nisi consequatur quisquam. Labore quo placeat maxime dicta. Aliquam sed temporibus officia.",
+    "created_at": "2026-01-10T14:16:40.758002"
+  },
+  {
+    "update_id": "be3236f1-b97c-47bc-92f1-28664731714f",
+    "ticket_id": "6cf8bca1-a73e-4b60-b5d5-5fc120bfb296",
+    "updated_by": "53e21cc0-ea94-406c-bd10-75ff55c9d3f0",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": null,
+    "created_at": "2026-01-10T08:16:40.758002"
+  },
+  {
+    "update_id": "bd985985-424f-414b-bb22-bc158399b341",
+    "ticket_id": "91a88514-58e1-41e7-bed1-baddaa3f6aeb",
+    "updated_by": "5633578f-c46a-4d5f-8af0-f237ed3da083",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": "Nam molestiae nisi porro ea distinctio.",
+    "created_at": "2026-01-09T20:16:40.758002"
+  },
+  {
+    "update_id": "81e82d63-033d-4318-851b-e4aaa7c308e9",
+    "ticket_id": "91a88514-58e1-41e7-bed1-baddaa3f6aeb",
+    "updated_by": "2e427378-88a0-4a51-85cf-023438df4b3e",
+    "update_type": "status_change",
+    "old_value": "cancelled",
+    "new_value": "open",
+    "comment": null,
+    "created_at": "2026-01-09T05:16:40.758002"
+  },
+  {
+    "update_id": "136b4d5e-6191-4085-a6d1-c84a65a263e7",
+    "ticket_id": "381b247c-5a45-4368-93db-315809886dd8",
+    "updated_by": "de54bd73-a45b-4d17-bb06-ccf00b696560",
+    "update_type": "status_change",
+    "old_value": "open",
+    "new_value": "completed",
+    "comment": "Deleniti vitae voluptatum.",
+    "created_at": "2026-01-10T11:16:40.758002"
+  },
+  {
+    "update_id": "d233c494-2a48-45a1-9d6b-af8668b393e6",
+    "ticket_id": "381b247c-5a45-4368-93db-315809886dd8",
+    "updated_by": "3637a3be-81df-4826-b2b2-9203800de8f4",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": "Deserunt nisi eaque ad. Repellat reiciendis qui iure deserunt fugiat minus. Adipisci incidunt nemo.",
+    "created_at": "2026-01-09T17:16:40.758002"
+  },
+  {
+    "update_id": "b2989e43-dc8b-4c55-846b-36f0ed423ad7",
+    "ticket_id": "6e98aa0c-3e7f-4245-b053-301a7c4f4d68",
+    "updated_by": "2162fda3-f59d-452c-8b84-3753596b0e37",
+    "update_type": "status_change",
+    "old_value": "open",
+    "new_value": "assigned",
+    "comment": "Quam dignissimos dolore. Adipisci sequi accusantium et illo.",
+    "created_at": "2026-01-10T07:16:40.758002"
+  },
+  {
+    "update_id": "e2934d8e-f375-436b-8ff3-dac5ae0a0767",
+    "ticket_id": "57c25593-0486-462f-81d7-e438c409f0f2",
+    "updated_by": "9f675785-2e0b-4477-aa29-61222a460655",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": "Nulla nam labore a. Aliquam tempore et maxime vero saepe sed.",
+    "created_at": "2026-01-09T10:16:40.758002"
+  },
+  {
+    "update_id": "ab59170d-a089-4b8f-952f-9c461a56858f",
+    "ticket_id": "36471b6f-5c6a-4724-b7d3-68f2a9987ea7",
+    "updated_by": "9f675785-2e0b-4477-aa29-61222a460655",
+    "update_type": "status_change",
+    "old_value": "assigned",
+    "new_value": "open",
+    "comment": "Quae non repudiandae aperiam. Vero reiciendis facilis nostrum.",
+    "created_at": "2026-01-10T16:16:40.758002"
+  },
+  {
+    "update_id": "06ea0948-480f-4f41-8aec-fbda2ae13c89",
+    "ticket_id": "634ef652-e72e-4be9-a4d7-5d330cd00182",
+    "updated_by": "701729af-5fd8-46a2-a906-2dee8db10106",
+    "update_type": "status_change",
+    "old_value": "completed",
+    "new_value": "in_progress",
+    "comment": "Expedita distinctio perferendis quod. Vero rem iusto. Pariatur omnis cupiditate quae.",
+    "created_at": "2026-01-08T20:16:40.758002"
+  },
+  {
+    "update_id": "e4dbafac-db58-4c4e-ad84-e7b343f81fbe",
+    "ticket_id": "634ef652-e72e-4be9-a4d7-5d330cd00182",
+    "updated_by": "5606a09e-c663-4954-8363-9ee017b710f3",
+    "update_type": "status_change",
+    "old_value": "completed",
+    "new_value": "offered",
+    "comment": "Est non culpa animi.\nNemo ipsa blanditiis animi quam. Odit iure excepturi facere voluptatum quis.",
+    "created_at": "2026-01-09T10:16:40.758002"
+  },
+  {
+    "update_id": "16710ea1-8a9d-405f-9805-b365ed5a8a59",
+    "ticket_id": "e2c57110-3206-4991-b16f-23ac30ab10ff",
+    "updated_by": "bd7ab506-795c-4f27-a6aa-414a73794a89",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": null,
+    "created_at": "2026-01-09T07:16:40.758002"
+  },
+  {
+    "update_id": "b630f9a0-c2ea-489f-bb24-197483cc1129",
+    "ticket_id": "e2c57110-3206-4991-b16f-23ac30ab10ff",
+    "updated_by": "ef5cf0dd-7157-4996-bd7f-d5844c695b85",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": "Saepe eaque occaecati voluptatum maiores ea amet. Necessitatibus eaque velit maiores.",
+    "created_at": "2026-01-10T02:16:40.758002"
+  },
+  {
+    "update_id": "02f7e3df-7ab4-405b-8982-a9f077c17b1f",
+    "ticket_id": "d4d3f2c8-c985-4883-b999-30592bbacc3e",
+    "updated_by": "1aff5cec-a79a-4e0f-9e20-020c060df054",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": null,
+    "created_at": "2026-01-10T01:16:40.758002"
+  },
+  {
+    "update_id": "8ff1b1eb-707c-4d33-aaa5-8a98fbf230a2",
+    "ticket_id": "33fa449a-4bf0-4fe9-92d2-9c1a5053641a",
+    "updated_by": "635c8d20-a20b-42e4-b92e-68575af1ed0c",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": null,
+    "created_at": "2026-01-10T00:16:40.758002"
+  },
+  {
+    "update_id": "310ddb76-215f-4b7c-9f54-8953a2bc7733",
+    "ticket_id": "e1af38e8-2bfd-4013-b94b-5a213b4c5c80",
+    "updated_by": "53e21cc0-ea94-406c-bd10-75ff55c9d3f0",
+    "update_type": "status_change",
+    "old_value": "offered",
+    "new_value": "completed",
+    "comment": null,
+    "created_at": "2026-01-09T03:16:40.758002"
+  },
+  {
+    "update_id": "1afe8867-5478-4b14-aeab-03acf3ab18fe",
+    "ticket_id": "2fbb382e-76db-48f2-afd1-277345818967",
+    "updated_by": "48746fda-a687-4f8a-960c-4c582088036c",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": "Reiciendis et doloremque quisquam similique ad. Placeat eum alias numquam voluptas.",
+    "created_at": "2026-01-09T03:16:40.758002"
+  },
+  {
+    "update_id": "20ea9f76-e54f-416f-b6ba-6752edd477d3",
+    "ticket_id": "2fbb382e-76db-48f2-afd1-277345818967",
+    "updated_by": "fe7950fd-059f-489f-96e8-d85f7ce0ae30",
+    "update_type": "status_change",
+    "old_value": "cancelled",
+    "new_value": "completed",
+    "comment": null,
+    "created_at": "2026-01-10T19:16:40.758002"
+  },
+  {
+    "update_id": "38e6b4cd-bf66-4476-9e43-3bc0dbbf198a",
+    "ticket_id": "089bd459-39de-4ee3-916d-1482c393a609",
+    "updated_by": "9bd371e1-5e67-4dfa-bc2f-a050abec2c44",
+    "update_type": "status_change",
+    "old_value": "completed",
+    "new_value": "in_progress",
+    "comment": "Neque reiciendis dolore soluta a nulla quidem.\nNam nobis deleniti sequi qui.",
+    "created_at": "2026-01-10T03:16:40.758002"
+  },
+  {
+    "update_id": "afda7bf5-6595-4c93-a9dd-a709838d661b",
+    "ticket_id": "089bd459-39de-4ee3-916d-1482c393a609",
+    "updated_by": "84c42ce6-1d1b-4792-9c0f-19957eaacc07",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": "Maxime vitae ut laborum eius velit. Non at ullam nulla quae.\nSint explicabo maiores dolorem.",
+    "created_at": "2026-01-09T04:16:40.758002"
+  },
+  {
+    "update_id": "1b6d6a98-28e5-4271-ae40-d7df35c8bee1",
+    "ticket_id": "5bcffe19-6f45-488d-9d19-3db307985e58",
+    "updated_by": "c1da56a7-a99f-4569-8740-179d2980b31c",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": null,
+    "created_at": "2026-01-10T02:16:40.758002"
+  },
+  {
+    "update_id": "5cd1eb0b-951f-4ab8-adda-360513e26fd8",
+    "ticket_id": "1333e557-20cd-4146-9fc4-e90f1c2c248a",
+    "updated_by": "f6a741eb-22f0-4349-8eaf-59ae545a3248",
+    "update_type": "status_change",
+    "old_value": "open",
+    "new_value": "cancelled",
+    "comment": null,
+    "created_at": "2026-01-10T14:16:40.758002"
+  },
+  {
+    "update_id": "4386ef46-d165-489f-9b9a-4d8a9d96e759",
+    "ticket_id": "1333e557-20cd-4146-9fc4-e90f1c2c248a",
+    "updated_by": "d30bc5fc-4288-42f8-8db7-645454d8876d",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": "Pariatur aperiam a asperiores laboriosam occaecati. Necessitatibus minus accusantium dolores alias.",
+    "created_at": "2026-01-09T20:16:40.758002"
+  },
+  {
+    "update_id": "82824dd5-052b-46c1-b619-9909d1a523a7",
+    "ticket_id": "5b6cd0ce-b7c7-43ca-9a41-4995c36d8ea4",
+    "updated_by": "e3478990-7673-49d4-ada7-5d3ce10629ff",
+    "update_type": "status_change",
+    "old_value": "completed",
+    "new_value": "in_progress",
+    "comment": null,
+    "created_at": "2026-01-10T01:16:40.758002"
+  },
+  {
+    "update_id": "531dd3ce-0ca9-4360-b625-af1f1973f88f",
+    "ticket_id": "5b6cd0ce-b7c7-43ca-9a41-4995c36d8ea4",
+    "updated_by": "07dcb2de-845d-4261-9632-476d9bd0885f",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": null,
+    "created_at": "2026-01-10T03:16:40.758002"
+  },
+  {
+    "update_id": "e5d6d67f-ef83-4f35-af93-b7967a30aadd",
+    "ticket_id": "bebfac99-9c0a-4cdb-ba09-614657ad89e1",
+    "updated_by": "1d43cd3f-f3f1-4856-a400-bf6219966d1e",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": "At labore velit quae corporis mollitia voluptatibus explicabo.",
+    "created_at": "2026-01-10T02:16:40.758002"
+  },
+  {
+    "update_id": "7e450c97-ea23-40d9-8937-315d92e28299",
+    "ticket_id": "bebfac99-9c0a-4cdb-ba09-614657ad89e1",
+    "updated_by": "c971acd2-c60f-43ab-b370-3fdd3d620722",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": null,
+    "created_at": "2026-01-10T14:16:40.758002"
+  },
+  {
+    "update_id": "53aa2c88-160f-466e-be18-a8b6746f543a",
+    "ticket_id": "d7a1e73d-73ab-4f7e-b85f-417e906d46f8",
+    "updated_by": "bd7ab506-795c-4f27-a6aa-414a73794a89",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": "Explicabo eaque officia iure asperiores aliquam alias rem.",
+    "created_at": "2026-01-10T15:16:40.758002"
+  },
+  {
+    "update_id": "f4e1fd1f-6903-4c74-ab00-6343e3a0e353",
+    "ticket_id": "d7a1e73d-73ab-4f7e-b85f-417e906d46f8",
+    "updated_by": "ef5cf0dd-7157-4996-bd7f-d5844c695b85",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": null,
+    "created_at": "2026-01-09T11:16:40.758002"
+  },
+  {
+    "update_id": "aa362a5a-d517-4d06-806c-1e6b6781bdb4",
+    "ticket_id": "40b4315d-a0d7-4daa-88bb-fe61b4847ad2",
+    "updated_by": "d30bc5fc-4288-42f8-8db7-645454d8876d",
+    "update_type": "status_change",
+    "old_value": "assigned",
+    "new_value": "cancelled",
+    "comment": null,
+    "created_at": "2026-01-10T00:16:40.758002"
+  },
+  {
+    "update_id": "4e214bed-d186-4f8e-bfb7-0d1416a52ebb",
+    "ticket_id": "97aae73c-ab97-4e1c-970c-fb8038570054",
+    "updated_by": "15217537-fd51-4f9f-9ad6-046ac857b445",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": null,
+    "created_at": "2026-01-09T03:16:40.758002"
+  },
+  {
+    "update_id": "e6999cc8-c165-4b04-ae80-2439912d3345",
+    "ticket_id": "571293b7-f2b7-45e4-b5fd-3450690bc1b3",
+    "updated_by": "cce8585d-eec3-4a70-a520-a5f254ec9956",
+    "update_type": "status_change",
+    "old_value": "open",
+    "new_value": "offered",
+    "comment": "Aliquid dolor tempora repellat voluptates odit quasi.",
+    "created_at": "2026-01-09T18:16:40.758002"
+  },
+  {
+    "update_id": "fd0ebe82-5f2b-4429-bf8d-099eb7c41fd9",
+    "ticket_id": "8b3bb9a9-216b-4930-8049-8a5dfdbad4e8",
+    "updated_by": "635c8d20-a20b-42e4-b92e-68575af1ed0c",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": "Rerum autem placeat veniam consectetur fuga. Animi at aliquam quo.",
+    "created_at": "2026-01-09T02:16:40.758002"
+  },
+  {
+    "update_id": "8a4a2d5b-8dd3-41e8-8dda-448c50c1af1d",
+    "ticket_id": "5bd5ecb1-603a-47e3-b9af-27ee8f8bf7ea",
+    "updated_by": "701729af-5fd8-46a2-a906-2dee8db10106",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": "Voluptatibus consequuntur ipsum. Nostrum quae repudiandae deleniti et.",
+    "created_at": "2026-01-09T12:16:40.758002"
+  },
+  {
+    "update_id": "b9ac3f2d-69b7-4c28-b98d-837c84aec736",
+    "ticket_id": "628e41a7-5a07-48b6-93a8-d6eef5277f87",
+    "updated_by": "1d43cd3f-f3f1-4856-a400-bf6219966d1e",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": "Quibusdam est quibusdam occaecati facere veritatis odit.",
+    "created_at": "2026-01-09T13:16:40.758002"
+  },
+  {
+    "update_id": "4f492628-147b-4ecc-86a8-74fdf58214bb",
+    "ticket_id": "e45de04c-5ccf-4fb8-b6a0-d1104271e8cf",
+    "updated_by": "15217537-fd51-4f9f-9ad6-046ac857b445",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": null,
+    "created_at": "2026-01-09T10:16:40.758002"
+  },
+  {
+    "update_id": "61759b15-6a55-4aae-8200-27ca55346a29",
+    "ticket_id": "e45de04c-5ccf-4fb8-b6a0-d1104271e8cf",
+    "updated_by": "8f90e246-a596-4e07-9fcf-d6820c5e05c6",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": null,
+    "created_at": "2026-01-10T04:16:40.758002"
+  },
+  {
+    "update_id": "2336a34d-be91-4488-b1fb-e6514a1b05bb",
+    "ticket_id": "304783c3-96de-45fa-8699-ba59bfdf7406",
+    "updated_by": "5606a09e-c663-4954-8363-9ee017b710f3",
+    "update_type": "status_change",
+    "old_value": "assigned",
+    "new_value": "completed",
+    "comment": null,
+    "created_at": "2026-01-09T13:16:40.758002"
+  },
+  {
+    "update_id": "e689c068-de69-4b92-8ee7-a28053d309ed",
+    "ticket_id": "374592ec-8ab7-4464-8caf-9b11d711d539",
+    "updated_by": "53e21cc0-ea94-406c-bd10-75ff55c9d3f0",
+    "update_type": "status_change",
+    "old_value": "completed",
+    "new_value": "offered",
+    "comment": null,
+    "created_at": "2026-01-10T10:16:40.758002"
+  },
+  {
+    "update_id": "5a09bb94-d5ba-4c4f-8073-1a8a375c82f8",
+    "ticket_id": "374592ec-8ab7-4464-8caf-9b11d711d539",
+    "updated_by": "98dcb9af-2c8b-4203-b722-cddec1980c37",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": null,
+    "created_at": "2026-01-09T03:16:40.758002"
+  },
+  {
+    "update_id": "eeb6c27f-ff7b-4b2c-962c-3722052d98ea",
+    "ticket_id": "f71d8df4-93af-4876-89df-96698d3ce34f",
+    "updated_by": "230c219b-ccd7-42fa-ac87-47d7593d7cb8",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": "Vero enim delectus fuga dolorum. Maxime rem accusantium. Deserunt beatae ducimus velit.",
+    "created_at": "2026-01-08T22:16:40.759002"
+  },
+  {
+    "update_id": "8d55e4b0-925c-4d0c-9102-9bdb5ee43465",
+    "ticket_id": "ddfdf1d1-5929-4297-9b6f-dca8811e5a85",
+    "updated_by": "837f422b-53c8-49cd-bfd5-ccac62beaa94",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": "Accusamus debitis saepe vero. Eius quas dolore aut.",
+    "created_at": "2026-01-10T02:16:40.759002"
+  },
+  {
+    "update_id": "b7697812-13d0-4059-a76e-616a44d44016",
+    "ticket_id": "ddfdf1d1-5929-4297-9b6f-dca8811e5a85",
+    "updated_by": "2e427378-88a0-4a51-85cf-023438df4b3e",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": "Totam ipsam quam. Odit placeat velit placeat. Similique placeat soluta adipisci.",
+    "created_at": "2026-01-10T14:16:40.759002"
+  },
+  {
+    "update_id": "7a0279d3-3e2e-4a46-bff2-d9aee5f0d3d6",
+    "ticket_id": "9be168d3-e27d-4df3-968a-7813ab0d2845",
+    "updated_by": "b51c767c-5ba5-47ba-b95b-aed4ceaefb6a",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": null,
+    "created_at": "2026-01-08T22:16:40.759002"
+  },
+  {
+    "update_id": "e258569f-ab16-45a0-a249-d6e95a08153a",
+    "ticket_id": "b57ec68f-9f3f-4c0b-b891-6ed9b5dfcf94",
+    "updated_by": "181ed817-1e00-4d4a-ba59-1a49227d2a81",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": "Eos voluptatibus alias. Reprehenderit inventore rem.",
+    "created_at": "2026-01-10T07:16:40.759002"
+  },
+  {
+    "update_id": "29120411-0458-46b8-b6d8-e240b67129b6",
+    "ticket_id": "b57ec68f-9f3f-4c0b-b891-6ed9b5dfcf94",
+    "updated_by": "c1da56a7-a99f-4569-8740-179d2980b31c",
+    "update_type": "status_change",
+    "old_value": "completed",
+    "new_value": "cancelled",
+    "comment": "Modi inventore ad aperiam vero quasi sit. Eos neque quas illo beatae. Amet dolorum fugiat error.",
+    "created_at": "2026-01-09T11:16:40.759002"
+  },
+  {
+    "update_id": "a9cabac9-2973-42ce-a841-812dccc423ee",
+    "ticket_id": "3e387c9f-6307-4b78-a649-8cff7498b02d",
+    "updated_by": "c2fd7e31-a6fe-4d24-ae81-82b51efa922a",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": "Eaque amet asperiores facere. Quibusdam tempora rem exercitationem aut.",
+    "created_at": "2026-01-09T09:16:40.759002"
+  },
+  {
+    "update_id": "b3c07654-5de3-42aa-9f4c-50198317c459",
+    "ticket_id": "0a7c7b09-b13e-47cd-b678-7ce89f1f2214",
+    "updated_by": "dae52668-34ad-45d5-a9ea-02b858e484a9",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": null,
+    "created_at": "2026-01-09T19:16:40.759002"
+  },
+  {
+    "update_id": "5725381a-7ab1-495b-9e6d-f63a2008ac25",
+    "ticket_id": "675b8124-6889-46de-922b-903a651cd72e",
+    "updated_by": "ef5cf0dd-7157-4996-bd7f-d5844c695b85",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": null,
+    "created_at": "2026-01-10T16:16:40.759002"
+  },
+  {
+    "update_id": "7f725d71-8461-45ee-b153-cb967dbe1b6a",
+    "ticket_id": "a1e86be6-3fea-4f86-b385-fe3fa7b6c53a",
+    "updated_by": "c1da56a7-a99f-4569-8740-179d2980b31c",
+    "update_type": "status_change",
+    "old_value": "open",
+    "new_value": "completed",
+    "comment": "Ducimus recusandae ipsam corrupti enim ea saepe quis.",
+    "created_at": "2026-01-09T04:16:40.759002"
+  },
+  {
+    "update_id": "32cdbca8-56c0-438e-bdd6-2a654152194f",
+    "ticket_id": "a1e86be6-3fea-4f86-b385-fe3fa7b6c53a",
+    "updated_by": "5606a09e-c663-4954-8363-9ee017b710f3",
+    "update_type": "status_change",
+    "old_value": "open",
+    "new_value": "cancelled",
+    "comment": "Minima nisi nulla reprehenderit praesentium numquam voluptates.",
+    "created_at": "2026-01-10T07:16:40.759002"
+  },
+  {
+    "update_id": "7d4c0692-5bbf-47ae-8d86-bfcee34dbd06",
+    "ticket_id": "1e07e3ac-e3f0-4f23-bea9-2aaaee703454",
+    "updated_by": "5c0b9bad-4b74-4a69-8a8f-5aa7132b4be1",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": "Eveniet nobis magnam error dolor. Necessitatibus tempore accusantium sed dolorum officia.",
+    "created_at": "2026-01-09T18:16:40.759002"
+  },
+  {
+    "update_id": "1504b6ef-bed8-4001-b394-8495c80eb8ba",
+    "ticket_id": "1e07e3ac-e3f0-4f23-bea9-2aaaee703454",
+    "updated_by": "07dcb2de-845d-4261-9632-476d9bd0885f",
+    "update_type": "status_change",
+    "old_value": "cancelled",
+    "new_value": "assigned",
+    "comment": "Facere corporis delectus quaerat corporis. Quia laboriosam perspiciatis necessitatibus.",
+    "created_at": "2026-01-10T14:16:40.759002"
+  },
+  {
+    "update_id": "6cd04a19-04f3-4da6-8528-daf492b37056",
+    "ticket_id": "f5600d57-6df5-43e7-81fc-524006bd9232",
+    "updated_by": "8dd01887-9818-4f47-ac15-f7d2db2b8382",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": "Voluptatem quisquam accusantium eveniet.",
+    "created_at": "2026-01-09T04:16:40.759002"
+  },
+  {
+    "update_id": "e93b9a84-be0c-4f8c-ac4b-c39e603aad6a",
+    "ticket_id": "91fea495-6521-407b-82c4-781f3b255b5b",
+    "updated_by": "606785c8-ee9d-46c8-b14a-9132a9c7d6b4",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": null,
+    "created_at": "2026-01-09T06:16:40.759002"
+  },
+  {
+    "update_id": "98ae3c21-53c1-46bd-8a25-b1d6968b60c3",
+    "ticket_id": "021a6eb9-fb03-49f7-9f25-6fe0af992f09",
+    "updated_by": "b51c767c-5ba5-47ba-b95b-aed4ceaefb6a",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": null,
+    "created_at": "2026-01-08T23:16:40.759002"
+  },
+  {
+    "update_id": "41222bbb-0f45-4baf-9ec0-4dd1aba90574",
+    "ticket_id": "021a6eb9-fb03-49f7-9f25-6fe0af992f09",
+    "updated_by": "4c9fcdcb-51c8-41cc-8f5d-7bb90b053729",
+    "update_type": "status_change",
+    "old_value": "cancelled",
+    "new_value": "offered",
+    "comment": null,
+    "created_at": "2026-01-09T18:16:40.759002"
+  },
+  {
+    "update_id": "471f0dd0-dbfa-48cc-a37d-f28e818345c8",
+    "ticket_id": "4ad190f6-05aa-4579-8f73-dd544676ef0d",
+    "updated_by": "5606a09e-c663-4954-8363-9ee017b710f3",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": null,
+    "created_at": "2026-01-10T14:16:40.759002"
+  },
+  {
+    "update_id": "ceb6a503-9983-4768-ac64-42aad1f867f1",
+    "ticket_id": "4ad190f6-05aa-4579-8f73-dd544676ef0d",
+    "updated_by": "04b63096-4f2e-4629-a042-f4ae36e08aa0",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": null,
+    "created_at": "2026-01-09T11:16:40.759002"
+  },
+  {
+    "update_id": "b215ff40-596d-41c1-8e37-63cd942a8736",
+    "ticket_id": "d512b423-1cf7-42c4-9520-6fcc517a89b2",
+    "updated_by": "8dd01887-9818-4f47-ac15-f7d2db2b8382",
+    "update_type": "status_change",
+    "old_value": "assigned",
+    "new_value": "in_progress",
+    "comment": "Sit provident voluptatibus nobis ipsum voluptatibus.",
+    "created_at": "2026-01-10T04:16:40.759002"
+  },
+  {
+    "update_id": "3df5a6da-8372-41ec-9263-569a566a35b8",
+    "ticket_id": "1defd18d-123f-485f-bc27-92df3617a6e8",
+    "updated_by": "15217537-fd51-4f9f-9ad6-046ac857b445",
+    "update_type": "status_change",
+    "old_value": "cancelled",
+    "new_value": "offered",
+    "comment": "Rem repudiandae molestias hic rem. Commodi eius totam occaecati dolorem praesentium.",
+    "created_at": "2026-01-10T06:16:40.759002"
+  },
+  {
+    "update_id": "0c1d82b3-a36c-404e-9ee8-96ea2bb75d7d",
+    "ticket_id": "1defd18d-123f-485f-bc27-92df3617a6e8",
+    "updated_by": "c5130d73-b391-48fc-8f69-d6ed12ce9ddc",
+    "update_type": "status_change",
+    "old_value": "cancelled",
+    "new_value": "completed",
+    "comment": "Fuga ratione soluta id voluptates. Tempore ipsum atque libero nam corrupti.",
+    "created_at": "2026-01-09T23:16:40.759002"
+  },
+  {
+    "update_id": "f0520ee9-be3c-4304-8de2-5324c7f9c74c",
+    "ticket_id": "a72d7c3a-a0a6-4791-8f7d-809df65f036b",
+    "updated_by": "89f74197-efc9-47a6-9e76-fb3957fa9d40",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": "Occaecati optio blanditiis facilis fugit. Fugiat aliquid dignissimos.",
+    "created_at": "2026-01-10T13:16:40.759002"
+  },
+  {
+    "update_id": "7aa7da78-07cd-4732-86a3-10b03aa0f537",
+    "ticket_id": "148c690c-eb69-4af1-b1c5-bd2cbb8a00c6",
+    "updated_by": "3c702d21-642a-4277-8070-885f9d8a6337",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": null,
+    "created_at": "2026-01-09T11:16:40.759002"
+  },
+  {
+    "update_id": "e04b246b-73cc-4cd3-ad03-97153bd7cb82",
+    "ticket_id": "148c690c-eb69-4af1-b1c5-bd2cbb8a00c6",
+    "updated_by": "ef5cf0dd-7157-4996-bd7f-d5844c695b85",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": "Quod fugiat repudiandae quis. Consequuntur iste placeat doloremque iste.",
+    "created_at": "2026-01-10T17:16:40.759002"
+  },
+  {
+    "update_id": "5a95ebef-340f-4618-aeae-2cca304884f9",
+    "ticket_id": "2810ba78-df10-4d82-b7a0-b0db527eab7d",
+    "updated_by": "c971acd2-c60f-43ab-b370-3fdd3d620722",
+    "update_type": "status_change",
+    "old_value": "in_progress",
+    "new_value": "open",
+    "comment": null,
+    "created_at": "2026-01-10T06:16:40.759002"
+  },
+  {
+    "update_id": "e1c2709e-d4f1-4e8f-a802-fa093a3efbf9",
+    "ticket_id": "2810ba78-df10-4d82-b7a0-b0db527eab7d",
+    "updated_by": "ef5cf0dd-7157-4996-bd7f-d5844c695b85",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": null,
+    "created_at": "2026-01-09T23:16:40.759002"
+  },
+  {
+    "update_id": "0fc05a2a-667f-4622-a928-f1b32485a7f5",
+    "ticket_id": "28f3185e-2287-464f-91a4-5e236f8cde76",
+    "updated_by": "84c42ce6-1d1b-4792-9c0f-19957eaacc07",
+    "update_type": "status_change",
+    "old_value": "completed",
+    "new_value": "cancelled",
+    "comment": "Inventore cum omnis. Occaecati quos minima facere placeat soluta iure.",
+    "created_at": "2026-01-09T03:16:40.759002"
+  },
+  {
+    "update_id": "3356db65-926b-40c4-bd53-d391bcc30de2",
+    "ticket_id": "773cd766-87c6-4f91-9679-a76c5e84aea3",
+    "updated_by": "b51c767c-5ba5-47ba-b95b-aed4ceaefb6a",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": "Nemo quo iste nobis. Architecto vitae cupiditate architecto quo.",
+    "created_at": "2026-01-10T08:16:40.759002"
+  },
+  {
+    "update_id": "ebb24e13-3099-4a13-9ba5-c62e332bcdfe",
+    "ticket_id": "773cd766-87c6-4f91-9679-a76c5e84aea3",
+    "updated_by": "dae52668-34ad-45d5-a9ea-02b858e484a9",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": null,
+    "created_at": "2026-01-10T01:16:40.759002"
+  },
+  {
+    "update_id": "5cd610f2-5750-4a5a-b19a-dcb0cbca1df3",
+    "ticket_id": "87bdd472-bfeb-41f5-bc2f-7dce22cb7633",
+    "updated_by": "98dcb9af-2c8b-4203-b722-cddec1980c37",
+    "update_type": "status_change",
+    "old_value": "offered",
+    "new_value": "assigned",
+    "comment": "Iste nostrum quas illo.",
+    "created_at": "2026-01-10T08:16:40.759002"
+  },
+  {
+    "update_id": "2959e22b-9910-4e77-80b6-aa20f17064a6",
+    "ticket_id": "87bdd472-bfeb-41f5-bc2f-7dce22cb7633",
+    "updated_by": "d30bc5fc-4288-42f8-8db7-645454d8876d",
+    "update_type": "status_change",
+    "old_value": "offered",
+    "new_value": "completed",
+    "comment": "Quod animi ipsa. Assumenda sint sequi animi. Ea omnis expedita incidunt dolorum.",
+    "created_at": "2026-01-10T05:16:40.759002"
+  },
+  {
+    "update_id": "6edad681-2f71-478b-8835-e6ef8fcaf142",
+    "ticket_id": "4aa3223d-4c8d-47c2-b062-37d810a65dcf",
+    "updated_by": "4c9fcdcb-51c8-41cc-8f5d-7bb90b053729",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": null,
+    "created_at": "2026-01-09T12:16:40.759002"
+  },
+  {
+    "update_id": "0d89c8a1-fe40-4802-a8a4-3dc9e1be89ae",
+    "ticket_id": "90d20ca3-0bf1-4e02-9341-21c5488f7582",
+    "updated_by": "cb1cb664-9569-4cb5-b1c1-f28d60a1ae58",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": "Natus eaque voluptates saepe non. Molestiae magni dolorum sed nesciunt veritatis qui.",
+    "created_at": "2026-01-09T19:16:40.759002"
+  },
+  {
+    "update_id": "5725de0e-320b-4254-a10f-42cacab77930",
+    "ticket_id": "90d20ca3-0bf1-4e02-9341-21c5488f7582",
+    "updated_by": "811885ec-4647-417b-aaf1-5f92ce82d41f",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": "Quibusdam aut dicta velit.\nRerum totam consequuntur est. Porro esse unde.",
+    "created_at": "2026-01-10T07:16:40.759002"
+  },
+  {
+    "update_id": "0b6d559e-e36e-4f45-9287-f5766bd8ec4e",
+    "ticket_id": "a3511743-7c54-4b73-a16a-a58cbcf9a3c5",
+    "updated_by": "181ed817-1e00-4d4a-ba59-1a49227d2a81",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": null,
+    "created_at": "2026-01-10T11:16:40.759002"
+  },
+  {
+    "update_id": "f9ab20fe-1f37-42b9-a5a9-f808e7d57884",
+    "ticket_id": "a13e9111-0a77-47e5-8663-c10be230195b",
+    "updated_by": "028a926a-32f3-4b29-a9bf-92313d77d083",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": null,
+    "created_at": "2026-01-09T13:16:40.759002"
+  },
+  {
+    "update_id": "c287f957-bb0b-47ae-8c26-b195861b6407",
+    "ticket_id": "a13e9111-0a77-47e5-8663-c10be230195b",
+    "updated_by": "5c0b9bad-4b74-4a69-8a8f-5aa7132b4be1",
+    "update_type": "status_change",
+    "old_value": "in_progress",
+    "new_value": "offered",
+    "comment": "Illum ullam dignissimos atque minus natus. Temporibus quaerat aliquam facere.",
+    "created_at": "2026-01-09T00:16:40.759002"
+  },
+  {
+    "update_id": "7f8fb07c-766c-4000-86aa-29eb89da37db",
+    "ticket_id": "9efce341-da6f-4faf-b7be-2e73205c5914",
+    "updated_by": "a4517eca-224a-46ac-b55c-e0b67138a075",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": null,
+    "created_at": "2026-01-09T13:16:40.759002"
+  },
+  {
+    "update_id": "7ba3fc3b-7b2a-4855-afec-80aaf9d757aa",
+    "ticket_id": "d1e8aa3e-4801-45fe-9839-42b8df0f4a2d",
+    "updated_by": "484b0cc5-b785-4895-92dd-2557dd36b49d",
+    "update_type": "status_change",
+    "old_value": "offered",
+    "new_value": "cancelled",
+    "comment": null,
+    "created_at": "2026-01-09T07:16:40.759002"
+  },
+  {
+    "update_id": "2888aaed-5c8b-453a-9270-fa6b406bbf24",
+    "ticket_id": "d1e8aa3e-4801-45fe-9839-42b8df0f4a2d",
+    "updated_by": "c1da56a7-a99f-4569-8740-179d2980b31c",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": "Magni laboriosam deleniti harum iure. Quaerat expedita ad molestiae cumque culpa iure.",
+    "created_at": "2026-01-10T16:16:40.759002"
+  },
+  {
+    "update_id": "9e5613ba-956c-439b-a9d0-8c520c17d542",
+    "ticket_id": "eb8cd131-caa8-4487-b868-b799ac53ba74",
+    "updated_by": "028a926a-32f3-4b29-a9bf-92313d77d083",
+    "update_type": "status_change",
+    "old_value": "cancelled",
+    "new_value": "offered",
+    "comment": null,
+    "created_at": "2026-01-09T09:16:40.759002"
+  },
+  {
+    "update_id": "7d347b38-f716-4d51-84e1-b112f9b1d860",
+    "ticket_id": "f3b38134-99db-4e8f-beba-03ab1c69e24a",
+    "updated_by": "c1d5de97-6a78-4e94-95a4-4edbd7db907e",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": "Dolor et cumque.\nTotam cum quod voluptatum deleniti.",
+    "created_at": "2026-01-10T00:16:40.759002"
+  },
+  {
+    "update_id": "45d76e5d-ca5c-4af2-9440-675640c9a762",
+    "ticket_id": "742fb069-0720-49a9-b874-e25e2da2d695",
+    "updated_by": "230c219b-ccd7-42fa-ac87-47d7593d7cb8",
+    "update_type": "status_change",
+    "old_value": "cancelled",
+    "new_value": "open",
+    "comment": null,
+    "created_at": "2026-01-10T05:16:40.759002"
+  },
+  {
+    "update_id": "97ac83d2-c533-4c1f-a5fe-f1ff223dbe88",
+    "ticket_id": "742fb069-0720-49a9-b874-e25e2da2d695",
+    "updated_by": "606785c8-ee9d-46c8-b14a-9132a9c7d6b4",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": null,
+    "created_at": "2026-01-10T16:16:40.759002"
+  },
+  {
+    "update_id": "efe7481b-09f5-4f53-accc-056133badc39",
+    "ticket_id": "7e31d405-fa46-4799-bc4c-b45ff16def10",
+    "updated_by": "0e67953d-2492-472f-931b-dcfa314195c5",
+    "update_type": "status_change",
+    "old_value": "in_progress",
+    "new_value": "assigned",
+    "comment": "Incidunt quisquam facere saepe nostrum ea.",
+    "created_at": "2026-01-09T22:16:40.759002"
+  },
+  {
+    "update_id": "696acaa0-4b1e-4923-936d-eb3c7c8d87b2",
+    "ticket_id": "7e31d405-fa46-4799-bc4c-b45ff16def10",
+    "updated_by": "ef5cf0dd-7157-4996-bd7f-d5844c695b85",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": null,
+    "created_at": "2026-01-09T00:16:40.759002"
+  },
+  {
+    "update_id": "b64eb394-ac1e-482b-a948-79c9af466bf7",
+    "ticket_id": "7c5d4e23-5faa-4f18-9ee9-38472bf07155",
+    "updated_by": "e558d614-df80-47e1-a888-f6c89bdc9681",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": null,
+    "created_at": "2026-01-08T21:16:40.760006"
+  },
+  {
+    "update_id": "88a23460-790e-4629-b518-84f384a9e686",
+    "ticket_id": "7c5d4e23-5faa-4f18-9ee9-38472bf07155",
+    "updated_by": "16451223-95ee-447d-b772-26f3b883b6b1",
+    "update_type": "status_change",
+    "old_value": "offered",
+    "new_value": "assigned",
+    "comment": null,
+    "created_at": "2026-01-10T01:16:40.760006"
+  },
+  {
+    "update_id": "0d4a9fa2-40c6-4a7c-af69-6d5492db9c2a",
+    "ticket_id": "f0ef8689-cb6b-40a4-a497-32941fb69b52",
+    "updated_by": "a4517eca-224a-46ac-b55c-e0b67138a075",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": "Numquam nam quasi delectus est. Tempora nostrum animi eaque ducimus.",
+    "created_at": "2026-01-10T19:16:40.760006"
+  },
+  {
+    "update_id": "8234e7c8-3d08-46be-9b9b-2499d652d309",
+    "ticket_id": "a06aaeca-a8fd-4a91-8490-a4f89a6efbe4",
+    "updated_by": "4ca7e197-d0e2-4a4c-aa38-6030173f5564",
+    "update_type": "status_change",
+    "old_value": "open",
+    "new_value": "completed",
+    "comment": "Excepturi dicta ipsam omnis reiciendis. Vero exercitationem debitis sed molestias illo odio.",
+    "created_at": "2026-01-09T07:16:40.760006"
+  },
+  {
+    "update_id": "b692613b-4ac7-470a-b146-06dbe112ad5b",
+    "ticket_id": "a06aaeca-a8fd-4a91-8490-a4f89a6efbe4",
+    "updated_by": "903506f4-5021-4b40-bc7f-119ed349c963",
+    "update_type": "status_change",
+    "old_value": "open",
+    "new_value": "assigned",
+    "comment": null,
+    "created_at": "2026-01-10T06:16:40.760006"
+  },
+  {
+    "update_id": "7112fbd3-05af-408d-9cc3-0b6c665378ed",
+    "ticket_id": "5d29a45a-38d0-440a-94df-94583919d041",
+    "updated_by": "903506f4-5021-4b40-bc7f-119ed349c963",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": null,
+    "created_at": "2026-01-09T18:16:40.760006"
+  },
+  {
+    "update_id": "3ef25e25-fe27-47dc-ab9d-cc806dfc23ea",
+    "ticket_id": "5d29a45a-38d0-440a-94df-94583919d041",
+    "updated_by": "3761ead2-7a29-4482-aeb6-8c8cb6487b5b",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": null,
+    "created_at": "2026-01-08T22:16:40.760006"
+  },
+  {
+    "update_id": "d20646c7-5469-4284-8f41-efc528d7cc3d",
+    "ticket_id": "aa1302da-869f-4128-9dc2-453d5c729afa",
+    "updated_by": "3637a3be-81df-4826-b2b2-9203800de8f4",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": "Expedita qui totam quisquam beatae amet dolore ipsa. Hic corporis odio.",
+    "created_at": "2026-01-09T10:16:40.760006"
+  },
+  {
+    "update_id": "89f671bc-a9f8-4508-baae-3eba5bd037e2",
+    "ticket_id": "aa1302da-869f-4128-9dc2-453d5c729afa",
+    "updated_by": "07dcb2de-845d-4261-9632-476d9bd0885f",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": "Modi a voluptatibus hic.",
+    "created_at": "2026-01-10T01:16:40.760006"
+  },
+  {
+    "update_id": "80eed858-4685-466b-bab9-368dbf454ccb",
+    "ticket_id": "3359c351-fccc-4b71-b3fe-a1a9bbe893cc",
+    "updated_by": "1d43cd3f-f3f1-4856-a400-bf6219966d1e",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": null,
+    "created_at": "2026-01-10T10:16:40.760006"
+  },
+  {
+    "update_id": "0cda0af2-5c83-4118-9dfd-fa4089f70f9b",
+    "ticket_id": "efcb7b19-efd0-4abf-964f-3f8398a9c397",
+    "updated_by": "c971acd2-c60f-43ab-b370-3fdd3d620722",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": null,
+    "created_at": "2026-01-10T11:16:40.760006"
+  },
+  {
+    "update_id": "a2d63723-5c15-4ead-ac3e-d0a672572f56",
+    "ticket_id": "efcb7b19-efd0-4abf-964f-3f8398a9c397",
+    "updated_by": "028a926a-32f3-4b29-a9bf-92313d77d083",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": null,
+    "created_at": "2026-01-09T20:16:40.760006"
+  },
+  {
+    "update_id": "c1dff959-3c2a-4043-903d-aa9171ed8d43",
+    "ticket_id": "b054f114-ec7a-42f8-9e1a-8f691a62c06a",
+    "updated_by": "c971acd2-c60f-43ab-b370-3fdd3d620722",
+    "update_type": "status_change",
+    "old_value": "cancelled",
+    "new_value": "in_progress",
+    "comment": "Explicabo ullam voluptate. Quae sed eius quisquam ipsa perferendis perspiciatis.",
+    "created_at": "2026-01-09T10:16:40.760006"
+  },
+  {
+    "update_id": "c2a327cd-4390-41a3-94c4-7e0b207c1814",
+    "ticket_id": "fc4bcf76-0493-45dd-973b-38516ba93ddd",
+    "updated_by": "811885ec-4647-417b-aaf1-5f92ce82d41f",
+    "update_type": "status_change",
+    "old_value": "open",
+    "new_value": "cancelled",
+    "comment": "Saepe quisquam atque veritatis laboriosam fugit. Nesciunt quam quam dolorum aliquam maxime magnam.",
+    "created_at": "2026-01-10T09:16:40.760006"
+  },
+  {
+    "update_id": "e26dfb18-6858-4075-a691-edec447141dd",
+    "ticket_id": "378b161f-8c5c-47c6-ba30-884a3619f939",
+    "updated_by": "903506f4-5021-4b40-bc7f-119ed349c963",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": "Quo minima quas nesciunt.",
+    "created_at": "2026-01-09T17:16:40.760006"
+  },
+  {
+    "update_id": "443aa9b5-f7d2-437c-bc0e-59d01198d4c5",
+    "ticket_id": "378b161f-8c5c-47c6-ba30-884a3619f939",
+    "updated_by": "0e67953d-2492-472f-931b-dcfa314195c5",
+    "update_type": "status_change",
+    "old_value": "assigned",
+    "new_value": "offered",
+    "comment": "Recusandae delectus odit a repellat veniam illum.",
+    "created_at": "2026-01-10T13:16:40.760006"
+  },
+  {
+    "update_id": "794d422a-88b2-4a88-8a05-4a5b5364d381",
+    "ticket_id": "5d3b9382-a849-4369-912c-6d7a51694a21",
+    "updated_by": "d30bc5fc-4288-42f8-8db7-645454d8876d",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": "Magnam quidem nobis dicta deleniti asperiores ipsam laborum.\nExplicabo non quis tempore sint.",
+    "created_at": "2026-01-09T15:16:40.760006"
+  },
+  {
+    "update_id": "b6340628-7e6a-4aa6-a5f2-f5d48754bcb9",
+    "ticket_id": "5d3b9382-a849-4369-912c-6d7a51694a21",
+    "updated_by": "701729af-5fd8-46a2-a906-2dee8db10106",
+    "update_type": "assignment",
+    "old_value": "unassigned",
+    "new_value": "assigned",
+    "comment": null,
+    "created_at": "2026-01-09T15:16:40.760006"
+  },
+  {
+    "update_id": "217eaa9e-e9fb-4f5c-a400-bfd10e6bc581",
+    "ticket_id": "465faf27-0701-4d0b-9ebf-f398d368c87f",
+    "updated_by": "84c42ce6-1d1b-4792-9c0f-19957eaacc07",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": "Ullam ab sit omnis. Saepe officia beatae magni voluptate tenetur.",
+    "created_at": "2026-01-10T07:16:40.760006"
+  },
+  {
+    "update_id": "3a4d0582-e2e8-4967-b319-f736ef729ccb",
+    "ticket_id": "465faf27-0701-4d0b-9ebf-f398d368c87f",
+    "updated_by": "3c702d21-642a-4277-8070-885f9d8a6337",
+    "update_type": "comment",
+    "old_value": null,
+    "new_value": null,
+    "comment": null,
+    "created_at": "2026-01-10T00:16:40.760006"
+  },
+  {
+    "update_id": "a7026ab1-bd2e-45d1-b3c2-86c6da0f35db",
+    "ticket_id": "13a8fc30-730b-422e-a8fd-ef6ad6105a94",
+    "updated_by": "903506f4-5021-4b40-bc7f-119ed349c963",
+    "update_type": "status_change",
+    "old_value": "assigned",
+    "new_value": "in_progress",
+    "comment": "Neque repellendus ratione fugiat. Blanditiis exercitationem quisquam.",
+    "created_at": "2026-01-10T03:16:40.760006"
+  }
+]

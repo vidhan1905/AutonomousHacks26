@@ -1,0 +1,3987 @@
+[
+  {
+    "expertise_id": "a5f1f334-a4c3-4c6c-8c46-9e29960a5bb2",
+    "service_person_id": "98dcb9af-2c8b-4203-b722-cddec1980c37",
+    "specialization_area": "family_medicine",
+    "years_of_experience": 17,
+    "certifications": [
+      {
+        "certification_name": "md",
+        "issuing_body": "international_board",
+        "issue_date": "2017-05-16",
+        "expiry_date": null
+      },
+      {
+        "certification_name": "usmle",
+        "issuing_body": "mci",
+        "issue_date": "2021-01-23",
+        "expiry_date": "2026-01-22"
+      },
+      {
+        "certification_name": "usmle",
+        "issuing_body": "international_board",
+        "issue_date": "2018-05-01",
+        "expiry_date": "2023-04-30"
+      }
+    ],
+    "education": [
+      {
+        "degree": "bds",
+        "institution": "Coleman-Evans Medical College",
+        "year": 1998,
+        "country": "india"
+      }
+    ],
+    "languages_spoken": [
+      "gujarati",
+      "other",
+      "kannada",
+      "tamil"
+    ],
+    "is_primary_specialization": true,
+    "created_at": "2025-12-06T20:16:40.591837",
+    "updated_at": "2026-01-10T20:16:40.591837"
+  },
+  {
+    "expertise_id": "92b83d79-a7ba-4556-a95c-29d82a169f05",
+    "service_person_id": "cb1cb664-9569-4cb5-b1c1-f28d60a1ae58",
+    "specialization_area": "general_medicine",
+    "years_of_experience": 0,
+    "certifications": [
+      {
+        "certification_name": "mbbs",
+        "issuing_body": "international_board",
+        "issue_date": "2016-05-14",
+        "expiry_date": null
+      },
+      {
+        "certification_name": "mbbs",
+        "issuing_body": "other",
+        "issue_date": "2022-02-21",
+        "expiry_date": null
+      },
+      {
+        "certification_name": "ms",
+        "issuing_body": "mci",
+        "issue_date": "2018-02-16",
+        "expiry_date": null
+      }
+    ],
+    "education": [
+      {
+        "degree": "bds",
+        "institution": "Orr-Ryan Medical College",
+        "year": 2003,
+        "country": "canada"
+      },
+      {
+        "degree": "ms",
+        "institution": "Phillips Inc Medical College",
+        "year": 2015,
+        "country": "australia"
+      }
+    ],
+    "languages_spoken": [
+      "marathi",
+      "other"
+    ],
+    "is_primary_specialization": true,
+    "created_at": "2025-10-12T20:16:40.591837",
+    "updated_at": "2026-01-10T20:16:40.591837"
+  },
+  {
+    "expertise_id": "fc4dad59-0939-4906-b112-ee0b3f0bab0c",
+    "service_person_id": "837f422b-53c8-49cd-bfd5-ccac62beaa94",
+    "specialization_area": "general_medicine",
+    "years_of_experience": 10,
+    "certifications": [
+      {
+        "certification_name": "mch",
+        "issuing_body": "university",
+        "issue_date": "2018-05-23",
+        "expiry_date": "2023-05-22"
+      },
+      {
+        "certification_name": "mbbs",
+        "issuing_body": "international_board",
+        "issue_date": "2022-12-19",
+        "expiry_date": "2027-12-18"
+      }
+    ],
+    "education": [
+      {
+        "degree": "ms",
+        "institution": "Bruce-Williams Medical College",
+        "year": 2012,
+        "country": "other"
+      },
+      {
+        "degree": "mbbs",
+        "institution": "Harmon LLC Medical College",
+        "year": 2017,
+        "country": "other"
+      }
+    ],
+    "languages_spoken": [
+      "malayalam",
+      "hindi"
+    ],
+    "is_primary_specialization": true,
+    "created_at": "2025-03-07T20:16:40.591837",
+    "updated_at": "2026-01-10T20:16:40.591837"
+  },
+  {
+    "expertise_id": "7e0bed61-600d-445c-9506-5b21a8a156bc",
+    "service_person_id": "28fd9fab-525b-4d98-897a-125aa6a4fe7b",
+    "specialization_area": "general_medicine",
+    "years_of_experience": 25,
+    "certifications": [
+      {
+        "certification_name": "plab",
+        "issuing_body": "university",
+        "issue_date": "2017-06-27",
+        "expiry_date": "2022-06-26"
+      }
+    ],
+    "education": [
+      {
+        "degree": "bhms",
+        "institution": "Frank, Garza and Kelly Medical College",
+        "year": 2020,
+        "country": "usa"
+      }
+    ],
+    "languages_spoken": [
+      "assamese",
+      "odia",
+      "telugu",
+      "urdu"
+    ],
+    "is_primary_specialization": true,
+    "created_at": "2025-06-23T20:16:40.591837",
+    "updated_at": "2026-01-10T20:16:40.591837"
+  },
+  {
+    "expertise_id": "dc270ca3-a127-4cc4-8484-54c28b3a8853",
+    "service_person_id": "3761ead2-7a29-4482-aeb6-8c8cb6487b5b",
+    "specialization_area": "trauma_care",
+    "years_of_experience": 7,
+    "certifications": [
+      {
+        "certification_name": "plab",
+        "issuing_body": "university",
+        "issue_date": "2018-05-19",
+        "expiry_date": "2023-05-18"
+      }
+    ],
+    "education": [
+      {
+        "degree": "ms",
+        "institution": "Snow PLC Medical College",
+        "year": 1993,
+        "country": "other"
+      },
+      {
+        "degree": "dnb",
+        "institution": "Hoffman Inc Medical College",
+        "year": 2020,
+        "country": "other"
+      }
+    ],
+    "languages_spoken": [
+      "malayalam",
+      "gujarati",
+      "urdu"
+    ],
+    "is_primary_specialization": true,
+    "created_at": "2026-01-05T20:16:40.591837",
+    "updated_at": "2026-01-10T20:16:40.591837"
+  },
+  {
+    "expertise_id": "136d4706-5352-48f1-9e87-dc3f42fbf979",
+    "service_person_id": "3761ead2-7a29-4482-aeb6-8c8cb6487b5b",
+    "specialization_area": "emergency_medicine",
+    "years_of_experience": 1,
+    "certifications": [
+      {
+        "certification_name": "dm",
+        "issuing_body": "mci",
+        "issue_date": "2024-04-30",
+        "expiry_date": null
+      }
+    ],
+    "education": [
+      {
+        "degree": "other",
+        "institution": "Williams, Becker and Jacobs Medical College",
+        "year": 2002,
+        "country": "other"
+      }
+    ],
+    "languages_spoken": [
+      "marathi",
+      "punjabi",
+      "bengali",
+      "tamil"
+    ],
+    "is_primary_specialization": false,
+    "created_at": "2025-03-19T20:16:40.591837",
+    "updated_at": "2026-01-10T20:16:40.591837"
+  },
+  {
+    "expertise_id": "d5107e6b-df4a-44f7-9cba-fe204e29bc9d",
+    "service_person_id": "53e21cc0-ea94-406c-bd10-75ff55c9d3f0",
+    "specialization_area": "emergency_medicine",
+    "years_of_experience": 13,
+    "certifications": [
+      {
+        "certification_name": "other",
+        "issuing_body": "university",
+        "issue_date": "2022-12-05",
+        "expiry_date": null
+      }
+    ],
+    "education": [
+      {
+        "degree": "dm",
+        "institution": "Anthony-Young Medical College",
+        "year": 2009,
+        "country": "other"
+      },
+      {
+        "degree": "dm",
+        "institution": "Flores-Davis Medical College",
+        "year": 1997,
+        "country": "usa"
+      }
+    ],
+    "languages_spoken": [
+      "marathi",
+      "tamil"
+    ],
+    "is_primary_specialization": true,
+    "created_at": "2025-07-25T20:16:40.591837",
+    "updated_at": "2026-01-10T20:16:40.591837"
+  },
+  {
+    "expertise_id": "6cce64f0-53e9-4596-b18c-94e12b230261",
+    "service_person_id": "53e21cc0-ea94-406c-bd10-75ff55c9d3f0",
+    "specialization_area": "trauma_care",
+    "years_of_experience": 5,
+    "certifications": [
+      {
+        "certification_name": "plab",
+        "issuing_body": "university",
+        "issue_date": "2019-07-16",
+        "expiry_date": "2024-07-14"
+      },
+      {
+        "certification_name": "usmle",
+        "issuing_body": "university",
+        "issue_date": "2018-02-27",
+        "expiry_date": "2023-02-26"
+      }
+    ],
+    "education": [
+      {
+        "degree": "md",
+        "institution": "Thomas-Banks Medical College",
+        "year": 1998,
+        "country": "other"
+      }
+    ],
+    "languages_spoken": [
+      "english",
+      "marathi",
+      "punjabi",
+      "tamil"
+    ],
+    "is_primary_specialization": false,
+    "created_at": "2025-06-18T20:16:40.592873",
+    "updated_at": "2026-01-10T20:16:40.592873"
+  },
+  {
+    "expertise_id": "a307dacf-4886-4c51-80d7-9bc171e2e128",
+    "service_person_id": "9f675785-2e0b-4477-aa29-61222a460655",
+    "specialization_area": "critical_care",
+    "years_of_experience": 17,
+    "certifications": [
+      {
+        "certification_name": "ms",
+        "issuing_body": "international_board",
+        "issue_date": "2021-09-09",
+        "expiry_date": "2026-09-08"
+      },
+      {
+        "certification_name": "dnb",
+        "issuing_body": "state_medical_council",
+        "issue_date": "2020-07-31",
+        "expiry_date": null
+      },
+      {
+        "certification_name": "plab",
+        "issuing_body": "international_board",
+        "issue_date": "2019-10-20",
+        "expiry_date": null
+      }
+    ],
+    "education": [
+      {
+        "degree": "dnb",
+        "institution": "Pacheco-Brown Medical College",
+        "year": 2007,
+        "country": "usa"
+      },
+      {
+        "degree": "bpt",
+        "institution": "Kennedy, Henry and Powers Medical College",
+        "year": 2007,
+        "country": "canada"
+      }
+    ],
+    "languages_spoken": [
+      "tamil",
+      "english",
+      "bengali",
+      "punjabi"
+    ],
+    "is_primary_specialization": true,
+    "created_at": "2025-08-07T20:16:40.592873",
+    "updated_at": "2026-01-10T20:16:40.592873"
+  },
+  {
+    "expertise_id": "09bfa69d-9e55-415f-b70a-5c9446909be9",
+    "service_person_id": "9f675785-2e0b-4477-aa29-61222a460655",
+    "specialization_area": "emergency_medicine",
+    "years_of_experience": 9,
+    "certifications": [
+      {
+        "certification_name": "frcs",
+        "issuing_body": "state_medical_council",
+        "issue_date": "2017-12-23",
+        "expiry_date": null
+      }
+    ],
+    "education": [
+      {
+        "degree": "bds",
+        "institution": "Anderson-Harrison Medical College",
+        "year": 2006,
+        "country": "usa"
+      },
+      {
+        "degree": "bhms",
+        "institution": "Jones LLC Medical College",
+        "year": 2007,
+        "country": "australia"
+      }
+    ],
+    "languages_spoken": [
+      "gujarati",
+      "tamil",
+      "urdu",
+      "odia"
+    ],
+    "is_primary_specialization": false,
+    "created_at": "2025-07-26T20:16:40.592873",
+    "updated_at": "2026-01-10T20:16:40.592873"
+  },
+  {
+    "expertise_id": "343bfb60-dda8-405c-9686-2a2901c7998d",
+    "service_person_id": "89f74197-efc9-47a6-9e76-fb3957fa9d40",
+    "specialization_area": "trauma_care",
+    "years_of_experience": 6,
+    "certifications": [
+      {
+        "certification_name": "usmle",
+        "issuing_body": "mci",
+        "issue_date": "2023-09-05",
+        "expiry_date": null
+      }
+    ],
+    "education": [
+      {
+        "degree": "bams",
+        "institution": "Martinez, Smith and Schmidt Medical College",
+        "year": 1995,
+        "country": "australia"
+      },
+      {
+        "degree": "mch",
+        "institution": "Allen, Ray and Kim Medical College",
+        "year": 2015,
+        "country": "usa"
+      }
+    ],
+    "languages_spoken": [
+      "marathi",
+      "urdu",
+      "telugu"
+    ],
+    "is_primary_specialization": true,
+    "created_at": "2025-02-07T20:16:40.592873",
+    "updated_at": "2026-01-10T20:16:40.592873"
+  },
+  {
+    "expertise_id": "568e9894-b8a9-45b0-af8a-149935eb9e48",
+    "service_person_id": "181ed817-1e00-4d4a-ba59-1a49227d2a81",
+    "specialization_area": "cardiac_surgery",
+    "years_of_experience": 19,
+    "certifications": [
+      {
+        "certification_name": "mch",
+        "issuing_body": "mci",
+        "issue_date": "2022-08-09",
+        "expiry_date": "2027-08-08"
+      },
+      {
+        "certification_name": "usmle",
+        "issuing_body": "mci",
+        "issue_date": "2020-10-21",
+        "expiry_date": "2025-10-20"
+      },
+      {
+        "certification_name": "dm",
+        "issuing_body": "international_board",
+        "issue_date": "2022-10-19",
+        "expiry_date": null
+      }
+    ],
+    "education": [
+      {
+        "degree": "bds",
+        "institution": "Dunn PLC Medical College",
+        "year": 2009,
+        "country": "usa"
+      },
+      {
+        "degree": "bams",
+        "institution": "Oconnor, Thomas and Lee Medical College",
+        "year": 1996,
+        "country": "uk"
+      }
+    ],
+    "languages_spoken": [
+      "gujarati",
+      "malayalam",
+      "other",
+      "punjabi"
+    ],
+    "is_primary_specialization": true,
+    "created_at": "2025-12-29T20:16:40.592873",
+    "updated_at": "2026-01-10T20:16:40.592873"
+  },
+  {
+    "expertise_id": "e8ad3436-dffe-4f4c-bc42-e2a8bad3be75",
+    "service_person_id": "07dcb2de-845d-4261-9632-476d9bd0885f",
+    "specialization_area": "cardiac_electrophysiology",
+    "years_of_experience": 8,
+    "certifications": [
+      {
+        "certification_name": "plab",
+        "issuing_body": "other",
+        "issue_date": "2019-08-09",
+        "expiry_date": "2024-08-07"
+      },
+      {
+        "certification_name": "usmle",
+        "issuing_body": "state_medical_council",
+        "issue_date": "2016-01-16",
+        "expiry_date": "2021-01-14"
+      },
+      {
+        "certification_name": "other",
+        "issuing_body": "international_board",
+        "issue_date": "2017-04-13",
+        "expiry_date": "2022-04-12"
+      }
+    ],
+    "education": [
+      {
+        "degree": "bams",
+        "institution": "Owens, Carroll and Henderson Medical College",
+        "year": 2002,
+        "country": "india"
+      },
+      {
+        "degree": "ms",
+        "institution": "Vega and Sons Medical College",
+        "year": 2002,
+        "country": "uk"
+      }
+    ],
+    "languages_spoken": [
+      "assamese",
+      "punjabi"
+    ],
+    "is_primary_specialization": true,
+    "created_at": "2025-04-16T20:16:40.593874",
+    "updated_at": "2026-01-10T20:16:40.593874"
+  },
+  {
+    "expertise_id": "74b98934-c088-4a29-98e7-ce62c1fbb689",
+    "service_person_id": "07dcb2de-845d-4261-9632-476d9bd0885f",
+    "specialization_area": "cardiac_surgery",
+    "years_of_experience": 1,
+    "certifications": [
+      {
+        "certification_name": "plab",
+        "issuing_body": "university",
+        "issue_date": "2016-08-31",
+        "expiry_date": "2021-08-30"
+      }
+    ],
+    "education": [
+      {
+        "degree": "dnb",
+        "institution": "Nelson Inc Medical College",
+        "year": 1996,
+        "country": "australia"
+      }
+    ],
+    "languages_spoken": [
+      "punjabi",
+      "bengali",
+      "telugu"
+    ],
+    "is_primary_specialization": false,
+    "created_at": "2025-04-15T20:16:40.593874",
+    "updated_at": "2026-01-10T20:16:40.593874"
+  },
+  {
+    "expertise_id": "50039201-60b9-4af3-8cf6-cc3cf519f397",
+    "service_person_id": "e3478990-7673-49d4-ada7-5d3ce10629ff",
+    "specialization_area": "cardiac_electrophysiology",
+    "years_of_experience": 5,
+    "certifications": [
+      {
+        "certification_name": "frcs",
+        "issuing_body": "mci",
+        "issue_date": "2018-04-22",
+        "expiry_date": null
+      }
+    ],
+    "education": [
+      {
+        "degree": "dm",
+        "institution": "Martin, Zavala and Long Medical College",
+        "year": 2010,
+        "country": "usa"
+      }
+    ],
+    "languages_spoken": [
+      "urdu",
+      "other"
+    ],
+    "is_primary_specialization": true,
+    "created_at": "2025-07-29T20:16:40.593874",
+    "updated_at": "2026-01-10T20:16:40.593874"
+  },
+  {
+    "expertise_id": "4c82d71d-855c-43e3-b579-29efb1fa3945",
+    "service_person_id": "701729af-5fd8-46a2-a906-2dee8db10106",
+    "specialization_area": "joint_replacement",
+    "years_of_experience": 17,
+    "certifications": [
+      {
+        "certification_name": "usmle",
+        "issuing_body": "other",
+        "issue_date": "2024-03-22",
+        "expiry_date": "2029-03-21"
+      }
+    ],
+    "education": [
+      {
+        "degree": "md",
+        "institution": "Monroe-Clarke Medical College",
+        "year": 1991,
+        "country": "usa"
+      }
+    ],
+    "languages_spoken": [
+      "telugu",
+      "kannada"
+    ],
+    "is_primary_specialization": true,
+    "created_at": "2025-02-21T20:16:40.593874",
+    "updated_at": "2026-01-10T20:16:40.593874"
+  },
+  {
+    "expertise_id": "da458f82-4bb6-4645-813c-3cb9986d6bd1",
+    "service_person_id": "701729af-5fd8-46a2-a906-2dee8db10106",
+    "specialization_area": "trauma_orthopedics",
+    "years_of_experience": 28,
+    "certifications": [
+      {
+        "certification_name": "usmle",
+        "issuing_body": "international_board",
+        "issue_date": "2019-05-12",
+        "expiry_date": null
+      }
+    ],
+    "education": [
+      {
+        "degree": "other",
+        "institution": "Walters, Duarte and Espinoza Medical College",
+        "year": 1992,
+        "country": "canada"
+      },
+      {
+        "degree": "dnb",
+        "institution": "Mccormick Inc Medical College",
+        "year": 2002,
+        "country": "usa"
+      }
+    ],
+    "languages_spoken": [
+      "telugu",
+      "odia",
+      "punjabi"
+    ],
+    "is_primary_specialization": false,
+    "created_at": "2025-09-13T20:16:40.593874",
+    "updated_at": "2026-01-10T20:16:40.593874"
+  },
+  {
+    "expertise_id": "ecab9e0f-fb6e-4006-8193-eaf61aae2fd3",
+    "service_person_id": "fd2be318-92b2-412b-b627-a9b4405dea57",
+    "specialization_area": "joint_replacement",
+    "years_of_experience": 20,
+    "certifications": [
+      {
+        "certification_name": "dnb",
+        "issuing_body": "international_board",
+        "issue_date": "2016-09-27",
+        "expiry_date": null
+      },
+      {
+        "certification_name": "mbbs",
+        "issuing_body": "international_board",
+        "issue_date": "2019-06-03",
+        "expiry_date": null
+      }
+    ],
+    "education": [
+      {
+        "degree": "other",
+        "institution": "Coleman, Thomas and Bond Medical College",
+        "year": 2015,
+        "country": "australia"
+      },
+      {
+        "degree": "other",
+        "institution": "Smith, Durham and Reynolds Medical College",
+        "year": 2004,
+        "country": "india"
+      }
+    ],
+    "languages_spoken": [
+      "english",
+      "odia",
+      "kannada"
+    ],
+    "is_primary_specialization": true,
+    "created_at": "2025-08-11T20:16:40.593874",
+    "updated_at": "2026-01-10T20:16:40.593874"
+  },
+  {
+    "expertise_id": "85065984-faa0-46cc-998c-7fcd9736d090",
+    "service_person_id": "fd2be318-92b2-412b-b627-a9b4405dea57",
+    "specialization_area": "trauma_orthopedics",
+    "years_of_experience": 10,
+    "certifications": [
+      {
+        "certification_name": "usmle",
+        "issuing_body": "university",
+        "issue_date": "2024-03-19",
+        "expiry_date": "2029-03-18"
+      }
+    ],
+    "education": [
+      {
+        "degree": "mch",
+        "institution": "Kirby-Sullivan Medical College",
+        "year": 2013,
+        "country": "uk"
+      }
+    ],
+    "languages_spoken": [
+      "malayalam",
+      "tamil",
+      "punjabi",
+      "odia"
+    ],
+    "is_primary_specialization": false,
+    "created_at": "2025-01-24T20:16:40.594871",
+    "updated_at": "2026-01-10T20:16:40.594871"
+  },
+  {
+    "expertise_id": "7a16a749-7f90-41a2-89f9-8a7fa17aa6fc",
+    "service_person_id": "a9e72d90-5ceb-4f82-8747-a37e56fc884b",
+    "specialization_area": "joint_replacement",
+    "years_of_experience": 20,
+    "certifications": [
+      {
+        "certification_name": "mch",
+        "issuing_body": "state_medical_council",
+        "issue_date": "2024-03-01",
+        "expiry_date": null
+      }
+    ],
+    "education": [
+      {
+        "degree": "dm",
+        "institution": "Cruz-Mendoza Medical College",
+        "year": 1998,
+        "country": "australia"
+      },
+      {
+        "degree": "ms",
+        "institution": "Mathews-Cook Medical College",
+        "year": 1990,
+        "country": "usa"
+      }
+    ],
+    "languages_spoken": [
+      "tamil",
+      "english",
+      "punjabi",
+      "gujarati"
+    ],
+    "is_primary_specialization": true,
+    "created_at": "2026-01-04T20:16:40.594871",
+    "updated_at": "2026-01-10T20:16:40.594871"
+  },
+  {
+    "expertise_id": "b10ac9cd-7bce-4107-8426-fb1b3a06479c",
+    "service_person_id": "9bd371e1-5e67-4dfa-bc2f-a050abec2c44",
+    "specialization_area": "sports_medicine",
+    "years_of_experience": 0,
+    "certifications": [
+      {
+        "certification_name": "mbbs",
+        "issuing_body": "other",
+        "issue_date": "2022-09-04",
+        "expiry_date": "2027-09-03"
+      },
+      {
+        "certification_name": "mch",
+        "issuing_body": "international_board",
+        "issue_date": "2024-04-28",
+        "expiry_date": "2029-04-27"
+      }
+    ],
+    "education": [
+      {
+        "degree": "bds",
+        "institution": "Holt, Harris and Collins Medical College",
+        "year": 1998,
+        "country": "australia"
+      }
+    ],
+    "languages_spoken": [
+      "english",
+      "marathi",
+      "bengali",
+      "malayalam"
+    ],
+    "is_primary_specialization": true,
+    "created_at": "2025-07-11T20:16:40.594871",
+    "updated_at": "2026-01-10T20:16:40.594871"
+  },
+  {
+    "expertise_id": "aa847d31-b71b-49e6-b865-80c9f8d07292",
+    "service_person_id": "1c547cef-957f-4284-bd91-f6d6ee423a5f",
+    "specialization_area": "pediatric_oncology",
+    "years_of_experience": 11,
+    "certifications": [
+      {
+        "certification_name": "frcs",
+        "issuing_body": "mci",
+        "issue_date": "2024-09-01",
+        "expiry_date": null
+      },
+      {
+        "certification_name": "md",
+        "issuing_body": "university",
+        "issue_date": "2024-05-09",
+        "expiry_date": null
+      },
+      {
+        "certification_name": "mbbs",
+        "issuing_body": "mci",
+        "issue_date": "2016-03-05",
+        "expiry_date": null
+      }
+    ],
+    "education": [
+      {
+        "degree": "dm",
+        "institution": "Miller Group Medical College",
+        "year": 1996,
+        "country": "australia"
+      },
+      {
+        "degree": "bpt",
+        "institution": "Taylor, Singleton and Hickman Medical College",
+        "year": 1997,
+        "country": "india"
+      }
+    ],
+    "languages_spoken": [
+      "urdu",
+      "kannada"
+    ],
+    "is_primary_specialization": true,
+    "created_at": "2026-01-04T20:16:40.594871",
+    "updated_at": "2026-01-10T20:16:40.594871"
+  },
+  {
+    "expertise_id": "82326e28-6715-4223-b4bd-0a9538623407",
+    "service_person_id": "606785c8-ee9d-46c8-b14a-9132a9c7d6b4",
+    "specialization_area": "pediatric_surgery",
+    "years_of_experience": 0,
+    "certifications": [
+      {
+        "certification_name": "frcs",
+        "issuing_body": "state_medical_council",
+        "issue_date": "2020-01-31",
+        "expiry_date": "2025-01-29"
+      },
+      {
+        "certification_name": "mbbs",
+        "issuing_body": "state_medical_council",
+        "issue_date": "2017-03-21",
+        "expiry_date": "2022-03-20"
+      },
+      {
+        "certification_name": "dnb",
+        "issuing_body": "international_board",
+        "issue_date": "2019-04-08",
+        "expiry_date": null
+      }
+    ],
+    "education": [
+      {
+        "degree": "bds",
+        "institution": "Phillips Ltd Medical College",
+        "year": 2005,
+        "country": "australia"
+      },
+      {
+        "degree": "dnb",
+        "institution": "Valenzuela, Mitchell and Miller Medical College",
+        "year": 2012,
+        "country": "other"
+      }
+    ],
+    "languages_spoken": [
+      "odia",
+      "punjabi",
+      "marathi",
+      "urdu"
+    ],
+    "is_primary_specialization": true,
+    "created_at": "2025-02-09T20:16:40.594871",
+    "updated_at": "2026-01-10T20:16:40.594871"
+  },
+  {
+    "expertise_id": "bae833c4-9dca-4cb4-9585-baf0ccff660a",
+    "service_person_id": "606785c8-ee9d-46c8-b14a-9132a9c7d6b4",
+    "specialization_area": "neonatology",
+    "years_of_experience": 9,
+    "certifications": [
+      {
+        "certification_name": "dm",
+        "issuing_body": "mci",
+        "issue_date": "2018-12-26",
+        "expiry_date": "2023-12-25"
+      },
+      {
+        "certification_name": "mbbs",
+        "issuing_body": "state_medical_council",
+        "issue_date": "2018-12-25",
+        "expiry_date": null
+      }
+    ],
+    "education": [
+      {
+        "degree": "bds",
+        "institution": "Hancock, Dixon and Green Medical College",
+        "year": 1994,
+        "country": "australia"
+      }
+    ],
+    "languages_spoken": [
+      "other",
+      "hindi"
+    ],
+    "is_primary_specialization": false,
+    "created_at": "2025-04-29T20:16:40.595877",
+    "updated_at": "2026-01-10T20:16:40.595877"
+  },
+  {
+    "expertise_id": "45fcb039-7e6b-4627-b305-a85b55f5280a",
+    "service_person_id": "c1d5de97-6a78-4e94-95a4-4edbd7db907e",
+    "specialization_area": "neonatology",
+    "years_of_experience": 3,
+    "certifications": [
+      {
+        "certification_name": "frcs",
+        "issuing_body": "state_medical_council",
+        "issue_date": "2020-08-09",
+        "expiry_date": null
+      }
+    ],
+    "education": [
+      {
+        "degree": "other",
+        "institution": "Meadows-Edwards Medical College",
+        "year": 1992,
+        "country": "australia"
+      },
+      {
+        "degree": "ms",
+        "institution": "Stewart LLC Medical College",
+        "year": 2002,
+        "country": "other"
+      }
+    ],
+    "languages_spoken": [
+      "other",
+      "bengali",
+      "punjabi"
+    ],
+    "is_primary_specialization": true,
+    "created_at": "2025-04-24T20:16:40.595877",
+    "updated_at": "2026-01-10T20:16:40.595877"
+  },
+  {
+    "expertise_id": "afeb50a0-72ea-4607-9f7a-0df932297c68",
+    "service_person_id": "484b0cc5-b785-4895-92dd-2557dd36b49d",
+    "specialization_area": "pediatric_surgery",
+    "years_of_experience": 11,
+    "certifications": [
+      {
+        "certification_name": "usmle",
+        "issuing_body": "international_board",
+        "issue_date": "2022-02-01",
+        "expiry_date": null
+      }
+    ],
+    "education": [
+      {
+        "degree": "dm",
+        "institution": "Moyer, Freeman and Castro Medical College",
+        "year": 1992,
+        "country": "canada"
+      },
+      {
+        "degree": "dnb",
+        "institution": "Landry and Sons Medical College",
+        "year": 2011,
+        "country": "uk"
+      }
+    ],
+    "languages_spoken": [
+      "punjabi",
+      "telugu"
+    ],
+    "is_primary_specialization": true,
+    "created_at": "2025-03-07T20:16:40.595877",
+    "updated_at": "2026-01-10T20:16:40.595877"
+  },
+  {
+    "expertise_id": "f7f8d2a3-5347-475c-be3e-0a02ea4d9e28",
+    "service_person_id": "484b0cc5-b785-4895-92dd-2557dd36b49d",
+    "specialization_area": "neonatology",
+    "years_of_experience": 0,
+    "certifications": [
+      {
+        "certification_name": "frcs",
+        "issuing_body": "mci",
+        "issue_date": "2023-03-11",
+        "expiry_date": "2028-03-09"
+      },
+      {
+        "certification_name": "frcs",
+        "issuing_body": "mci",
+        "issue_date": "2017-04-03",
+        "expiry_date": "2022-04-02"
+      },
+      {
+        "certification_name": "dnb",
+        "issuing_body": "other",
+        "issue_date": "2016-09-30",
+        "expiry_date": null
+      }
+    ],
+    "education": [
+      {
+        "degree": "dm",
+        "institution": "Obrien-Small Medical College",
+        "year": 2004,
+        "country": "other"
+      },
+      {
+        "degree": "other",
+        "institution": "Robles Inc Medical College",
+        "year": 2004,
+        "country": "australia"
+      }
+    ],
+    "languages_spoken": [
+      "odia",
+      "gujarati",
+      "malayalam"
+    ],
+    "is_primary_specialization": false,
+    "created_at": "2025-08-13T20:16:40.595877",
+    "updated_at": "2026-01-10T20:16:40.595877"
+  },
+  {
+    "expertise_id": "71216768-6ce3-4275-b3a0-4d241fb32471",
+    "service_person_id": "1d43cd3f-f3f1-4856-a400-bf6219966d1e",
+    "specialization_area": "obstetrics",
+    "years_of_experience": 16,
+    "certifications": [
+      {
+        "certification_name": "md",
+        "issuing_body": "other",
+        "issue_date": "2023-02-18",
+        "expiry_date": "2028-02-17"
+      },
+      {
+        "certification_name": "mbbs",
+        "issuing_body": "state_medical_council",
+        "issue_date": "2024-10-18",
+        "expiry_date": "2029-10-17"
+      },
+      {
+        "certification_name": "mbbs",
+        "issuing_body": "other",
+        "issue_date": "2022-09-23",
+        "expiry_date": "2027-09-22"
+      }
+    ],
+    "education": [
+      {
+        "degree": "dm",
+        "institution": "Bryant Ltd Medical College",
+        "year": 2000,
+        "country": "canada"
+      }
+    ],
+    "languages_spoken": [
+      "punjabi",
+      "tamil"
+    ],
+    "is_primary_specialization": true,
+    "created_at": "2025-05-01T20:16:40.595877",
+    "updated_at": "2026-01-10T20:16:40.595877"
+  },
+  {
+    "expertise_id": "f9ed5074-1691-4a51-a642-5b6e306d8c91",
+    "service_person_id": "1d43cd3f-f3f1-4856-a400-bf6219966d1e",
+    "specialization_area": "reproductive_medicine",
+    "years_of_experience": 1,
+    "certifications": [
+      {
+        "certification_name": "mch",
+        "issuing_body": "other",
+        "issue_date": "2021-10-01",
+        "expiry_date": null
+      },
+      {
+        "certification_name": "mbbs",
+        "issuing_body": "mci",
+        "issue_date": "2023-06-28",
+        "expiry_date": null
+      },
+      {
+        "certification_name": "other",
+        "issuing_body": "other",
+        "issue_date": "2017-05-31",
+        "expiry_date": "2022-05-30"
+      }
+    ],
+    "education": [
+      {
+        "degree": "mch",
+        "institution": "Morrow Group Medical College",
+        "year": 2009,
+        "country": "australia"
+      }
+    ],
+    "languages_spoken": [
+      "hindi",
+      "assamese",
+      "tamil"
+    ],
+    "is_primary_specialization": false,
+    "created_at": "2025-03-23T20:16:40.595877",
+    "updated_at": "2026-01-10T20:16:40.595877"
+  },
+  {
+    "expertise_id": "23d2b1b0-e8cf-4657-ac6c-a40153a978f0",
+    "service_person_id": "5606a09e-c663-4954-8363-9ee017b710f3",
+    "specialization_area": "gynecological_oncology",
+    "years_of_experience": 3,
+    "certifications": [
+      {
+        "certification_name": "frcs",
+        "issuing_body": "other",
+        "issue_date": "2022-03-08",
+        "expiry_date": null
+      }
+    ],
+    "education": [
+      {
+        "degree": "bhms",
+        "institution": "Cline-Anderson Medical College",
+        "year": 2015,
+        "country": "canada"
+      }
+    ],
+    "languages_spoken": [
+      "telugu",
+      "other",
+      "english"
+    ],
+    "is_primary_specialization": true,
+    "created_at": "2025-12-18T20:16:40.595877",
+    "updated_at": "2026-01-10T20:16:40.595877"
+  },
+  {
+    "expertise_id": "cb416bc6-abb8-4524-84a7-8398969d91d9",
+    "service_person_id": "5606a09e-c663-4954-8363-9ee017b710f3",
+    "specialization_area": "reproductive_medicine",
+    "years_of_experience": 6,
+    "certifications": [
+      {
+        "certification_name": "mch",
+        "issuing_body": "other",
+        "issue_date": "2022-08-18",
+        "expiry_date": null
+      }
+    ],
+    "education": [
+      {
+        "degree": "bds",
+        "institution": "Harmon Inc Medical College",
+        "year": 1993,
+        "country": "usa"
+      },
+      {
+        "degree": "bpt",
+        "institution": "Williams, Smith and Harmon Medical College",
+        "year": 1995,
+        "country": "australia"
+      }
+    ],
+    "languages_spoken": [
+      "hindi",
+      "tamil"
+    ],
+    "is_primary_specialization": false,
+    "created_at": "2025-02-09T20:16:40.595877",
+    "updated_at": "2026-01-10T20:16:40.595877"
+  },
+  {
+    "expertise_id": "0add725b-3e34-4cd9-93f7-572d6f4b820f",
+    "service_person_id": "4ca7e197-d0e2-4a4c-aa38-6030173f5564",
+    "specialization_area": "reproductive_medicine",
+    "years_of_experience": 9,
+    "certifications": [
+      {
+        "certification_name": "plab",
+        "issuing_body": "university",
+        "issue_date": "2019-09-03",
+        "expiry_date": "2024-09-01"
+      },
+      {
+        "certification_name": "md",
+        "issuing_body": "international_board",
+        "issue_date": "2017-07-01",
+        "expiry_date": null
+      },
+      {
+        "certification_name": "md",
+        "issuing_body": "other",
+        "issue_date": "2024-06-06",
+        "expiry_date": null
+      }
+    ],
+    "education": [
+      {
+        "degree": "md",
+        "institution": "Collins-Collins Medical College",
+        "year": 2005,
+        "country": "india"
+      }
+    ],
+    "languages_spoken": [
+      "kannada",
+      "english",
+      "other"
+    ],
+    "is_primary_specialization": true,
+    "created_at": "2025-11-22T20:16:40.595877",
+    "updated_at": "2026-01-10T20:16:40.595877"
+  },
+  {
+    "expertise_id": "1ec76117-f1df-4a98-847d-f1cdf2181999",
+    "service_person_id": "a4517eca-224a-46ac-b55c-e0b67138a075",
+    "specialization_area": "dermatopathology",
+    "years_of_experience": 4,
+    "certifications": [
+      {
+        "certification_name": "frcs",
+        "issuing_body": "university",
+        "issue_date": "2021-08-31",
+        "expiry_date": "2026-08-30"
+      },
+      {
+        "certification_name": "mbbs",
+        "issuing_body": "other",
+        "issue_date": "2024-01-10",
+        "expiry_date": null
+      }
+    ],
+    "education": [
+      {
+        "degree": "other",
+        "institution": "Bowen Group Medical College",
+        "year": 2015,
+        "country": "uk"
+      }
+    ],
+    "languages_spoken": [
+      "tamil",
+      "punjabi",
+      "gujarati",
+      "malayalam"
+    ],
+    "is_primary_specialization": true,
+    "created_at": "2025-03-30T20:16:40.595877",
+    "updated_at": "2026-01-10T20:16:40.595877"
+  },
+  {
+    "expertise_id": "92e9e325-4fc7-4850-8534-71bbfb2d38e7",
+    "service_person_id": "a4517eca-224a-46ac-b55c-e0b67138a075",
+    "specialization_area": "cosmetic_dermatology",
+    "years_of_experience": 7,
+    "certifications": [
+      {
+        "certification_name": "mbbs",
+        "issuing_body": "other",
+        "issue_date": "2021-05-13",
+        "expiry_date": null
+      },
+      {
+        "certification_name": "ms",
+        "issuing_body": "university",
+        "issue_date": "2017-10-11",
+        "expiry_date": "2022-10-10"
+      },
+      {
+        "certification_name": "frcs",
+        "issuing_body": "mci",
+        "issue_date": "2019-09-08",
+        "expiry_date": "2024-09-06"
+      }
+    ],
+    "education": [
+      {
+        "degree": "other",
+        "institution": "Ortiz-Collins Medical College",
+        "year": 2019,
+        "country": "usa"
+      },
+      {
+        "degree": "md",
+        "institution": "Cunningham, Jones and Bradley Medical College",
+        "year": 2013,
+        "country": "other"
+      }
+    ],
+    "languages_spoken": [
+      "kannada",
+      "urdu",
+      "gujarati",
+      "tamil"
+    ],
+    "is_primary_specialization": false,
+    "created_at": "2025-06-11T20:16:40.595877",
+    "updated_at": "2026-01-10T20:16:40.595877"
+  },
+  {
+    "expertise_id": "fe2b82b3-cd90-456e-a26d-7a34951206f2",
+    "service_person_id": "af68381c-069e-41cc-86f8-36460320749d",
+    "specialization_area": "cosmetic_dermatology",
+    "years_of_experience": 0,
+    "certifications": [
+      {
+        "certification_name": "usmle",
+        "issuing_body": "state_medical_council",
+        "issue_date": "2022-11-09",
+        "expiry_date": "2027-11-08"
+      },
+      {
+        "certification_name": "mch",
+        "issuing_body": "state_medical_council",
+        "issue_date": "2021-06-11",
+        "expiry_date": null
+      }
+    ],
+    "education": [
+      {
+        "degree": "mbbs",
+        "institution": "Levine-Garcia Medical College",
+        "year": 2006,
+        "country": "australia"
+      }
+    ],
+    "languages_spoken": [
+      "kannada",
+      "telugu"
+    ],
+    "is_primary_specialization": true,
+    "created_at": "2025-08-19T20:16:40.595877",
+    "updated_at": "2026-01-10T20:16:40.595877"
+  },
+  {
+    "expertise_id": "fa0bac6b-a9eb-4bca-a7ec-88c1d8181e3a",
+    "service_person_id": "af68381c-069e-41cc-86f8-36460320749d",
+    "specialization_area": "pediatric_dermatology",
+    "years_of_experience": 2,
+    "certifications": [
+      {
+        "certification_name": "plab",
+        "issuing_body": "other",
+        "issue_date": "2016-11-14",
+        "expiry_date": "2021-11-13"
+      },
+      {
+        "certification_name": "plab",
+        "issuing_body": "international_board",
+        "issue_date": "2021-02-12",
+        "expiry_date": null
+      }
+    ],
+    "education": [
+      {
+        "degree": "md",
+        "institution": "Torres Group Medical College",
+        "year": 2005,
+        "country": "uk"
+      }
+    ],
+    "languages_spoken": [
+      "hindi",
+      "tamil",
+      "assamese",
+      "malayalam"
+    ],
+    "is_primary_specialization": false,
+    "created_at": "2025-08-18T20:16:40.597491",
+    "updated_at": "2026-01-10T20:16:40.597491"
+  },
+  {
+    "expertise_id": "7a39764d-7624-46be-9101-6ab5f3e6c2a0",
+    "service_person_id": "dae52668-34ad-45d5-a9ea-02b858e484a9",
+    "specialization_area": "cosmetic_dermatology",
+    "years_of_experience": 13,
+    "certifications": [
+      {
+        "certification_name": "dm",
+        "issuing_body": "international_board",
+        "issue_date": "2018-11-03",
+        "expiry_date": "2023-11-02"
+      },
+      {
+        "certification_name": "mbbs",
+        "issuing_body": "mci",
+        "issue_date": "2024-06-20",
+        "expiry_date": null
+      }
+    ],
+    "education": [
+      {
+        "degree": "dnb",
+        "institution": "Huang-Colon Medical College",
+        "year": 2009,
+        "country": "usa"
+      },
+      {
+        "degree": "dm",
+        "institution": "Shannon-Chapman Medical College",
+        "year": 2012,
+        "country": "other"
+      }
+    ],
+    "languages_spoken": [
+      "assamese",
+      "urdu",
+      "punjabi",
+      "english"
+    ],
+    "is_primary_specialization": true,
+    "created_at": "2025-10-31T20:16:40.597491",
+    "updated_at": "2026-01-10T20:16:40.597491"
+  },
+  {
+    "expertise_id": "be8a19b8-1569-4dbb-b19b-0ccd956263d0",
+    "service_person_id": "dae52668-34ad-45d5-a9ea-02b858e484a9",
+    "specialization_area": "dermatopathology",
+    "years_of_experience": 14,
+    "certifications": [
+      {
+        "certification_name": "other",
+        "issuing_body": "university",
+        "issue_date": "2016-03-17",
+        "expiry_date": "2021-03-16"
+      }
+    ],
+    "education": [
+      {
+        "degree": "dm",
+        "institution": "Smith Inc Medical College",
+        "year": 2017,
+        "country": "other"
+      }
+    ],
+    "languages_spoken": [
+      "gujarati",
+      "punjabi",
+      "urdu",
+      "marathi"
+    ],
+    "is_primary_specialization": false,
+    "created_at": "2025-10-11T20:16:40.597491",
+    "updated_at": "2026-01-10T20:16:40.597491"
+  },
+  {
+    "expertise_id": "a51a51e8-85bf-4803-9f7c-27c0507a7172",
+    "service_person_id": "0ae60cdf-89bf-433d-9910-31210c332113",
+    "specialization_area": "cosmetic_dermatology",
+    "years_of_experience": 30,
+    "certifications": [
+      {
+        "certification_name": "usmle",
+        "issuing_body": "other",
+        "issue_date": "2022-04-02",
+        "expiry_date": null
+      },
+      {
+        "certification_name": "other",
+        "issuing_body": "mci",
+        "issue_date": "2018-03-13",
+        "expiry_date": "2023-03-12"
+      }
+    ],
+    "education": [
+      {
+        "degree": "dnb",
+        "institution": "Williams-Patterson Medical College",
+        "year": 2012,
+        "country": "canada"
+      },
+      {
+        "degree": "bams",
+        "institution": "Hayes Inc Medical College",
+        "year": 2015,
+        "country": "other"
+      }
+    ],
+    "languages_spoken": [
+      "marathi",
+      "hindi",
+      "bengali",
+      "tamil"
+    ],
+    "is_primary_specialization": true,
+    "created_at": "2025-01-17T20:16:40.597491",
+    "updated_at": "2026-01-10T20:16:40.597491"
+  },
+  {
+    "expertise_id": "f702f2d7-0820-431f-9e3c-995636e04f5d",
+    "service_person_id": "230c219b-ccd7-42fa-ac87-47d7593d7cb8",
+    "specialization_area": "pediatric_ophthalmology",
+    "years_of_experience": 2,
+    "certifications": [
+      {
+        "certification_name": "md",
+        "issuing_body": "international_board",
+        "issue_date": "2024-01-03",
+        "expiry_date": null
+      },
+      {
+        "certification_name": "ms",
+        "issuing_body": "state_medical_council",
+        "issue_date": "2024-03-24",
+        "expiry_date": null
+      },
+      {
+        "certification_name": "frcs",
+        "issuing_body": "other",
+        "issue_date": "2023-12-30",
+        "expiry_date": null
+      }
+    ],
+    "education": [
+      {
+        "degree": "other",
+        "institution": "Harrington, Baldwin and Freeman Medical College",
+        "year": 2015,
+        "country": "other"
+      },
+      {
+        "degree": "bds",
+        "institution": "Rios PLC Medical College",
+        "year": 2012,
+        "country": "australia"
+      }
+    ],
+    "languages_spoken": [
+      "hindi",
+      "gujarati",
+      "urdu",
+      "other"
+    ],
+    "is_primary_specialization": true,
+    "created_at": "2025-02-06T20:16:40.597491",
+    "updated_at": "2026-01-10T20:16:40.597491"
+  },
+  {
+    "expertise_id": "4d9a5537-65ee-45f3-8466-e7e9e3560495",
+    "service_person_id": "c458ae70-47ff-43e6-a326-005621cecd75",
+    "specialization_area": "glaucoma",
+    "years_of_experience": 5,
+    "certifications": [
+      {
+        "certification_name": "dnb",
+        "issuing_body": "university",
+        "issue_date": "2021-10-03",
+        "expiry_date": "2026-10-02"
+      },
+      {
+        "certification_name": "dnb",
+        "issuing_body": "other",
+        "issue_date": "2016-09-11",
+        "expiry_date": null
+      }
+    ],
+    "education": [
+      {
+        "degree": "bpt",
+        "institution": "Edwards Ltd Medical College",
+        "year": 2005,
+        "country": "canada"
+      },
+      {
+        "degree": "dnb",
+        "institution": "Fitzgerald Group Medical College",
+        "year": 2020,
+        "country": "india"
+      }
+    ],
+    "languages_spoken": [
+      "assamese",
+      "hindi"
+    ],
+    "is_primary_specialization": true,
+    "created_at": "2025-04-05T20:16:40.597491",
+    "updated_at": "2026-01-10T20:16:40.597491"
+  },
+  {
+    "expertise_id": "b62e6700-ea3b-4618-a374-1892cb6538be",
+    "service_person_id": "c458ae70-47ff-43e6-a326-005621cecd75",
+    "specialization_area": "retina",
+    "years_of_experience": 1,
+    "certifications": [
+      {
+        "certification_name": "mch",
+        "issuing_body": "state_medical_council",
+        "issue_date": "2022-10-20",
+        "expiry_date": "2027-10-19"
+      }
+    ],
+    "education": [
+      {
+        "degree": "dnb",
+        "institution": "Diaz, Brewer and Perry Medical College",
+        "year": 1991,
+        "country": "india"
+      }
+    ],
+    "languages_spoken": [
+      "urdu",
+      "punjabi",
+      "gujarati",
+      "tamil"
+    ],
+    "is_primary_specialization": false,
+    "created_at": "2025-06-16T20:16:40.597491",
+    "updated_at": "2026-01-10T20:16:40.597491"
+  },
+  {
+    "expertise_id": "d3bb1e06-40e6-4aff-bf1a-c9c2e41c8407",
+    "service_person_id": "6d32bc8a-bd82-4a1c-a28a-daa1b929a558",
+    "specialization_area": "pediatric_ophthalmology",
+    "years_of_experience": 13,
+    "certifications": [
+      {
+        "certification_name": "plab",
+        "issuing_body": "mci",
+        "issue_date": "2021-07-27",
+        "expiry_date": null
+      }
+    ],
+    "education": [
+      {
+        "degree": "md",
+        "institution": "Day-Tran Medical College",
+        "year": 2011,
+        "country": "uk"
+      },
+      {
+        "degree": "dnb",
+        "institution": "Gilbert-Bowen Medical College",
+        "year": 1992,
+        "country": "usa"
+      }
+    ],
+    "languages_spoken": [
+      "bengali",
+      "marathi",
+      "kannada",
+      "hindi"
+    ],
+    "is_primary_specialization": true,
+    "created_at": "2025-04-28T20:16:40.597491",
+    "updated_at": "2026-01-10T20:16:40.597491"
+  },
+  {
+    "expertise_id": "c9f11d4a-1d3c-4881-acc2-ce93bb9f3b33",
+    "service_person_id": "6d32bc8a-bd82-4a1c-a28a-daa1b929a558",
+    "specialization_area": "cornea",
+    "years_of_experience": 25,
+    "certifications": [
+      {
+        "certification_name": "other",
+        "issuing_body": "mci",
+        "issue_date": "2020-12-13",
+        "expiry_date": "2025-12-12"
+      },
+      {
+        "certification_name": "other",
+        "issuing_body": "state_medical_council",
+        "issue_date": "2019-12-04",
+        "expiry_date": null
+      },
+      {
+        "certification_name": "plab",
+        "issuing_body": "state_medical_council",
+        "issue_date": "2016-04-07",
+        "expiry_date": "2021-04-06"
+      }
+    ],
+    "education": [
+      {
+        "degree": "other",
+        "institution": "Robinson-Fisher Medical College",
+        "year": 1998,
+        "country": "other"
+      }
+    ],
+    "languages_spoken": [
+      "urdu",
+      "bengali",
+      "english"
+    ],
+    "is_primary_specialization": false,
+    "created_at": "2025-11-30T20:16:40.598607",
+    "updated_at": "2026-01-10T20:16:40.598607"
+  },
+  {
+    "expertise_id": "e7c5f1b5-c7e1-4ff4-8ff4-1da6c723605f",
+    "service_person_id": "cce8585d-eec3-4a70-a520-a5f254ec9956",
+    "specialization_area": "retina",
+    "years_of_experience": 3,
+    "certifications": [
+      {
+        "certification_name": "frcs",
+        "issuing_body": "state_medical_council",
+        "issue_date": "2016-06-25",
+        "expiry_date": null
+      },
+      {
+        "certification_name": "usmle",
+        "issuing_body": "other",
+        "issue_date": "2017-03-10",
+        "expiry_date": "2022-03-09"
+      },
+      {
+        "certification_name": "dnb",
+        "issuing_body": "other",
+        "issue_date": "2023-09-26",
+        "expiry_date": null
+      }
+    ],
+    "education": [
+      {
+        "degree": "ms",
+        "institution": "Colon, Vasquez and Stewart Medical College",
+        "year": 1993,
+        "country": "canada"
+      }
+    ],
+    "languages_spoken": [
+      "marathi",
+      "punjabi",
+      "urdu"
+    ],
+    "is_primary_specialization": true,
+    "created_at": "2025-09-20T20:16:40.598607",
+    "updated_at": "2026-01-10T20:16:40.598607"
+  },
+  {
+    "expertise_id": "20053f9a-4316-4b6f-9dfe-609253c3a2de",
+    "service_person_id": "cce8585d-eec3-4a70-a520-a5f254ec9956",
+    "specialization_area": "pediatric_ophthalmology",
+    "years_of_experience": 12,
+    "certifications": [
+      {
+        "certification_name": "plab",
+        "issuing_body": "university",
+        "issue_date": "2021-07-10",
+        "expiry_date": null
+      },
+      {
+        "certification_name": "dm",
+        "issuing_body": "state_medical_council",
+        "issue_date": "2016-03-10",
+        "expiry_date": "2021-03-09"
+      }
+    ],
+    "education": [
+      {
+        "degree": "other",
+        "institution": "Griffin, Shepard and Smith Medical College",
+        "year": 1997,
+        "country": "australia"
+      },
+      {
+        "degree": "bpt",
+        "institution": "Klein Ltd Medical College",
+        "year": 2014,
+        "country": "uk"
+      }
+    ],
+    "languages_spoken": [
+      "telugu",
+      "hindi"
+    ],
+    "is_primary_specialization": false,
+    "created_at": "2026-01-07T20:16:40.598607",
+    "updated_at": "2026-01-10T20:16:40.598607"
+  },
+  {
+    "expertise_id": "f0d7d704-d206-485f-9608-737be8ba43a6",
+    "service_person_id": "ef5cf0dd-7157-4996-bd7f-d5844c695b85",
+    "specialization_area": "head_neck_surgery",
+    "years_of_experience": 18,
+    "certifications": [
+      {
+        "certification_name": "usmle",
+        "issuing_body": "state_medical_council",
+        "issue_date": "2023-05-16",
+        "expiry_date": "2028-05-14"
+      }
+    ],
+    "education": [
+      {
+        "degree": "mch",
+        "institution": "Martin-Vasquez Medical College",
+        "year": 2016,
+        "country": "india"
+      }
+    ],
+    "languages_spoken": [
+      "gujarati",
+      "tamil",
+      "kannada",
+      "marathi"
+    ],
+    "is_primary_specialization": true,
+    "created_at": "2025-12-02T20:16:40.598607",
+    "updated_at": "2026-01-10T20:16:40.598607"
+  },
+  {
+    "expertise_id": "3c05ec5e-3d6d-4040-b8cc-c05d5d4bde21",
+    "service_person_id": "ef5cf0dd-7157-4996-bd7f-d5844c695b85",
+    "specialization_area": "otology",
+    "years_of_experience": 15,
+    "certifications": [
+      {
+        "certification_name": "plab",
+        "issuing_body": "other",
+        "issue_date": "2020-09-12",
+        "expiry_date": null
+      },
+      {
+        "certification_name": "md",
+        "issuing_body": "university",
+        "issue_date": "2021-07-10",
+        "expiry_date": null
+      }
+    ],
+    "education": [
+      {
+        "degree": "bhms",
+        "institution": "Hill-Smith Medical College",
+        "year": 2020,
+        "country": "uk"
+      }
+    ],
+    "languages_spoken": [
+      "marathi",
+      "telugu",
+      "kannada"
+    ],
+    "is_primary_specialization": false,
+    "created_at": "2025-01-15T20:16:40.598607",
+    "updated_at": "2026-01-10T20:16:40.598607"
+  },
+  {
+    "expertise_id": "722db9ce-16fb-4a76-86b4-5f67a6f861d2",
+    "service_person_id": "84c42ce6-1d1b-4792-9c0f-19957eaacc07",
+    "specialization_area": "laryngology",
+    "years_of_experience": 1,
+    "certifications": [
+      {
+        "certification_name": "md",
+        "issuing_body": "state_medical_council",
+        "issue_date": "2017-01-08",
+        "expiry_date": "2022-01-07"
+      },
+      {
+        "certification_name": "plab",
+        "issuing_body": "other",
+        "issue_date": "2016-09-14",
+        "expiry_date": null
+      },
+      {
+        "certification_name": "mbbs",
+        "issuing_body": "university",
+        "issue_date": "2019-01-14",
+        "expiry_date": "2024-01-13"
+      }
+    ],
+    "education": [
+      {
+        "degree": "bpt",
+        "institution": "Smith Group Medical College",
+        "year": 2005,
+        "country": "uk"
+      },
+      {
+        "degree": "dm",
+        "institution": "Carter and Sons Medical College",
+        "year": 2018,
+        "country": "canada"
+      }
+    ],
+    "languages_spoken": [
+      "marathi",
+      "hindi",
+      "odia",
+      "punjabi"
+    ],
+    "is_primary_specialization": true,
+    "created_at": "2025-05-24T20:16:40.598607",
+    "updated_at": "2026-01-10T20:16:40.598607"
+  },
+  {
+    "expertise_id": "c523c37a-5bd6-435e-9359-1fdd49e65c1e",
+    "service_person_id": "84c42ce6-1d1b-4792-9c0f-19957eaacc07",
+    "specialization_area": "rhinology",
+    "years_of_experience": 24,
+    "certifications": [
+      {
+        "certification_name": "dnb",
+        "issuing_body": "international_board",
+        "issue_date": "2016-07-21",
+        "expiry_date": null
+      },
+      {
+        "certification_name": "plab",
+        "issuing_body": "university",
+        "issue_date": "2017-04-30",
+        "expiry_date": "2022-04-29"
+      },
+      {
+        "certification_name": "mch",
+        "issuing_body": "other",
+        "issue_date": "2023-05-09",
+        "expiry_date": null
+      }
+    ],
+    "education": [
+      {
+        "degree": "mbbs",
+        "institution": "Peters-Beck Medical College",
+        "year": 2007,
+        "country": "other"
+      },
+      {
+        "degree": "mbbs",
+        "institution": "Perkins-Ramirez Medical College",
+        "year": 1992,
+        "country": "uk"
+      }
+    ],
+    "languages_spoken": [
+      "hindi",
+      "kannada",
+      "telugu",
+      "bengali"
+    ],
+    "is_primary_specialization": false,
+    "created_at": "2025-11-04T20:16:40.598607",
+    "updated_at": "2026-01-10T20:16:40.598607"
+  },
+  {
+    "expertise_id": "dba19c5b-4d19-46f1-b4e3-37f21cc6acb9",
+    "service_person_id": "c2fd7e31-a6fe-4d24-ae81-82b51efa922a",
+    "specialization_area": "laryngology",
+    "years_of_experience": 14,
+    "certifications": [
+      {
+        "certification_name": "frcs",
+        "issuing_body": "other",
+        "issue_date": "2023-10-07",
+        "expiry_date": "2028-10-05"
+      },
+      {
+        "certification_name": "other",
+        "issuing_body": "international_board",
+        "issue_date": "2022-05-13",
+        "expiry_date": "2027-05-12"
+      }
+    ],
+    "education": [
+      {
+        "degree": "mch",
+        "institution": "Atkins-Bowen Medical College",
+        "year": 1998,
+        "country": "australia"
+      },
+      {
+        "degree": "mch",
+        "institution": "Moody, Mora and Odonnell Medical College",
+        "year": 2019,
+        "country": "india"
+      }
+    ],
+    "languages_spoken": [
+      "malayalam",
+      "tamil",
+      "telugu",
+      "kannada"
+    ],
+    "is_primary_specialization": true,
+    "created_at": "2025-11-29T20:16:40.599600",
+    "updated_at": "2026-01-10T20:16:40.599600"
+  },
+  {
+    "expertise_id": "e1c17bc2-d357-4f6f-9607-76a8640242f9",
+    "service_person_id": "c5130d73-b391-48fc-8f69-d6ed12ce9ddc",
+    "specialization_area": "laryngology",
+    "years_of_experience": 11,
+    "certifications": [
+      {
+        "certification_name": "usmle",
+        "issuing_body": "international_board",
+        "issue_date": "2019-09-25",
+        "expiry_date": "2024-09-23"
+      },
+      {
+        "certification_name": "dm",
+        "issuing_body": "international_board",
+        "issue_date": "2018-04-05",
+        "expiry_date": "2023-04-04"
+      }
+    ],
+    "education": [
+      {
+        "degree": "bds",
+        "institution": "Delgado-Becker Medical College",
+        "year": 2019,
+        "country": "usa"
+      }
+    ],
+    "languages_spoken": [
+      "urdu",
+      "bengali",
+      "hindi",
+      "kannada"
+    ],
+    "is_primary_specialization": true,
+    "created_at": "2025-10-07T20:16:40.599600",
+    "updated_at": "2026-01-10T20:16:40.599600"
+  },
+  {
+    "expertise_id": "2f7e7f58-6d7f-47e7-82aa-25f146585453",
+    "service_person_id": "61177adb-a938-40c3-b04d-eee76875ff2a",
+    "specialization_area": "epilepsy",
+    "years_of_experience": 29,
+    "certifications": [
+      {
+        "certification_name": "plab",
+        "issuing_body": "state_medical_council",
+        "issue_date": "2018-01-20",
+        "expiry_date": null
+      },
+      {
+        "certification_name": "other",
+        "issuing_body": "international_board",
+        "issue_date": "2023-03-21",
+        "expiry_date": null
+      }
+    ],
+    "education": [
+      {
+        "degree": "bams",
+        "institution": "Martinez LLC Medical College",
+        "year": 1994,
+        "country": "uk"
+      },
+      {
+        "degree": "bds",
+        "institution": "Sweeney-Ross Medical College",
+        "year": 1998,
+        "country": "canada"
+      }
+    ],
+    "languages_spoken": [
+      "gujarati",
+      "other"
+    ],
+    "is_primary_specialization": true,
+    "created_at": "2025-08-14T20:16:40.599600",
+    "updated_at": "2026-01-10T20:16:40.599600"
+  },
+  {
+    "expertise_id": "1a91dd91-2670-4003-b08a-524918a06ada",
+    "service_person_id": "8f90e246-a596-4e07-9fcf-d6820c5e05c6",
+    "specialization_area": "epilepsy",
+    "years_of_experience": 1,
+    "certifications": [
+      {
+        "certification_name": "dm",
+        "issuing_body": "other",
+        "issue_date": "2019-07-24",
+        "expiry_date": null
+      },
+      {
+        "certification_name": "mch",
+        "issuing_body": "international_board",
+        "issue_date": "2024-03-18",
+        "expiry_date": null
+      }
+    ],
+    "education": [
+      {
+        "degree": "bpt",
+        "institution": "Woods, Smith and Hill Medical College",
+        "year": 2011,
+        "country": "canada"
+      },
+      {
+        "degree": "bds",
+        "institution": "Garcia-Reyes Medical College",
+        "year": 1996,
+        "country": "australia"
+      }
+    ],
+    "languages_spoken": [
+      "bengali",
+      "marathi",
+      "assamese"
+    ],
+    "is_primary_specialization": true,
+    "created_at": "2025-04-20T20:16:40.599600",
+    "updated_at": "2026-01-10T20:16:40.599600"
+  },
+  {
+    "expertise_id": "f0523f8c-a90e-4b82-83cc-29624bbcbec3",
+    "service_person_id": "16451223-95ee-447d-b772-26f3b883b6b1",
+    "specialization_area": "stroke",
+    "years_of_experience": 4,
+    "certifications": [
+      {
+        "certification_name": "mch",
+        "issuing_body": "other",
+        "issue_date": "2017-03-21",
+        "expiry_date": "2022-03-20"
+      },
+      {
+        "certification_name": "other",
+        "issuing_body": "mci",
+        "issue_date": "2022-07-14",
+        "expiry_date": "2027-07-13"
+      }
+    ],
+    "education": [
+      {
+        "degree": "other",
+        "institution": "Martin-Hancock Medical College",
+        "year": 2001,
+        "country": "other"
+      }
+    ],
+    "languages_spoken": [
+      "telugu",
+      "punjabi",
+      "bengali"
+    ],
+    "is_primary_specialization": true,
+    "created_at": "2026-01-06T20:16:40.599600",
+    "updated_at": "2026-01-10T20:16:40.599600"
+  },
+  {
+    "expertise_id": "44ba1447-9af8-44a7-8e14-ef1d558bf318",
+    "service_person_id": "16451223-95ee-447d-b772-26f3b883b6b1",
+    "specialization_area": "neurocritical_care",
+    "years_of_experience": 10,
+    "certifications": [
+      {
+        "certification_name": "mch",
+        "issuing_body": "state_medical_council",
+        "issue_date": "2020-10-03",
+        "expiry_date": "2025-10-02"
+      },
+      {
+        "certification_name": "mch",
+        "issuing_body": "mci",
+        "issue_date": "2020-11-10",
+        "expiry_date": "2025-11-09"
+      },
+      {
+        "certification_name": "dnb",
+        "issuing_body": "international_board",
+        "issue_date": "2019-01-28",
+        "expiry_date": null
+      }
+    ],
+    "education": [
+      {
+        "degree": "bhms",
+        "institution": "White Ltd Medical College",
+        "year": 1997,
+        "country": "usa"
+      },
+      {
+        "degree": "ms",
+        "institution": "Hernandez-Rubio Medical College",
+        "year": 2001,
+        "country": "canada"
+      }
+    ],
+    "languages_spoken": [
+      "telugu",
+      "tamil",
+      "bengali",
+      "english"
+    ],
+    "is_primary_specialization": false,
+    "created_at": "2025-08-02T20:16:40.599600",
+    "updated_at": "2026-01-10T20:16:40.599600"
+  },
+  {
+    "expertise_id": "116a5645-c66f-4b46-bd44-a8cb1c4effed",
+    "service_person_id": "d2b876fb-e45e-4827-8143-af00200b72d3",
+    "specialization_area": "movement_disorders",
+    "years_of_experience": 1,
+    "certifications": [
+      {
+        "certification_name": "frcs",
+        "issuing_body": "mci",
+        "issue_date": "2022-09-01",
+        "expiry_date": null
+      }
+    ],
+    "education": [
+      {
+        "degree": "mbbs",
+        "institution": "Ruiz, Barnett and Palmer Medical College",
+        "year": 1999,
+        "country": "canada"
+      },
+      {
+        "degree": "md",
+        "institution": "Bell, Jones and Eaton Medical College",
+        "year": 2015,
+        "country": "usa"
+      }
+    ],
+    "languages_spoken": [
+      "assamese",
+      "punjabi",
+      "malayalam",
+      "english"
+    ],
+    "is_primary_specialization": true,
+    "created_at": "2025-08-25T20:16:40.600604",
+    "updated_at": "2026-01-10T20:16:40.600604"
+  },
+  {
+    "expertise_id": "fa0877e4-a2b1-4b52-8eb2-3de2832f7bc0",
+    "service_person_id": "d2b876fb-e45e-4827-8143-af00200b72d3",
+    "specialization_area": "neurocritical_care",
+    "years_of_experience": 0,
+    "certifications": [
+      {
+        "certification_name": "mch",
+        "issuing_body": "mci",
+        "issue_date": "2017-04-14",
+        "expiry_date": null
+      },
+      {
+        "certification_name": "dm",
+        "issuing_body": "state_medical_council",
+        "issue_date": "2019-09-09",
+        "expiry_date": null
+      }
+    ],
+    "education": [
+      {
+        "degree": "md",
+        "institution": "Baker, Brooks and Thompson Medical College",
+        "year": 2014,
+        "country": "usa"
+      },
+      {
+        "degree": "dm",
+        "institution": "Brandt PLC Medical College",
+        "year": 2006,
+        "country": "other"
+      }
+    ],
+    "languages_spoken": [
+      "gujarati",
+      "telugu",
+      "english",
+      "odia"
+    ],
+    "is_primary_specialization": false,
+    "created_at": "2025-10-03T20:16:40.600604",
+    "updated_at": "2026-01-10T20:16:40.600604"
+  },
+  {
+    "expertise_id": "f71354fe-9302-49dc-b984-b07a65ae74ee",
+    "service_person_id": "903506f4-5021-4b40-bc7f-119ed349c963",
+    "specialization_area": "child_psychiatry",
+    "years_of_experience": 24,
+    "certifications": [
+      {
+        "certification_name": "mch",
+        "issuing_body": "state_medical_council",
+        "issue_date": "2019-10-13",
+        "expiry_date": "2024-10-11"
+      },
+      {
+        "certification_name": "dnb",
+        "issuing_body": "other",
+        "issue_date": "2017-05-02",
+        "expiry_date": null
+      }
+    ],
+    "education": [
+      {
+        "degree": "bams",
+        "institution": "Willis-Solomon Medical College",
+        "year": 1998,
+        "country": "usa"
+      }
+    ],
+    "languages_spoken": [
+      "other",
+      "bengali",
+      "kannada",
+      "malayalam"
+    ],
+    "is_primary_specialization": true,
+    "created_at": "2025-09-19T20:16:40.600604",
+    "updated_at": "2026-01-10T20:16:40.600604"
+  },
+  {
+    "expertise_id": "ae0e96c5-bed5-450a-88d2-b27100d1e03b",
+    "service_person_id": "e558d614-df80-47e1-a888-f6c89bdc9681",
+    "specialization_area": "addiction_psychiatry",
+    "years_of_experience": 1,
+    "certifications": [
+      {
+        "certification_name": "mch",
+        "issuing_body": "international_board",
+        "issue_date": "2022-04-07",
+        "expiry_date": null
+      },
+      {
+        "certification_name": "ms",
+        "issuing_body": "state_medical_council",
+        "issue_date": "2020-10-09",
+        "expiry_date": "2025-10-08"
+      }
+    ],
+    "education": [
+      {
+        "degree": "bams",
+        "institution": "Moreno-Morales Medical College",
+        "year": 1995,
+        "country": "usa"
+      },
+      {
+        "degree": "dm",
+        "institution": "Gillespie LLC Medical College",
+        "year": 2005,
+        "country": "usa"
+      }
+    ],
+    "languages_spoken": [
+      "other",
+      "marathi",
+      "malayalam"
+    ],
+    "is_primary_specialization": true,
+    "created_at": "2025-12-02T20:16:40.600604",
+    "updated_at": "2026-01-10T20:16:40.600604"
+  },
+  {
+    "expertise_id": "bd701213-a396-42e7-ad26-8098dab07dfc",
+    "service_person_id": "028a926a-32f3-4b29-a9bf-92313d77d083",
+    "specialization_area": "adult_psychiatry",
+    "years_of_experience": 23,
+    "certifications": [
+      {
+        "certification_name": "dnb",
+        "issuing_body": "state_medical_council",
+        "issue_date": "2021-02-23",
+        "expiry_date": "2026-02-22"
+      },
+      {
+        "certification_name": "md",
+        "issuing_body": "international_board",
+        "issue_date": "2017-05-15",
+        "expiry_date": null
+      },
+      {
+        "certification_name": "plab",
+        "issuing_body": "other",
+        "issue_date": "2016-02-17",
+        "expiry_date": null
+      }
+    ],
+    "education": [
+      {
+        "degree": "mbbs",
+        "institution": "Glenn-Robinson Medical College",
+        "year": 1992,
+        "country": "canada"
+      },
+      {
+        "degree": "bds",
+        "institution": "Mcclure, Johnston and King Medical College",
+        "year": 2002,
+        "country": "australia"
+      }
+    ],
+    "languages_spoken": [
+      "punjabi",
+      "kannada",
+      "english"
+    ],
+    "is_primary_specialization": true,
+    "created_at": "2025-04-17T20:16:40.600604",
+    "updated_at": "2026-01-10T20:16:40.600604"
+  },
+  {
+    "expertise_id": "3dc5742e-a303-49da-9a6e-95bf07b6869d",
+    "service_person_id": "5c0b9bad-4b74-4a69-8a8f-5aa7132b4be1",
+    "specialization_area": "medical_oncology",
+    "years_of_experience": 3,
+    "certifications": [
+      {
+        "certification_name": "usmle",
+        "issuing_body": "international_board",
+        "issue_date": "2022-06-21",
+        "expiry_date": "2027-06-20"
+      },
+      {
+        "certification_name": "dnb",
+        "issuing_body": "state_medical_council",
+        "issue_date": "2020-10-08",
+        "expiry_date": null
+      },
+      {
+        "certification_name": "mch",
+        "issuing_body": "state_medical_council",
+        "issue_date": "2016-09-22",
+        "expiry_date": null
+      }
+    ],
+    "education": [
+      {
+        "degree": "bds",
+        "institution": "Green Group Medical College",
+        "year": 2003,
+        "country": "india"
+      }
+    ],
+    "languages_spoken": [
+      "assamese",
+      "urdu",
+      "other",
+      "tamil"
+    ],
+    "is_primary_specialization": true,
+    "created_at": "2025-02-19T20:16:40.600604",
+    "updated_at": "2026-01-10T20:16:40.600604"
+  },
+  {
+    "expertise_id": "1c8224d0-afb2-4b95-a39a-c505af2511d9",
+    "service_person_id": "5c0b9bad-4b74-4a69-8a8f-5aa7132b4be1",
+    "specialization_area": "surgical_oncology",
+    "years_of_experience": 4,
+    "certifications": [
+      {
+        "certification_name": "md",
+        "issuing_body": "international_board",
+        "issue_date": "2019-09-26",
+        "expiry_date": "2024-09-24"
+      },
+      {
+        "certification_name": "dm",
+        "issuing_body": "state_medical_council",
+        "issue_date": "2019-04-30",
+        "expiry_date": null
+      }
+    ],
+    "education": [
+      {
+        "degree": "bams",
+        "institution": "Lee-Day Medical College",
+        "year": 2005,
+        "country": "uk"
+      },
+      {
+        "degree": "bpt",
+        "institution": "Yates, Barajas and Wright Medical College",
+        "year": 2007,
+        "country": "india"
+      }
+    ],
+    "languages_spoken": [
+      "marathi",
+      "punjabi",
+      "odia",
+      "tamil"
+    ],
+    "is_primary_specialization": false,
+    "created_at": "2025-04-05T20:16:40.601600",
+    "updated_at": "2026-01-10T20:16:40.601600"
+  },
+  {
+    "expertise_id": "1d02f14c-a525-4f7a-8565-103bcec079b1",
+    "service_person_id": "6cdeb9ee-c64a-4c95-987b-6a4f51cdc9d7",
+    "specialization_area": "radiation_oncology",
+    "years_of_experience": 10,
+    "certifications": [
+      {
+        "certification_name": "plab",
+        "issuing_body": "university",
+        "issue_date": "2021-04-12",
+        "expiry_date": "2026-04-11"
+      },
+      {
+        "certification_name": "dnb",
+        "issuing_body": "state_medical_council",
+        "issue_date": "2017-04-17",
+        "expiry_date": "2022-04-16"
+      }
+    ],
+    "education": [
+      {
+        "degree": "mbbs",
+        "institution": "Jackson, Calhoun and Jones Medical College",
+        "year": 2011,
+        "country": "india"
+      },
+      {
+        "degree": "md",
+        "institution": "Lambert-Miller Medical College",
+        "year": 2017,
+        "country": "usa"
+      }
+    ],
+    "languages_spoken": [
+      "gujarati",
+      "urdu",
+      "telugu",
+      "other"
+    ],
+    "is_primary_specialization": true,
+    "created_at": "2025-09-12T20:16:40.601600",
+    "updated_at": "2026-01-10T20:16:40.601600"
+  },
+  {
+    "expertise_id": "34fe56f7-c76a-42d2-85bd-e47411d94a4b",
+    "service_person_id": "6cdeb9ee-c64a-4c95-987b-6a4f51cdc9d7",
+    "specialization_area": "medical_oncology",
+    "years_of_experience": 4,
+    "certifications": [
+      {
+        "certification_name": "plab",
+        "issuing_body": "other",
+        "issue_date": "2018-03-03",
+        "expiry_date": "2023-03-02"
+      }
+    ],
+    "education": [
+      {
+        "degree": "bhms",
+        "institution": "Richardson Inc Medical College",
+        "year": 2017,
+        "country": "usa"
+      }
+    ],
+    "languages_spoken": [
+      "other",
+      "english",
+      "punjabi",
+      "telugu"
+    ],
+    "is_primary_specialization": false,
+    "created_at": "2025-10-21T20:16:40.601600",
+    "updated_at": "2026-01-10T20:16:40.601600"
+  },
+  {
+    "expertise_id": "3143a4f8-c342-4ecf-99cc-f9772a518c11",
+    "service_person_id": "c971acd2-c60f-43ab-b370-3fdd3d620722",
+    "specialization_area": "surgical_oncology",
+    "years_of_experience": 9,
+    "certifications": [
+      {
+        "certification_name": "dnb",
+        "issuing_body": "university",
+        "issue_date": "2023-12-21",
+        "expiry_date": "2028-12-19"
+      }
+    ],
+    "education": [
+      {
+        "degree": "md",
+        "institution": "Edwards, Morales and Mckinney Medical College",
+        "year": 2018,
+        "country": "canada"
+      },
+      {
+        "degree": "dnb",
+        "institution": "Smith-Hamilton Medical College",
+        "year": 1995,
+        "country": "australia"
+      }
+    ],
+    "languages_spoken": [
+      "marathi",
+      "odia",
+      "bengali",
+      "hindi"
+    ],
+    "is_primary_specialization": true,
+    "created_at": "2025-05-04T20:16:40.601600",
+    "updated_at": "2026-01-10T20:16:40.601600"
+  },
+  {
+    "expertise_id": "a6ebc838-b680-497d-8c6d-06365297431b",
+    "service_person_id": "f6a741eb-22f0-4349-8eaf-59ae545a3248",
+    "specialization_area": "radiation_oncology",
+    "years_of_experience": 0,
+    "certifications": [
+      {
+        "certification_name": "usmle",
+        "issuing_body": "mci",
+        "issue_date": "2021-04-03",
+        "expiry_date": null
+      },
+      {
+        "certification_name": "ms",
+        "issuing_body": "mci",
+        "issue_date": "2016-07-29",
+        "expiry_date": null
+      }
+    ],
+    "education": [
+      {
+        "degree": "bams",
+        "institution": "Wilson Inc Medical College",
+        "year": 2014,
+        "country": "usa"
+      },
+      {
+        "degree": "other",
+        "institution": "Burns Group Medical College",
+        "year": 2016,
+        "country": "canada"
+      }
+    ],
+    "languages_spoken": [
+      "hindi",
+      "urdu",
+      "english",
+      "punjabi"
+    ],
+    "is_primary_specialization": true,
+    "created_at": "2025-10-03T20:16:40.601600",
+    "updated_at": "2026-01-10T20:16:40.601600"
+  },
+  {
+    "expertise_id": "414c674a-4ccc-4bab-a2f1-0b1461c01a49",
+    "service_person_id": "04b63096-4f2e-4629-a042-f4ae36e08aa0",
+    "specialization_area": "reconstructive_urology",
+    "years_of_experience": 9,
+    "certifications": [
+      {
+        "certification_name": "md",
+        "issuing_body": "university",
+        "issue_date": "2017-04-06",
+        "expiry_date": "2022-04-05"
+      }
+    ],
+    "education": [
+      {
+        "degree": "md",
+        "institution": "Lambert-Sheppard Medical College",
+        "year": 1993,
+        "country": "india"
+      }
+    ],
+    "languages_spoken": [
+      "malayalam",
+      "odia",
+      "urdu",
+      "punjabi"
+    ],
+    "is_primary_specialization": true,
+    "created_at": "2025-04-21T20:16:40.601600",
+    "updated_at": "2026-01-10T20:16:40.601600"
+  },
+  {
+    "expertise_id": "efea8225-d2ce-48df-b69d-1e8a9d781706",
+    "service_person_id": "04b63096-4f2e-4629-a042-f4ae36e08aa0",
+    "specialization_area": "pediatric_urology",
+    "years_of_experience": 23,
+    "certifications": [
+      {
+        "certification_name": "ms",
+        "issuing_body": "international_board",
+        "issue_date": "2016-02-27",
+        "expiry_date": "2021-02-25"
+      },
+      {
+        "certification_name": "mbbs",
+        "issuing_body": "state_medical_council",
+        "issue_date": "2022-04-21",
+        "expiry_date": "2027-04-20"
+      },
+      {
+        "certification_name": "frcs",
+        "issuing_body": "international_board",
+        "issue_date": "2020-02-21",
+        "expiry_date": "2025-02-19"
+      }
+    ],
+    "education": [
+      {
+        "degree": "bams",
+        "institution": "Snyder-Ramirez Medical College",
+        "year": 2006,
+        "country": "canada"
+      },
+      {
+        "degree": "bams",
+        "institution": "Perkins LLC Medical College",
+        "year": 2009,
+        "country": "other"
+      }
+    ],
+    "languages_spoken": [
+      "punjabi",
+      "other",
+      "assamese",
+      "kannada"
+    ],
+    "is_primary_specialization": false,
+    "created_at": "2025-12-29T20:16:40.602603",
+    "updated_at": "2026-01-10T20:16:40.602603"
+  },
+  {
+    "expertise_id": "d6fd93d6-b493-4f5f-bdf3-c7bb9e278f1d",
+    "service_person_id": "bd7ab506-795c-4f27-a6aa-414a73794a89",
+    "specialization_area": "pediatric_urology",
+    "years_of_experience": 26,
+    "certifications": [
+      {
+        "certification_name": "mch",
+        "issuing_body": "international_board",
+        "issue_date": "2024-03-27",
+        "expiry_date": null
+      },
+      {
+        "certification_name": "plab",
+        "issuing_body": "state_medical_council",
+        "issue_date": "2023-11-04",
+        "expiry_date": "2028-11-02"
+      }
+    ],
+    "education": [
+      {
+        "degree": "bpt",
+        "institution": "Collier-Christian Medical College",
+        "year": 1991,
+        "country": "other"
+      }
+    ],
+    "languages_spoken": [
+      "kannada",
+      "telugu"
+    ],
+    "is_primary_specialization": true,
+    "created_at": "2025-10-31T20:16:40.602603",
+    "updated_at": "2026-01-10T20:16:40.602603"
+  },
+  {
+    "expertise_id": "5440a897-48f8-413f-a478-168670aa1232",
+    "service_person_id": "bd7ab506-795c-4f27-a6aa-414a73794a89",
+    "specialization_area": "reconstructive_urology",
+    "years_of_experience": 16,
+    "certifications": [
+      {
+        "certification_name": "mch",
+        "issuing_body": "other",
+        "issue_date": "2018-06-15",
+        "expiry_date": null
+      }
+    ],
+    "education": [
+      {
+        "degree": "bhms",
+        "institution": "Perez-Garcia Medical College",
+        "year": 1994,
+        "country": "usa"
+      }
+    ],
+    "languages_spoken": [
+      "assamese",
+      "marathi",
+      "hindi",
+      "bengali"
+    ],
+    "is_primary_specialization": false,
+    "created_at": "2025-05-16T20:16:40.602603",
+    "updated_at": "2026-01-10T20:16:40.602603"
+  },
+  {
+    "expertise_id": "c4d4029a-dbdb-4d8b-b008-95769217eae1",
+    "service_person_id": "811885ec-4647-417b-aaf1-5f92ce82d41f",
+    "specialization_area": "urologic_oncology",
+    "years_of_experience": 11,
+    "certifications": [
+      {
+        "certification_name": "other",
+        "issuing_body": "international_board",
+        "issue_date": "2021-06-03",
+        "expiry_date": "2026-06-02"
+      }
+    ],
+    "education": [
+      {
+        "degree": "ms",
+        "institution": "Bell-Cruz Medical College",
+        "year": 1995,
+        "country": "usa"
+      }
+    ],
+    "languages_spoken": [
+      "marathi",
+      "kannada",
+      "english",
+      "malayalam"
+    ],
+    "is_primary_specialization": true,
+    "created_at": "2025-11-03T20:16:40.602603",
+    "updated_at": "2026-01-10T20:16:40.602603"
+  },
+  {
+    "expertise_id": "a88b95c4-a906-4790-947f-01226ae24bc0",
+    "service_person_id": "d30bc5fc-4288-42f8-8db7-645454d8876d",
+    "specialization_area": "endoscopy",
+    "years_of_experience": 13,
+    "certifications": [
+      {
+        "certification_name": "usmle",
+        "issuing_body": "other",
+        "issue_date": "2019-10-27",
+        "expiry_date": null
+      },
+      {
+        "certification_name": "md",
+        "issuing_body": "university",
+        "issue_date": "2020-08-04",
+        "expiry_date": null
+      }
+    ],
+    "education": [
+      {
+        "degree": "md",
+        "institution": "Taylor Inc Medical College",
+        "year": 2001,
+        "country": "canada"
+      },
+      {
+        "degree": "md",
+        "institution": "Garcia-Rosales Medical College",
+        "year": 1990,
+        "country": "india"
+      }
+    ],
+    "languages_spoken": [
+      "malayalam",
+      "english",
+      "other"
+    ],
+    "is_primary_specialization": true,
+    "created_at": "2025-05-27T20:16:40.602603",
+    "updated_at": "2026-01-10T20:16:40.602603"
+  },
+  {
+    "expertise_id": "1a4837bd-45f9-49ca-99b1-ee794fd94a60",
+    "service_person_id": "5633578f-c46a-4d5f-8af0-f237ed3da083",
+    "specialization_area": "endoscopy",
+    "years_of_experience": 3,
+    "certifications": [
+      {
+        "certification_name": "md",
+        "issuing_body": "other",
+        "issue_date": "2019-06-12",
+        "expiry_date": null
+      },
+      {
+        "certification_name": "plab",
+        "issuing_body": "state_medical_council",
+        "issue_date": "2021-08-17",
+        "expiry_date": "2026-08-16"
+      },
+      {
+        "certification_name": "ms",
+        "issuing_body": "university",
+        "issue_date": "2021-06-23",
+        "expiry_date": "2026-06-22"
+      }
+    ],
+    "education": [
+      {
+        "degree": "mch",
+        "institution": "Jackson, Ellison and Neal Medical College",
+        "year": 1998,
+        "country": "other"
+      }
+    ],
+    "languages_spoken": [
+      "tamil",
+      "hindi",
+      "urdu"
+    ],
+    "is_primary_specialization": true,
+    "created_at": "2025-06-07T20:16:40.602603",
+    "updated_at": "2026-01-10T20:16:40.602603"
+  },
+  {
+    "expertise_id": "60a19176-1a73-4e45-ac4c-b0fed9c9f15e",
+    "service_person_id": "5633578f-c46a-4d5f-8af0-f237ed3da083",
+    "specialization_area": "hepatology",
+    "years_of_experience": 12,
+    "certifications": [
+      {
+        "certification_name": "plab",
+        "issuing_body": "state_medical_council",
+        "issue_date": "2021-10-21",
+        "expiry_date": null
+      }
+    ],
+    "education": [
+      {
+        "degree": "ms",
+        "institution": "Frey-Lawrence Medical College",
+        "year": 2010,
+        "country": "canada"
+      },
+      {
+        "degree": "dm",
+        "institution": "Nguyen-Shields Medical College",
+        "year": 1992,
+        "country": "australia"
+      }
+    ],
+    "languages_spoken": [
+      "malayalam",
+      "english"
+    ],
+    "is_primary_specialization": false,
+    "created_at": "2025-12-13T20:16:40.602603",
+    "updated_at": "2026-01-10T20:16:40.602603"
+  },
+  {
+    "expertise_id": "66c4d4ef-3782-4b5a-b20f-386c64012e21",
+    "service_person_id": "3cd0f889-5103-4236-aac4-adb81086977a",
+    "specialization_area": "endoscopy",
+    "years_of_experience": 8,
+    "certifications": [
+      {
+        "certification_name": "mch",
+        "issuing_body": "state_medical_council",
+        "issue_date": "2022-01-11",
+        "expiry_date": null
+      }
+    ],
+    "education": [
+      {
+        "degree": "mbbs",
+        "institution": "Patterson, Wilkinson and Rios Medical College",
+        "year": 1993,
+        "country": "uk"
+      },
+      {
+        "degree": "bds",
+        "institution": "Wood LLC Medical College",
+        "year": 2012,
+        "country": "usa"
+      }
+    ],
+    "languages_spoken": [
+      "marathi",
+      "hindi",
+      "odia"
+    ],
+    "is_primary_specialization": true,
+    "created_at": "2025-12-01T20:16:40.603593",
+    "updated_at": "2026-01-10T20:16:40.603593"
+  },
+  {
+    "expertise_id": "a36e77e1-0b4a-42bc-b6a7-eb88202c7e3d",
+    "service_person_id": "3c702d21-642a-4277-8070-885f9d8a6337",
+    "specialization_area": "critical_care_pulmonology",
+    "years_of_experience": 7,
+    "certifications": [
+      {
+        "certification_name": "dm",
+        "issuing_body": "university",
+        "issue_date": "2017-10-24",
+        "expiry_date": null
+      },
+      {
+        "certification_name": "usmle",
+        "issuing_body": "other",
+        "issue_date": "2023-08-05",
+        "expiry_date": "2028-08-03"
+      }
+    ],
+    "education": [
+      {
+        "degree": "mbbs",
+        "institution": "Anderson, Brown and Gonzalez Medical College",
+        "year": 2004,
+        "country": "other"
+      },
+      {
+        "degree": "ms",
+        "institution": "Sanchez LLC Medical College",
+        "year": 2010,
+        "country": "australia"
+      }
+    ],
+    "languages_spoken": [
+      "telugu",
+      "bengali"
+    ],
+    "is_primary_specialization": true,
+    "created_at": "2025-03-19T20:16:40.603593",
+    "updated_at": "2026-01-10T20:16:40.603593"
+  },
+  {
+    "expertise_id": "15fd8b71-8e65-49d6-812a-0d86b969c673",
+    "service_person_id": "3c702d21-642a-4277-8070-885f9d8a6337",
+    "specialization_area": "sleep_medicine",
+    "years_of_experience": 16,
+    "certifications": [
+      {
+        "certification_name": "frcs",
+        "issuing_body": "mci",
+        "issue_date": "2019-05-17",
+        "expiry_date": "2024-05-15"
+      },
+      {
+        "certification_name": "mch",
+        "issuing_body": "state_medical_council",
+        "issue_date": "2022-06-02",
+        "expiry_date": null
+      }
+    ],
+    "education": [
+      {
+        "degree": "mbbs",
+        "institution": "Day, Smith and Hill Medical College",
+        "year": 2002,
+        "country": "uk"
+      }
+    ],
+    "languages_spoken": [
+      "tamil",
+      "english",
+      "punjabi",
+      "bengali"
+    ],
+    "is_primary_specialization": false,
+    "created_at": "2025-04-07T20:16:40.603593",
+    "updated_at": "2026-01-10T20:16:40.603593"
+  },
+  {
+    "expertise_id": "24d8e4af-f795-4dc4-ad44-c9e005ae0d24",
+    "service_person_id": "7f6ab6c2-c56d-4f57-bacf-c59f16f38a62",
+    "specialization_area": "interventional_pulmonology",
+    "years_of_experience": 0,
+    "certifications": [
+      {
+        "certification_name": "other",
+        "issuing_body": "mci",
+        "issue_date": "2019-07-17",
+        "expiry_date": "2024-07-15"
+      },
+      {
+        "certification_name": "ms",
+        "issuing_body": "state_medical_council",
+        "issue_date": "2017-02-20",
+        "expiry_date": "2022-02-19"
+      },
+      {
+        "certification_name": "other",
+        "issuing_body": "state_medical_council",
+        "issue_date": "2017-07-28",
+        "expiry_date": "2022-07-27"
+      }
+    ],
+    "education": [
+      {
+        "degree": "other",
+        "institution": "Caldwell-Gonzalez Medical College",
+        "year": 1994,
+        "country": "australia"
+      }
+    ],
+    "languages_spoken": [
+      "odia",
+      "tamil",
+      "malayalam"
+    ],
+    "is_primary_specialization": true,
+    "created_at": "2025-08-23T20:16:40.603593",
+    "updated_at": "2026-01-10T20:16:40.603593"
+  },
+  {
+    "expertise_id": "a8952581-ba7f-4e71-a08e-2028bd157088",
+    "service_person_id": "48746fda-a687-4f8a-960c-4c582088036c",
+    "specialization_area": "sleep_medicine",
+    "years_of_experience": 9,
+    "certifications": [
+      {
+        "certification_name": "dm",
+        "issuing_body": "university",
+        "issue_date": "2020-05-10",
+        "expiry_date": null
+      }
+    ],
+    "education": [
+      {
+        "degree": "md",
+        "institution": "Chen LLC Medical College",
+        "year": 1998,
+        "country": "india"
+      }
+    ],
+    "languages_spoken": [
+      "malayalam",
+      "odia",
+      "hindi",
+      "bengali"
+    ],
+    "is_primary_specialization": true,
+    "created_at": "2025-10-28T20:16:40.603593",
+    "updated_at": "2026-01-10T20:16:40.603593"
+  },
+  {
+    "expertise_id": "ca73206e-3f91-4e9f-8786-ded9f6f8d1b2",
+    "service_person_id": "3637a3be-81df-4826-b2b2-9203800de8f4",
+    "specialization_area": "reproductive_endocrinology",
+    "years_of_experience": 7,
+    "certifications": [
+      {
+        "certification_name": "mbbs",
+        "issuing_body": "mci",
+        "issue_date": "2019-08-16",
+        "expiry_date": "2024-08-14"
+      }
+    ],
+    "education": [
+      {
+        "degree": "other",
+        "institution": "Foster, Lee and Nguyen Medical College",
+        "year": 1997,
+        "country": "india"
+      },
+      {
+        "degree": "dm",
+        "institution": "Rush-Moss Medical College",
+        "year": 1993,
+        "country": "uk"
+      }
+    ],
+    "languages_spoken": [
+      "other",
+      "telugu",
+      "punjabi"
+    ],
+    "is_primary_specialization": true,
+    "created_at": "2025-04-16T20:16:40.603593",
+    "updated_at": "2026-01-10T20:16:40.603593"
+  },
+  {
+    "expertise_id": "db5f236f-0154-49bc-856c-69176fc85ee0",
+    "service_person_id": "3637a3be-81df-4826-b2b2-9203800de8f4",
+    "specialization_area": "thyroid_disorders",
+    "years_of_experience": 25,
+    "certifications": [
+      {
+        "certification_name": "md",
+        "issuing_body": "mci",
+        "issue_date": "2017-01-01",
+        "expiry_date": "2021-12-31"
+      }
+    ],
+    "education": [
+      {
+        "degree": "dm",
+        "institution": "Fletcher Ltd Medical College",
+        "year": 2018,
+        "country": "india"
+      },
+      {
+        "degree": "ms",
+        "institution": "Graham PLC Medical College",
+        "year": 1992,
+        "country": "uk"
+      }
+    ],
+    "languages_spoken": [
+      "kannada",
+      "telugu",
+      "marathi"
+    ],
+    "is_primary_specialization": false,
+    "created_at": "2025-04-10T20:16:40.603593",
+    "updated_at": "2026-01-10T20:16:40.603593"
+  },
+  {
+    "expertise_id": "a1ea2e7a-355c-42bf-9266-1c3f1efcc8bf",
+    "service_person_id": "04061767-ed41-4a5b-9830-12569d27866c",
+    "specialization_area": "diabetes",
+    "years_of_experience": 8,
+    "certifications": [
+      {
+        "certification_name": "frcs",
+        "issuing_body": "other",
+        "issue_date": "2024-05-22",
+        "expiry_date": null
+      }
+    ],
+    "education": [
+      {
+        "degree": "bds",
+        "institution": "Gonzalez-Snow Medical College",
+        "year": 1997,
+        "country": "australia"
+      }
+    ],
+    "languages_spoken": [
+      "marathi",
+      "kannada"
+    ],
+    "is_primary_specialization": true,
+    "created_at": "2025-08-26T20:16:40.603593",
+    "updated_at": "2026-01-10T20:16:40.603593"
+  },
+  {
+    "expertise_id": "56ac6372-8b72-497d-a780-301dafac0f5f",
+    "service_person_id": "2e427378-88a0-4a51-85cf-023438df4b3e",
+    "specialization_area": "thyroid_disorders",
+    "years_of_experience": 25,
+    "certifications": [
+      {
+        "certification_name": "mch",
+        "issuing_body": "university",
+        "issue_date": "2016-01-27",
+        "expiry_date": null
+      }
+    ],
+    "education": [
+      {
+        "degree": "bams",
+        "institution": "Black, White and Bernard Medical College",
+        "year": 2011,
+        "country": "canada"
+      },
+      {
+        "degree": "ms",
+        "institution": "Sandoval-Vargas Medical College",
+        "year": 2001,
+        "country": "canada"
+      }
+    ],
+    "languages_spoken": [
+      "urdu",
+      "telugu",
+      "other",
+      "odia"
+    ],
+    "is_primary_specialization": true,
+    "created_at": "2025-09-26T20:16:40.604597",
+    "updated_at": "2026-01-10T20:16:40.604597"
+  },
+  {
+    "expertise_id": "fe4777f1-a5ba-46aa-bb2c-bb0e00bb0434",
+    "service_person_id": "0e67953d-2492-472f-931b-dcfa314195c5",
+    "specialization_area": "diagnostic_radiology",
+    "years_of_experience": 10,
+    "certifications": [
+      {
+        "certification_name": "dnb",
+        "issuing_body": "university",
+        "issue_date": "2021-09-13",
+        "expiry_date": null
+      },
+      {
+        "certification_name": "mch",
+        "issuing_body": "state_medical_council",
+        "issue_date": "2018-05-07",
+        "expiry_date": "2023-05-06"
+      },
+      {
+        "certification_name": "dm",
+        "issuing_body": "state_medical_council",
+        "issue_date": "2024-02-09",
+        "expiry_date": null
+      }
+    ],
+    "education": [
+      {
+        "degree": "ms",
+        "institution": "Brown-Simpson Medical College",
+        "year": 2014,
+        "country": "other"
+      }
+    ],
+    "languages_spoken": [
+      "tamil",
+      "hindi"
+    ],
+    "is_primary_specialization": true,
+    "created_at": "2025-10-18T20:16:40.604597",
+    "updated_at": "2026-01-10T20:16:40.604597"
+  },
+  {
+    "expertise_id": "300d4836-18a8-4d50-aebf-6ed044a207ca",
+    "service_person_id": "ab2de880-385b-401d-a337-2e860d7d8ff4",
+    "specialization_area": "nuclear_medicine",
+    "years_of_experience": 2,
+    "certifications": [
+      {
+        "certification_name": "usmle",
+        "issuing_body": "mci",
+        "issue_date": "2023-04-30",
+        "expiry_date": null
+      }
+    ],
+    "education": [
+      {
+        "degree": "bhms",
+        "institution": "Carr, Riddle and Adams Medical College",
+        "year": 1999,
+        "country": "uk"
+      }
+    ],
+    "languages_spoken": [
+      "kannada",
+      "tamil",
+      "english"
+    ],
+    "is_primary_specialization": true,
+    "created_at": "2025-04-17T20:16:40.604597",
+    "updated_at": "2026-01-10T20:16:40.604597"
+  },
+  {
+    "expertise_id": "42d80cad-4f85-409e-8dbb-5d1d8aae189d",
+    "service_person_id": "ab2de880-385b-401d-a337-2e860d7d8ff4",
+    "specialization_area": "diagnostic_radiology",
+    "years_of_experience": 6,
+    "certifications": [
+      {
+        "certification_name": "frcs",
+        "issuing_body": "mci",
+        "issue_date": "2023-10-01",
+        "expiry_date": "2028-09-29"
+      },
+      {
+        "certification_name": "md",
+        "issuing_body": "mci",
+        "issue_date": "2018-03-31",
+        "expiry_date": "2023-03-30"
+      },
+      {
+        "certification_name": "plab",
+        "issuing_body": "state_medical_council",
+        "issue_date": "2017-03-26",
+        "expiry_date": null
+      }
+    ],
+    "education": [
+      {
+        "degree": "ms",
+        "institution": "Robbins, Johns and Cooper Medical College",
+        "year": 1998,
+        "country": "canada"
+      },
+      {
+        "degree": "dnb",
+        "institution": "Miller-Buchanan Medical College",
+        "year": 2016,
+        "country": "uk"
+      }
+    ],
+    "languages_spoken": [
+      "telugu",
+      "punjabi"
+    ],
+    "is_primary_specialization": false,
+    "created_at": "2025-04-28T20:16:40.604597",
+    "updated_at": "2026-01-10T20:16:40.604597"
+  },
+  {
+    "expertise_id": "9bd4a5e2-58dc-4740-9b37-785fe1954440",
+    "service_person_id": "fe7950fd-059f-489f-96e8-d85f7ce0ae30",
+    "specialization_area": "diagnostic_radiology",
+    "years_of_experience": 21,
+    "certifications": [
+      {
+        "certification_name": "usmle",
+        "issuing_body": "state_medical_council",
+        "issue_date": "2017-05-15",
+        "expiry_date": null
+      },
+      {
+        "certification_name": "md",
+        "issuing_body": "state_medical_council",
+        "issue_date": "2022-08-27",
+        "expiry_date": "2027-08-26"
+      },
+      {
+        "certification_name": "plab",
+        "issuing_body": "state_medical_council",
+        "issue_date": "2024-04-10",
+        "expiry_date": "2029-04-09"
+      }
+    ],
+    "education": [
+      {
+        "degree": "bds",
+        "institution": "Diaz, Vincent and Williams Medical College",
+        "year": 1994,
+        "country": "other"
+      }
+    ],
+    "languages_spoken": [
+      "english",
+      "bengali",
+      "urdu"
+    ],
+    "is_primary_specialization": true,
+    "created_at": "2025-06-21T20:16:40.604597",
+    "updated_at": "2026-01-10T20:16:40.604597"
+  },
+  {
+    "expertise_id": "162103ea-bd18-412e-9380-8907b17db023",
+    "service_person_id": "1b264cb7-ae18-453f-9a02-71e713dc405e",
+    "specialization_area": "diagnostic_radiology",
+    "years_of_experience": 27,
+    "certifications": [
+      {
+        "certification_name": "mbbs",
+        "issuing_body": "state_medical_council",
+        "issue_date": "2017-05-07",
+        "expiry_date": "2022-05-06"
+      },
+      {
+        "certification_name": "other",
+        "issuing_body": "mci",
+        "issue_date": "2021-07-29",
+        "expiry_date": "2026-07-28"
+      }
+    ],
+    "education": [
+      {
+        "degree": "bpt",
+        "institution": "Berger, Brown and Williams Medical College",
+        "year": 1993,
+        "country": "australia"
+      },
+      {
+        "degree": "dnb",
+        "institution": "David-Cook Medical College",
+        "year": 2013,
+        "country": "uk"
+      }
+    ],
+    "languages_spoken": [
+      "marathi",
+      "odia",
+      "kannada"
+    ],
+    "is_primary_specialization": true,
+    "created_at": "2025-09-23T20:16:40.605601",
+    "updated_at": "2026-01-10T20:16:40.605601"
+  },
+  {
+    "expertise_id": "fb39f5d5-f032-48fb-a814-4f17c837f790",
+    "service_person_id": "1b264cb7-ae18-453f-9a02-71e713dc405e",
+    "specialization_area": "nuclear_medicine",
+    "years_of_experience": 15,
+    "certifications": [
+      {
+        "certification_name": "mch",
+        "issuing_body": "mci",
+        "issue_date": "2017-07-16",
+        "expiry_date": null
+      }
+    ],
+    "education": [
+      {
+        "degree": "ms",
+        "institution": "Wilson Group Medical College",
+        "year": 1998,
+        "country": "other"
+      }
+    ],
+    "languages_spoken": [
+      "other",
+      "gujarati",
+      "hindi"
+    ],
+    "is_primary_specialization": false,
+    "created_at": "2025-11-05T20:16:40.605601",
+    "updated_at": "2026-01-10T20:16:40.605601"
+  },
+  {
+    "expertise_id": "4768c2ca-c4a1-4b60-ae55-94eb9b2d09d1",
+    "service_person_id": "65fde7cf-bb86-4ddc-ba5a-bcbc07c5615c",
+    "specialization_area": "clinical_pathology",
+    "years_of_experience": 9,
+    "certifications": [
+      {
+        "certification_name": "plab",
+        "issuing_body": "other",
+        "issue_date": "2016-07-17",
+        "expiry_date": null
+      },
+      {
+        "certification_name": "usmle",
+        "issuing_body": "state_medical_council",
+        "issue_date": "2021-05-12",
+        "expiry_date": "2026-05-11"
+      },
+      {
+        "certification_name": "ms",
+        "issuing_body": "international_board",
+        "issue_date": "2019-03-14",
+        "expiry_date": "2024-03-12"
+      }
+    ],
+    "education": [
+      {
+        "degree": "dm",
+        "institution": "Lee and Sons Medical College",
+        "year": 2020,
+        "country": "india"
+      }
+    ],
+    "languages_spoken": [
+      "bengali",
+      "punjabi",
+      "assamese"
+    ],
+    "is_primary_specialization": true,
+    "created_at": "2025-06-28T20:16:40.605601",
+    "updated_at": "2026-01-10T20:16:40.605601"
+  },
+  {
+    "expertise_id": "7a53de7b-617d-4379-86f0-b18b0adbff4b",
+    "service_person_id": "65fde7cf-bb86-4ddc-ba5a-bcbc07c5615c",
+    "specialization_area": "forensic_pathology",
+    "years_of_experience": 12,
+    "certifications": [
+      {
+        "certification_name": "other",
+        "issuing_body": "university",
+        "issue_date": "2024-10-29",
+        "expiry_date": null
+      },
+      {
+        "certification_name": "dm",
+        "issuing_body": "state_medical_council",
+        "issue_date": "2019-01-31",
+        "expiry_date": null
+      },
+      {
+        "certification_name": "dm",
+        "issuing_body": "mci",
+        "issue_date": "2021-11-23",
+        "expiry_date": "2026-11-22"
+      }
+    ],
+    "education": [
+      {
+        "degree": "bams",
+        "institution": "Williams PLC Medical College",
+        "year": 2006,
+        "country": "other"
+      },
+      {
+        "degree": "ms",
+        "institution": "Smith-Murray Medical College",
+        "year": 2003,
+        "country": "india"
+      }
+    ],
+    "languages_spoken": [
+      "bengali",
+      "other",
+      "kannada",
+      "telugu"
+    ],
+    "is_primary_specialization": false,
+    "created_at": "2025-02-27T20:16:40.605601",
+    "updated_at": "2026-01-10T20:16:40.605601"
+  },
+  {
+    "expertise_id": "608bbb77-aea5-415d-9dca-1379cd68d745",
+    "service_person_id": "c1da56a7-a99f-4569-8740-179d2980b31c",
+    "specialization_area": "anatomic_pathology",
+    "years_of_experience": 1,
+    "certifications": [
+      {
+        "certification_name": "ms",
+        "issuing_body": "other",
+        "issue_date": "2021-02-28",
+        "expiry_date": "2026-02-27"
+      },
+      {
+        "certification_name": "frcs",
+        "issuing_body": "mci",
+        "issue_date": "2021-02-23",
+        "expiry_date": null
+      },
+      {
+        "certification_name": "ms",
+        "issuing_body": "international_board",
+        "issue_date": "2021-05-11",
+        "expiry_date": "2026-05-10"
+      }
+    ],
+    "education": [
+      {
+        "degree": "other",
+        "institution": "Campbell, Kelley and Hodges Medical College",
+        "year": 2015,
+        "country": "india"
+      },
+      {
+        "degree": "bhms",
+        "institution": "Reid and Sons Medical College",
+        "year": 2015,
+        "country": "australia"
+      }
+    ],
+    "languages_spoken": [
+      "kannada",
+      "assamese",
+      "other"
+    ],
+    "is_primary_specialization": true,
+    "created_at": "2025-07-11T20:16:40.605601",
+    "updated_at": "2026-01-10T20:16:40.605601"
+  },
+  {
+    "expertise_id": "cd19178c-1cd0-46cb-96ed-0d825e68c550",
+    "service_person_id": "15217537-fd51-4f9f-9ad6-046ac857b445",
+    "specialization_area": "forensic_pathology",
+    "years_of_experience": 8,
+    "certifications": [
+      {
+        "certification_name": "mbbs",
+        "issuing_body": "other",
+        "issue_date": "2023-05-14",
+        "expiry_date": null
+      },
+      {
+        "certification_name": "other",
+        "issuing_body": "university",
+        "issue_date": "2019-06-07",
+        "expiry_date": null
+      }
+    ],
+    "education": [
+      {
+        "degree": "bhms",
+        "institution": "Jones-Lucas Medical College",
+        "year": 1999,
+        "country": "other"
+      }
+    ],
+    "languages_spoken": [
+      "tamil",
+      "kannada"
+    ],
+    "is_primary_specialization": true,
+    "created_at": "2025-05-18T20:16:40.605601",
+    "updated_at": "2026-01-10T20:16:40.605601"
+  },
+  {
+    "expertise_id": "96d8f51d-3580-4d7b-bb90-68343aac5828",
+    "service_person_id": "1aff5cec-a79a-4e0f-9e20-020c060df054",
+    "specialization_area": "anatomic_pathology",
+    "years_of_experience": 0,
+    "certifications": [
+      {
+        "certification_name": "usmle",
+        "issuing_body": "other",
+        "issue_date": "2019-10-10",
+        "expiry_date": "2024-10-08"
+      }
+    ],
+    "education": [
+      {
+        "degree": "ms",
+        "institution": "Kelly Group Medical College",
+        "year": 2006,
+        "country": "india"
+      },
+      {
+        "degree": "dnb",
+        "institution": "Smith Ltd Medical College",
+        "year": 1996,
+        "country": "australia"
+      }
+    ],
+    "languages_spoken": [
+      "gujarati",
+      "urdu",
+      "assamese",
+      "bengali"
+    ],
+    "is_primary_specialization": true,
+    "created_at": "2025-01-24T20:16:40.605601",
+    "updated_at": "2026-01-10T20:16:40.605601"
+  },
+  {
+    "expertise_id": "47dadf34-28f8-4477-9e4a-ea2286d0abf0",
+    "service_person_id": "1aff5cec-a79a-4e0f-9e20-020c060df054",
+    "specialization_area": "forensic_pathology",
+    "years_of_experience": 3,
+    "certifications": [
+      {
+        "certification_name": "plab",
+        "issuing_body": "mci",
+        "issue_date": "2021-05-30",
+        "expiry_date": "2026-05-29"
+      }
+    ],
+    "education": [
+      {
+        "degree": "mch",
+        "institution": "Mccall Ltd Medical College",
+        "year": 2000,
+        "country": "canada"
+      }
+    ],
+    "languages_spoken": [
+      "assamese",
+      "malayalam",
+      "punjabi"
+    ],
+    "is_primary_specialization": false,
+    "created_at": "2025-06-29T20:16:40.605601",
+    "updated_at": "2026-01-10T20:16:40.605601"
+  },
+  {
+    "expertise_id": "aaff0b73-135a-4d5a-96ef-f74aefbe2dfd",
+    "service_person_id": "635c8d20-a20b-42e4-b92e-68575af1ed0c",
+    "specialization_area": "critical_care_anesthesia",
+    "years_of_experience": 4,
+    "certifications": [
+      {
+        "certification_name": "mch",
+        "issuing_body": "mci",
+        "issue_date": "2016-02-14",
+        "expiry_date": "2021-02-12"
+      },
+      {
+        "certification_name": "dnb",
+        "issuing_body": "mci",
+        "issue_date": "2020-01-04",
+        "expiry_date": "2025-01-02"
+      },
+      {
+        "certification_name": "dnb",
+        "issuing_body": "state_medical_council",
+        "issue_date": "2024-09-09",
+        "expiry_date": "2029-09-08"
+      }
+    ],
+    "education": [
+      {
+        "degree": "md",
+        "institution": "Vasquez Group Medical College",
+        "year": 2004,
+        "country": "australia"
+      },
+      {
+        "degree": "dm",
+        "institution": "Fry, Black and Mccall Medical College",
+        "year": 1996,
+        "country": "uk"
+      }
+    ],
+    "languages_spoken": [
+      "punjabi",
+      "gujarati",
+      "other",
+      "odia"
+    ],
+    "is_primary_specialization": true,
+    "created_at": "2025-04-16T20:16:40.606590",
+    "updated_at": "2026-01-10T20:16:40.606590"
+  },
+  {
+    "expertise_id": "7a1ee1d8-fb16-4554-9c8f-a6676d856af2",
+    "service_person_id": "635c8d20-a20b-42e4-b92e-68575af1ed0c",
+    "specialization_area": "pediatric_anesthesia",
+    "years_of_experience": 1,
+    "certifications": [
+      {
+        "certification_name": "frcs",
+        "issuing_body": "state_medical_council",
+        "issue_date": "2021-02-01",
+        "expiry_date": "2026-01-31"
+      },
+      {
+        "certification_name": "dm",
+        "issuing_body": "international_board",
+        "issue_date": "2016-10-17",
+        "expiry_date": null
+      },
+      {
+        "certification_name": "dnb",
+        "issuing_body": "international_board",
+        "issue_date": "2020-04-11",
+        "expiry_date": "2025-04-10"
+      }
+    ],
+    "education": [
+      {
+        "degree": "mbbs",
+        "institution": "Horne, Jones and Savage Medical College",
+        "year": 1995,
+        "country": "canada"
+      }
+    ],
+    "languages_spoken": [
+      "marathi",
+      "assamese",
+      "bengali"
+    ],
+    "is_primary_specialization": false,
+    "created_at": "2025-12-11T20:16:40.606590",
+    "updated_at": "2026-01-10T20:16:40.606590"
+  },
+  {
+    "expertise_id": "074b0224-61df-4115-8f9d-b2c6fc0d478a",
+    "service_person_id": "8dd01887-9818-4f47-ac15-f7d2db2b8382",
+    "specialization_area": "pain_management",
+    "years_of_experience": 9,
+    "certifications": [
+      {
+        "certification_name": "frcs",
+        "issuing_body": "state_medical_council",
+        "issue_date": "2018-01-15",
+        "expiry_date": "2023-01-14"
+      },
+      {
+        "certification_name": "dm",
+        "issuing_body": "state_medical_council",
+        "issue_date": "2017-03-16",
+        "expiry_date": null
+      }
+    ],
+    "education": [
+      {
+        "degree": "md",
+        "institution": "Chan-Bell Medical College",
+        "year": 1996,
+        "country": "usa"
+      }
+    ],
+    "languages_spoken": [
+      "odia",
+      "assamese",
+      "other",
+      "marathi"
+    ],
+    "is_primary_specialization": true,
+    "created_at": "2025-10-12T20:16:40.606590",
+    "updated_at": "2026-01-10T20:16:40.606590"
+  },
+  {
+    "expertise_id": "dc47046b-37f7-4d8f-ac05-9d7212bdd2cc",
+    "service_person_id": "8dd01887-9818-4f47-ac15-f7d2db2b8382",
+    "specialization_area": "pediatric_anesthesia",
+    "years_of_experience": 22,
+    "certifications": [
+      {
+        "certification_name": "mch",
+        "issuing_body": "state_medical_council",
+        "issue_date": "2020-03-05",
+        "expiry_date": null
+      }
+    ],
+    "education": [
+      {
+        "degree": "bds",
+        "institution": "Davis-Diaz Medical College",
+        "year": 2006,
+        "country": "other"
+      },
+      {
+        "degree": "ms",
+        "institution": "Banks-Patel Medical College",
+        "year": 1994,
+        "country": "canada"
+      }
+    ],
+    "languages_spoken": [
+      "marathi",
+      "urdu",
+      "malayalam"
+    ],
+    "is_primary_specialization": false,
+    "created_at": "2025-07-29T20:16:40.606590",
+    "updated_at": "2026-01-10T20:16:40.606590"
+  },
+  {
+    "expertise_id": "3330d361-ebf0-416a-8284-31fd4e0c0a7a",
+    "service_person_id": "2162fda3-f59d-452c-8b84-3753596b0e37",
+    "specialization_area": "pain_management",
+    "years_of_experience": 0,
+    "certifications": [
+      {
+        "certification_name": "other",
+        "issuing_body": "state_medical_council",
+        "issue_date": "2016-01-18",
+        "expiry_date": "2021-01-16"
+      },
+      {
+        "certification_name": "frcs",
+        "issuing_body": "international_board",
+        "issue_date": "2018-01-27",
+        "expiry_date": null
+      }
+    ],
+    "education": [
+      {
+        "degree": "other",
+        "institution": "Lewis and Sons Medical College",
+        "year": 2016,
+        "country": "india"
+      },
+      {
+        "degree": "other",
+        "institution": "Petersen, Brooks and Smith Medical College",
+        "year": 1996,
+        "country": "india"
+      }
+    ],
+    "languages_spoken": [
+      "english",
+      "assamese",
+      "bengali"
+    ],
+    "is_primary_specialization": true,
+    "created_at": "2025-07-20T20:16:40.606590",
+    "updated_at": "2026-01-10T20:16:40.606590"
+  },
+  {
+    "expertise_id": "856ac23c-0bd3-4c9b-993d-b02e00c9de1e",
+    "service_person_id": "2162fda3-f59d-452c-8b84-3753596b0e37",
+    "specialization_area": "critical_care_anesthesia",
+    "years_of_experience": 1,
+    "certifications": [
+      {
+        "certification_name": "plab",
+        "issuing_body": "mci",
+        "issue_date": "2020-02-18",
+        "expiry_date": null
+      },
+      {
+        "certification_name": "dm",
+        "issuing_body": "other",
+        "issue_date": "2023-10-04",
+        "expiry_date": "2028-10-02"
+      }
+    ],
+    "education": [
+      {
+        "degree": "mch",
+        "institution": "Weber, Bartlett and Evans Medical College",
+        "year": 2005,
+        "country": "other"
+      }
+    ],
+    "languages_spoken": [
+      "kannada",
+      "other",
+      "gujarati",
+      "bengali"
+    ],
+    "is_primary_specialization": false,
+    "created_at": "2025-09-04T20:16:40.606590",
+    "updated_at": "2026-01-10T20:16:40.606590"
+  }
+]

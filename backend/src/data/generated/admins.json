@@ -1,0 +1,47 @@
+[
+  {
+    "admin_id": "865ffe0d-aff0-48b1-a0e3-ce64634cd68a",
+    "username": "admin_1",
+    "email": "admin_1@hospital.com",
+    "password_hash": "94daf25950206b4b115c9ff6de014275064bf54ada8ae627d7dc58360b67304f",
+    "role": "super_admin",
+    "is_active": true,
+    "created_at": "2025-08-19T20:16:40.588146"
+  },
+  {
+    "admin_id": "4c9fcdcb-51c8-41cc-8f5d-7bb90b053729",
+    "username": "admin_2",
+    "email": "admin_2@hospital.com",
+    "password_hash": "94daf25950206b4b115c9ff6de014275064bf54ada8ae627d7dc58360b67304f",
+    "role": "admin",
+    "is_active": true,
+    "created_at": "2025-06-10T20:16:40.588146"
+  },
+  {
+    "admin_id": "b51c767c-5ba5-47ba-b95b-aed4ceaefb6a",
+    "username": "admin_3",
+    "email": "admin_3@hospital.com",
+    "password_hash": "94daf25950206b4b115c9ff6de014275064bf54ada8ae627d7dc58360b67304f",
+    "role": "admin",
+    "is_active": true,
+    "created_at": "2025-10-19T20:16:40.588146"
+  },
+  {
+    "admin_id": "de54bd73-a45b-4d17-bb06-ccf00b696560",
+    "username": "admin_4",
+    "email": "admin_4@hospital.com",
+    "password_hash": "94daf25950206b4b115c9ff6de014275064bf54ada8ae627d7dc58360b67304f",
+    "role": "admin",
+    "is_active": true,
+    "created_at": "2025-10-17T20:16:40.588146"
+  },
+  {
+    "admin_id": "9499b880-9cb9-436b-b73c-e53320e06713",
+    "username": "admin_5",
+    "email": "admin_5@hospital.com",
+    "password_hash": "94daf25950206b4b115c9ff6de014275064bf54ada8ae627d7dc58360b67304f",
+    "role": "admin",
+    "is_active": true,
+    "created_at": "2025-04-08T20:16:40.588146"
+  }
+]

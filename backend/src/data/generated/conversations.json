@@ -1,0 +1,3602 @@
+[
+  {
+    "conversation_id": "81127ac4-135f-4ecc-b474-cb62e8aacd41",
+    "patient_id": "50f7afc4-7fee-4925-8c1b-dc33e5f46370",
+    "status": "escalated",
+    "started_at": "2025-10-19T20:16:40.610287",
+    "ended_at": "2025-10-19T21:52:40.610287",
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "7b3fb856-ceaa-455a-8a2a-3ee839fa0dcd",
+    "patient_id": "72ca75dd-9e40-4f9d-9389-0b5389827015",
+    "status": "active",
+    "started_at": "2025-10-12T20:16:40.611264",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "e3550ed6-3971-4018-95b8-8b743574542d",
+    "patient_id": "af992753-6177-4ee1-8d52-42e27c7c88d9",
+    "status": "escalated",
+    "started_at": "2025-12-02T20:16:40.611264",
+    "ended_at": "2025-12-02T21:02:40.611264",
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "446fc899-389b-40f5-8c60-833fbf8cf298",
+    "patient_id": "fa326d15-b84f-4eeb-9b84-28742a0a16a2",
+    "status": "active",
+    "started_at": "2025-12-26T20:16:40.611264",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "8e49797f-3c27-4ed2-9150-56aa697eb9cb",
+    "patient_id": "0b15429d-c5f9-4052-9666-8e3dece4a968",
+    "status": "active",
+    "started_at": "2025-12-02T20:16:40.611264",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "20659bce-0c98-4f82-b8e9-65acfb8535f5",
+    "patient_id": "835bf514-6fdf-48c8-ac9e-1945dd7e5cf0",
+    "status": "active",
+    "started_at": "2025-12-19T20:16:40.611264",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "6d1c7c66-4edf-4559-b980-df6fb2520f1b",
+    "patient_id": "86197d4b-c3b9-4b8a-9e76-7a42b872ac6c",
+    "status": "completed",
+    "started_at": "2025-12-22T20:16:40.611264",
+    "ended_at": "2025-12-22T20:56:40.611264",
+    "summary": "Excepturi tenetur deleniti minima ducimus quas. Possimus dolorem soluta eligendi. Eveniet ad consequuntur esse dignissimos sint labore voluptates.",
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "379ac68c-19c8-44b0-b666-eed8d2efa586",
+    "patient_id": "faa028ba-a8d3-4621-be63-d5dbf2a53826",
+    "status": "completed",
+    "started_at": "2025-12-04T20:16:40.611264",
+    "ended_at": "2025-12-04T20:54:40.611264",
+    "summary": "Eaque impedit nihil perferendis ullam unde maxime sapiente. Tenetur dolore harum perferendis saepe.",
+    "llm_model": null
+  },
+  {
+    "conversation_id": "e8367e38-0a11-4f7d-8505-e11c7b1ec099",
+    "patient_id": "ea065435-5a78-4cda-9dd5-619313c23ce8",
+    "status": "active",
+    "started_at": "2026-01-04T20:16:40.611264",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "b7d0c6c4-0e47-4521-b65d-249d404dbab5",
+    "patient_id": "a3bd36aa-ca1a-4cbe-83ab-321830322961",
+    "status": "active",
+    "started_at": "2025-12-23T20:16:40.611264",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "0cc4133b-d376-444e-aba6-5df03c1e756e",
+    "patient_id": "fe956f61-b6d0-4aeb-a084-ac91e3a243f0",
+    "status": "completed",
+    "started_at": "2025-11-14T20:16:40.611264",
+    "ended_at": "2025-11-14T22:08:40.611264",
+    "summary": "Laudantium tempora ducimus. Officia nam reiciendis asperiores ipsum aut optio ad. Quisquam doloremque quis.\nReiciendis magnam atque minus inventore.\nFuga adipisci dolorum.",
+    "llm_model": null
+  },
+  {
+    "conversation_id": "90ab1a92-613b-49bf-9a02-6c53ccd79f1f",
+    "patient_id": "2fea8583-fe6d-40bd-98c2-ee8043aa580d",
+    "status": "active",
+    "started_at": "2025-10-28T20:16:40.611264",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "423e3119-ba6b-4e52-bc70-c3a5a6e9a41d",
+    "patient_id": "233ecc0b-b03d-4717-8c9f-d536f2bcf763",
+    "status": "completed",
+    "started_at": "2025-10-26T20:16:40.611264",
+    "ended_at": "2025-10-26T21:59:40.611264",
+    "summary": "Qui dolorem quas odit minus tenetur. Accusamus dolore soluta fugit eligendi saepe veniam.",
+    "llm_model": null
+  },
+  {
+    "conversation_id": "4889ab83-422f-47ea-835c-08b5938cc74a",
+    "patient_id": "d6a4a024-6355-4a3b-9078-a4bc37bba5d2",
+    "status": "active",
+    "started_at": "2026-01-04T20:16:40.611264",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "393fb578-ad9b-4177-9600-8e0d94767b27",
+    "patient_id": "917d8902-710c-4d0b-95c6-db460ec4200a",
+    "status": "active",
+    "started_at": "2025-12-25T20:16:40.611264",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "5b968709-1041-4cdc-b17f-6564ecfd8580",
+    "patient_id": "0c67e1b5-170d-482b-a3a3-487c1a86cd10",
+    "status": "active",
+    "started_at": "2026-01-05T20:16:40.611264",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "eda25768-3fb6-4536-9c65-7a07c8273c6f",
+    "patient_id": "9da69a83-b266-4c82-9c24-e907474f93c6",
+    "status": "active",
+    "started_at": "2025-11-26T20:16:40.611264",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "6def8e47-658f-45f0-a773-b96ecd790562",
+    "patient_id": "2c48d08a-577a-4e40-ae78-e56cd673bdc1",
+    "status": "completed",
+    "started_at": "2025-12-30T20:16:40.611264",
+    "ended_at": "2025-12-30T21:24:40.611264",
+    "summary": "Velit quas perferendis eum quo cupiditate. Eos quisquam dolore quos consequatur iusto expedita.\nDistinctio tenetur impedit quis repellendus assumenda exercitationem.",
+    "llm_model": null
+  },
+  {
+    "conversation_id": "517c6d42-f6cf-4e3b-9439-f917533d601d",
+    "patient_id": "440f5d17-4695-441e-8cf7-df6dc4ca9657",
+    "status": "completed",
+    "started_at": "2025-10-12T20:16:40.611264",
+    "ended_at": "2025-10-12T21:24:40.611264",
+    "summary": "Eos adipisci eligendi recusandae velit voluptate excepturi. Saepe consequatur illum totam veritatis et.\nIn provident quasi quam rem rerum. Doloremque eum culpa autem quidem impedit.",
+    "llm_model": null
+  },
+  {
+    "conversation_id": "aa501671-17a9-45a1-857e-32ddfbdb9865",
+    "patient_id": "7a945a81-7a82-41fe-9752-a03ac50cd03a",
+    "status": "completed",
+    "started_at": "2025-10-28T20:16:40.611264",
+    "ended_at": "2025-10-28T22:03:40.611264",
+    "summary": "Quasi ex illum quam quod. Dolore a laboriosam hic aliquid illo in. Libero molestiae veritatis vero officia ducimus consequuntur natus.",
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "1ef616fa-f765-4e45-86e5-aeff84290c43",
+    "patient_id": "0af5dc36-11a3-4dd5-84eb-ee679bf74374",
+    "status": "completed",
+    "started_at": "2025-10-28T20:16:40.611264",
+    "ended_at": "2025-10-28T21:32:40.611264",
+    "summary": "Tempore similique facere esse sequi itaque facilis. Saepe placeat temporibus culpa laboriosam nostrum architecto. Vitae laborum quam corporis.",
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "f48a8936-d270-4fd1-8c1e-24efd743115c",
+    "patient_id": "c01de166-d4b8-4d80-b074-41cff2570e46",
+    "status": "completed",
+    "started_at": "2026-01-06T20:16:40.611264",
+    "ended_at": "2026-01-06T22:02:40.611264",
+    "summary": "Doloribus facere ea atque. Iure ducimus possimus ad cumque minus nam. Eius magnam quasi minus deserunt.",
+    "llm_model": null
+  },
+  {
+    "conversation_id": "8d2ab4d8-7e35-478c-a702-57fad9a3ae3f",
+    "patient_id": "1b11113f-c34d-49ff-9ebd-7b018635d665",
+    "status": "active",
+    "started_at": "2025-11-20T20:16:40.611264",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "593d8686-d71e-4c50-b717-0506952bee49",
+    "patient_id": "d53bb7db-297b-4ff3-9a8c-74134704002e",
+    "status": "active",
+    "started_at": "2025-12-31T20:16:40.611264",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "3f91cb3f-18a1-43ad-b37d-00eb2278899a",
+    "patient_id": "1685d365-291c-4a34-aa2b-90457bdb00cf",
+    "status": "active",
+    "started_at": "2025-12-18T20:16:40.611264",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "3fe8e684-fc19-4eb6-889c-557353390205",
+    "patient_id": "9c76516c-e712-41ed-99dd-16270075c87e",
+    "status": "completed",
+    "started_at": "2026-01-06T20:16:40.611264",
+    "ended_at": "2026-01-06T21:11:40.611264",
+    "summary": "Maxime nisi dolor impedit eaque laborum mollitia. Dolorum laboriosam sapiente quidem dicta. Quo a porro ipsa tenetur cumque quos. Alias quidem eius.",
+    "llm_model": null
+  },
+  {
+    "conversation_id": "771e31bf-dc60-4b84-b74a-0522cef32774",
+    "patient_id": "b2354d55-6e94-40e1-8982-37351eabe863",
+    "status": "active",
+    "started_at": "2025-10-20T20:16:40.611264",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "4672c696-a82a-48b9-90de-43757a55eecf",
+    "patient_id": "6087681a-55b6-47b7-8a1a-593f86ad3c35",
+    "status": "active",
+    "started_at": "2025-10-22T20:16:40.611264",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "e4fbf77a-46ae-44e5-92e7-b161989d57d5",
+    "patient_id": "f10087d5-923b-4daa-a25d-6b45dce30c05",
+    "status": "active",
+    "started_at": "2025-10-18T20:16:40.611264",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "5708563a-2cf2-4a34-a651-35793370e1af",
+    "patient_id": "feaa88c9-5009-4a71-a0e5-4049312264f9",
+    "status": "escalated",
+    "started_at": "2025-10-24T20:16:40.611264",
+    "ended_at": "2025-10-24T21:48:40.611264",
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "8cffeba3-1dea-48bb-bd03-1d01fddae03d",
+    "patient_id": "40e5d9c4-8898-453b-9353-4c6fda57e1af",
+    "status": "escalated",
+    "started_at": "2025-10-22T20:16:40.611264",
+    "ended_at": "2025-10-22T21:42:40.611264",
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "6fb99636-8581-4d59-af5f-2bff80abe484",
+    "patient_id": "d6a4a024-6355-4a3b-9078-a4bc37bba5d2",
+    "status": "completed",
+    "started_at": "2025-11-21T20:16:40.611264",
+    "ended_at": "2025-11-21T21:38:40.611264",
+    "summary": "Nulla deserunt voluptas architecto. Architecto facere exercitationem molestias laudantium ipsum minima. Ipsam nihil voluptatum dicta ex veniam aut.",
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "a78ed377-87cb-42eb-a5e5-42a287f740c4",
+    "patient_id": "f8b4002d-797b-4bc6-a985-1e6875fa12b9",
+    "status": "active",
+    "started_at": "2025-11-27T20:16:40.611264",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "d2f25170-d5d4-4893-9f41-167e1482947e",
+    "patient_id": "eb2e9824-9108-450f-846a-46caf729d576",
+    "status": "active",
+    "started_at": "2025-11-20T20:16:40.611264",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "183b1754-931e-4a06-a277-27b95ab01ae0",
+    "patient_id": "f10087d5-923b-4daa-a25d-6b45dce30c05",
+    "status": "escalated",
+    "started_at": "2025-12-29T20:16:40.611264",
+    "ended_at": "2025-12-29T21:25:40.611264",
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "e51cabb4-d8c7-46fb-a50d-364a9b759774",
+    "patient_id": "9e3078f9-0d8f-4324-b448-6d25b9efa1db",
+    "status": "completed",
+    "started_at": "2025-12-03T20:16:40.611264",
+    "ended_at": "2025-12-03T21:38:40.611264",
+    "summary": "Ipsum modi nihil dolores perferendis veniam. Numquam doloribus similique. Recusandae mollitia doloremque.",
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "c31d67fc-4f57-43e2-bd56-f3ae29a3ea50",
+    "patient_id": "6b586b1c-8c0f-43ff-b39d-91bc8ac7cf14",
+    "status": "completed",
+    "started_at": "2025-10-28T20:16:40.611264",
+    "ended_at": "2025-10-28T21:43:40.611264",
+    "summary": "Rerum repellat quam corporis. Fugit ipsa nobis praesentium. Neque quis qui corporis consequuntur. Laudantium consequatur eos vel.",
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "d7eac1e8-4c3c-42ab-9849-656a50bc00d4",
+    "patient_id": "0af5dc36-11a3-4dd5-84eb-ee679bf74374",
+    "status": "active",
+    "started_at": "2025-12-24T20:16:40.611264",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "3b9a3a88-0793-4735-84c7-7c2442af7837",
+    "patient_id": "6f78bdcb-6a95-44b7-85bc-25046114046a",
+    "status": "completed",
+    "started_at": "2025-11-25T20:16:40.611264",
+    "ended_at": "2025-11-25T22:00:40.611264",
+    "summary": "Vitae inventore repellat occaecati soluta omnis. Architecto ratione consectetur architecto eum repellat dolor. Aliquam eum numquam velit mollitia architecto earum sapiente.",
+    "llm_model": null
+  },
+  {
+    "conversation_id": "c6f601c3-9af0-4d90-8fb4-cdefaed57dfe",
+    "patient_id": "899671d0-344a-42ac-b9d2-a4dc37e6a094",
+    "status": "active",
+    "started_at": "2025-11-04T20:16:40.611264",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "f8e926ee-fbb4-4ba8-abd5-faa183afa9a6",
+    "patient_id": "3f7e989c-4b85-4bfa-967b-70341a2fce71",
+    "status": "escalated",
+    "started_at": "2025-11-06T20:16:40.611264",
+    "ended_at": "2025-11-06T20:35:40.611264",
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "57b4d7d7-3e27-43a1-b03f-83a5e87ef5d3",
+    "patient_id": "a7553544-dcb3-4213-b25b-58937406c30a",
+    "status": "active",
+    "started_at": "2025-11-02T20:16:40.611264",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "bbc30940-3ce3-4a09-a05a-7a59faea71e1",
+    "patient_id": "82727f09-2cab-47e1-ad03-afba023c9b0b",
+    "status": "escalated",
+    "started_at": "2025-12-28T20:16:40.611264",
+    "ended_at": "2025-12-28T20:49:40.611264",
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "bead8dce-bbff-4765-8c92-6f08a8cd2d0c",
+    "patient_id": "45be7091-ed4d-42d9-862d-987ab77547ec",
+    "status": "active",
+    "started_at": "2025-12-13T20:16:40.611264",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "0b70b3f5-da0f-4885-a59b-942ed27f9700",
+    "patient_id": "3f110b17-d5c9-4562-b85a-965d54deff71",
+    "status": "escalated",
+    "started_at": "2025-11-05T20:16:40.611264",
+    "ended_at": "2025-11-05T21:28:40.611264",
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "1f68c05e-bddb-431c-8ddb-184e8fcc180a",
+    "patient_id": "f7f9096c-a5aa-4376-bdcc-676bd60ea01c",
+    "status": "active",
+    "started_at": "2025-11-12T20:16:40.611264",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "958b7862-dd1d-430f-a50f-7e21c3e15b66",
+    "patient_id": "628a4633-5930-49f3-b7e7-e62c1edaad1c",
+    "status": "escalated",
+    "started_at": "2025-11-01T20:16:40.611264",
+    "ended_at": "2025-11-01T21:36:40.611264",
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "32e86d73-fe43-4e86-b1a1-90753b563a8b",
+    "patient_id": "330f382d-90ba-4d79-9e29-0f2876a86031",
+    "status": "completed",
+    "started_at": "2025-12-27T20:16:40.611264",
+    "ended_at": "2025-12-27T21:07:40.611264",
+    "summary": "At inventore reprehenderit vitae magnam unde. Quam vel sed minus. Labore accusantium cumque libero odio. Culpa maiores eaque saepe ad architecto provident.",
+    "llm_model": null
+  },
+  {
+    "conversation_id": "19568be8-6af3-4039-b268-98fb923acecb",
+    "patient_id": "2032097c-1b70-4950-8421-66def5933d6f",
+    "status": "escalated",
+    "started_at": "2025-10-27T20:16:40.611264",
+    "ended_at": "2025-10-27T20:30:40.611264",
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "6eecd05f-d277-44b9-a803-43d3f2a5e850",
+    "patient_id": "259ed422-578f-4079-b7fa-da5449d4e337",
+    "status": "active",
+    "started_at": "2025-11-23T20:16:40.611264",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "f7b06c01-1a1f-44a3-b7ea-1d77fd4f4059",
+    "patient_id": "60adf98c-cb97-48ba-b596-db7476521423",
+    "status": "completed",
+    "started_at": "2025-12-26T20:16:40.611264",
+    "ended_at": "2025-12-26T22:16:40.611264",
+    "summary": "Soluta earum corrupti nulla consequatur. Necessitatibus quam eaque inventore consequuntur placeat excepturi.",
+    "llm_model": null
+  },
+  {
+    "conversation_id": "18b7780e-6beb-403b-b3c1-b8169a0abe12",
+    "patient_id": "72a25f71-84a2-4611-bfa2-a4f26b636cf4",
+    "status": "completed",
+    "started_at": "2025-11-30T20:16:40.611264",
+    "ended_at": "2025-11-30T20:29:40.611264",
+    "summary": "Odit ea minima laborum deleniti accusamus. Accusamus rerum alias quam a vitae.",
+    "llm_model": null
+  },
+  {
+    "conversation_id": "2b9bea13-de02-4a91-b08d-afa7d6d35123",
+    "patient_id": "4dcee3b1-4804-4dbb-bbd0-de95407e7d2a",
+    "status": "escalated",
+    "started_at": "2025-12-26T20:16:40.611264",
+    "ended_at": "2025-12-26T21:43:40.611264",
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "cfd723bb-26b3-40a0-9361-f39d73510e73",
+    "patient_id": "4241eb3e-8e4c-472c-a820-1a2ae23eb37b",
+    "status": "escalated",
+    "started_at": "2025-11-15T20:16:40.611264",
+    "ended_at": "2025-11-15T21:45:40.611264",
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "8b82309e-2d17-40de-9216-1035e1fbcee8",
+    "patient_id": "bb736f71-85bb-4480-9c38-9e1673d9219b",
+    "status": "escalated",
+    "started_at": "2025-12-28T20:16:40.611264",
+    "ended_at": "2025-12-28T21:48:40.611264",
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "09807fe2-9e11-4c09-8305-ad39da4f95b1",
+    "patient_id": "46159821-cd96-4c81-adc5-0ce4cf9bd5b3",
+    "status": "completed",
+    "started_at": "2026-01-05T20:16:40.611264",
+    "ended_at": "2026-01-05T21:49:40.611264",
+    "summary": "Perferendis debitis suscipit praesentium nam ab totam. Necessitatibus harum natus delectus. Sequi nesciunt doloremque eum.",
+    "llm_model": null
+  },
+  {
+    "conversation_id": "534e2748-938e-49e8-be8a-1f08761820b5",
+    "patient_id": "760f307b-f528-41ad-ae87-e4351d1bd85c",
+    "status": "completed",
+    "started_at": "2025-10-25T20:16:40.611264",
+    "ended_at": "2025-10-25T20:38:40.611264",
+    "summary": "Officiis quas at. Sed at esse sint.\nId impedit iusto quas nobis commodi. Pariatur alias expedita.\nMaiores eius repellendus dolore. Autem beatae voluptatum libero quia.",
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "6b80ac66-6b1f-470c-afe3-eac63fbbbd59",
+    "patient_id": "7921375a-3c26-42ce-8a9f-72138bb93cb2",
+    "status": "escalated",
+    "started_at": "2025-10-21T20:16:40.611264",
+    "ended_at": "2025-10-21T21:58:40.611264",
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "3a88e16d-74b7-4277-ab88-6ae59ec17909",
+    "patient_id": "ebb37611-c7ba-40ad-aeeb-911fbed1e7a4",
+    "status": "active",
+    "started_at": "2025-12-02T20:16:40.611264",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "09af75bc-cd13-43c5-a0ce-45d4182af340",
+    "patient_id": "2848ed4b-f6fb-4e8e-94d2-0004afc9b3e9",
+    "status": "completed",
+    "started_at": "2025-12-15T20:16:40.611264",
+    "ended_at": "2025-12-15T20:46:40.611264",
+    "summary": "Maiores quam ea facilis. Ab ab iste nulla nobis libero nihil.\nMolestias ad praesentium ratione deleniti. Minima dolore eos asperiores aperiam.\nTotam deleniti occaecati dicta.",
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "5675c8d7-4942-4d59-a68c-abfccdb07388",
+    "patient_id": "6901a77b-4318-4d6b-ab06-2c1c04fb1ad7",
+    "status": "completed",
+    "started_at": "2025-12-21T20:16:40.611264",
+    "ended_at": "2025-12-21T21:05:40.611264",
+    "summary": "Accusamus quaerat minima aspernatur minus. Quibusdam earum omnis fugiat.",
+    "llm_model": null
+  },
+  {
+    "conversation_id": "e154bafa-2b40-4496-9048-b437a0baab2a",
+    "patient_id": "75f8327c-5cec-4d9a-9213-adcbeb5d1a1c",
+    "status": "completed",
+    "started_at": "2025-11-11T20:16:40.611264",
+    "ended_at": "2025-11-11T22:06:40.611264",
+    "summary": "Quidem iure accusantium repellendus ratione ratione sequi error. Id sed quo velit. Ex asperiores reiciendis culpa dolores eos placeat. Illo repudiandae esse quod quis consequuntur laboriosam maxime.",
+    "llm_model": null
+  },
+  {
+    "conversation_id": "5753154c-e443-4c69-b4be-75b95c2a2cbd",
+    "patient_id": "213d8959-b1bb-4a39-93e8-9290b748aea3",
+    "status": "escalated",
+    "started_at": "2025-11-04T20:16:40.611264",
+    "ended_at": "2025-11-04T20:30:40.611264",
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "a936078d-e08c-449f-8ab7-cb620d266004",
+    "patient_id": "80f3dc53-5930-4e40-a250-a91ec6a92cca",
+    "status": "active",
+    "started_at": "2025-12-16T20:16:40.611264",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "64cc89f5-5d23-49dd-9519-ec5fd4c419cc",
+    "patient_id": "eb202050-db4e-4438-809c-8f73d3debfbc",
+    "status": "escalated",
+    "started_at": "2025-11-21T20:16:40.611264",
+    "ended_at": "2025-11-21T21:13:40.611264",
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "c0ef3878-be9e-40e9-ad64-015b5e5fb1dc",
+    "patient_id": "1d920dab-351a-442b-b511-7ae5a6295951",
+    "status": "escalated",
+    "started_at": "2025-11-15T20:16:40.611264",
+    "ended_at": "2025-11-15T20:52:40.611264",
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "6f961cd3-9a1b-4c84-a620-18dc31c72c04",
+    "patient_id": "f8e82b06-0147-403c-9ccf-e63851ce5f9c",
+    "status": "escalated",
+    "started_at": "2025-12-07T20:16:40.611264",
+    "ended_at": "2025-12-07T21:22:40.611264",
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "fa1e93e3-89f5-4036-bc64-987e3a2fbb43",
+    "patient_id": "d53bb7db-297b-4ff3-9a8c-74134704002e",
+    "status": "completed",
+    "started_at": "2025-12-07T20:16:40.611264",
+    "ended_at": "2025-12-07T21:45:40.611264",
+    "summary": "Deleniti fugit architecto inventore asperiores quibusdam suscipit. At voluptatum amet ratione officiis nihil nam nihil.",
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "b4273a3f-09ae-4fa9-9af6-d120b62bc77b",
+    "patient_id": "9d08a534-92e2-4bfc-9ffa-8a8f863d3049",
+    "status": "completed",
+    "started_at": "2025-12-17T20:16:40.612288",
+    "ended_at": "2025-12-17T21:50:40.612288",
+    "summary": "Voluptatum consequatur maxime incidunt nam. Qui eveniet impedit. Nam minima porro dolores.\nConsequuntur similique dignissimos quam.",
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "84634f85-27a2-4f57-a180-3a4bb345f6a0",
+    "patient_id": "cb03fb2b-63f1-4e1f-a705-78b7f651db40",
+    "status": "active",
+    "started_at": "2025-11-23T20:16:40.612288",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "98c90371-78c2-4680-a693-73c74e144630",
+    "patient_id": "3c06e16a-6e4f-4854-95dc-d4bebe7fa97d",
+    "status": "completed",
+    "started_at": "2025-10-17T20:16:40.612288",
+    "ended_at": "2025-10-17T21:29:40.612288",
+    "summary": "Recusandae repudiandae sunt velit omnis soluta minima harum. Sint aperiam odit possimus at.",
+    "llm_model": null
+  },
+  {
+    "conversation_id": "43e7a0fd-6573-4127-a810-262b789474e8",
+    "patient_id": "1b457102-97a1-4935-9426-b863f164e87b",
+    "status": "completed",
+    "started_at": "2025-11-13T20:16:40.612288",
+    "ended_at": "2025-11-13T21:54:40.612288",
+    "summary": "Voluptas accusamus facilis error impedit itaque nulla. Praesentium dolorum laboriosam occaecati impedit natus. Quo magni placeat assumenda harum numquam.",
+    "llm_model": null
+  },
+  {
+    "conversation_id": "a11b9a9f-37e7-4f51-a67d-2ab0e202e6f5",
+    "patient_id": "6e9033c7-0aa2-40fc-96b4-ff289889e7b1",
+    "status": "completed",
+    "started_at": "2025-12-19T20:16:40.612288",
+    "ended_at": "2025-12-19T20:54:40.612288",
+    "summary": "Debitis non ipsam ipsam impedit perspiciatis. Quasi non ipsa cumque maiores maiores officiis.\nEsse minus aperiam nesciunt consectetur autem maxime fuga. Sapiente non accusantium placeat.",
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "20cb66ea-c01b-4a63-affa-14b61447a86f",
+    "patient_id": "b88e9010-9d97-4739-8cbb-0934de94ba5a",
+    "status": "escalated",
+    "started_at": "2025-11-21T20:16:40.612288",
+    "ended_at": "2025-11-21T20:38:40.612288",
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "5d5248e3-8c0f-4eb7-8eb9-b024f3adf3b0",
+    "patient_id": "4911ecb8-8b1e-4ece-9ca2-edbc5160f9d6",
+    "status": "active",
+    "started_at": "2025-12-22T20:16:40.612288",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "bd483ada-200c-4192-a127-10e65a91385a",
+    "patient_id": "931b5002-8273-48d9-816f-579c924d4222",
+    "status": "completed",
+    "started_at": "2026-01-03T20:16:40.612288",
+    "ended_at": "2026-01-03T20:33:40.612288",
+    "summary": "Delectus debitis sed deserunt ut explicabo quod. Aspernatur a repudiandae magnam quae sed cum. Inventore cumque sapiente sint.",
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "85d2a610-c491-4175-830d-1f2a0437aef5",
+    "patient_id": "25373da2-5f97-4fad-8a1c-98807f92e5c3",
+    "status": "completed",
+    "started_at": "2026-01-06T20:16:40.612288",
+    "ended_at": "2026-01-06T21:49:40.612288",
+    "summary": "Occaecati blanditiis inventore illo. Earum id doloremque. Odit eveniet error accusantium non eius maxime.",
+    "llm_model": null
+  },
+  {
+    "conversation_id": "64812530-6987-4017-9ef6-fce1ef31a1d9",
+    "patient_id": "5cbcf487-17ae-4c36-9e03-4461c9680ed1",
+    "status": "completed",
+    "started_at": "2025-10-30T20:16:40.612288",
+    "ended_at": "2025-10-30T21:03:40.612288",
+    "summary": "Placeat ratione aspernatur quidem necessitatibus dolorum. Animi aliquid iusto ut.",
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "da9b43c7-eec4-4f60-839a-29770ba67967",
+    "patient_id": "9e3078f9-0d8f-4324-b448-6d25b9efa1db",
+    "status": "completed",
+    "started_at": "2025-11-23T20:16:40.612288",
+    "ended_at": "2025-11-23T21:49:40.612288",
+    "summary": "Occaecati amet quam mollitia suscipit quos recusandae. Sapiente dolorum iure provident saepe. Soluta laboriosam nulla incidunt nulla.",
+    "llm_model": null
+  },
+  {
+    "conversation_id": "ce5c1d08-d44b-4000-9057-ea77ba3adf81",
+    "patient_id": "eb2e9824-9108-450f-846a-46caf729d576",
+    "status": "active",
+    "started_at": "2025-11-15T20:16:40.612288",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "b7258154-b5f8-47a8-8e06-b0ba2980a739",
+    "patient_id": "ee3c3ee4-918d-4107-8b60-a712f8f56495",
+    "status": "active",
+    "started_at": "2025-11-28T20:16:40.612288",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "39c15ae4-e913-42d5-a62a-ac12942b233b",
+    "patient_id": "d7c51559-a5a8-44cc-96e5-97d826c01a13",
+    "status": "escalated",
+    "started_at": "2025-11-29T20:16:40.612288",
+    "ended_at": "2025-11-29T22:03:40.612288",
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "891ba811-9ef7-4c14-97e0-5d9589ba1d81",
+    "patient_id": "1f9fa492-5e01-44fe-8294-97e7243a2dbd",
+    "status": "active",
+    "started_at": "2025-12-09T20:16:40.612288",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "f516e7af-93ea-42cd-8b79-360cd9776dd4",
+    "patient_id": "d0eb209a-8927-4ad0-af55-48417b5169a9",
+    "status": "escalated",
+    "started_at": "2025-11-29T20:16:40.612288",
+    "ended_at": "2025-11-29T20:33:40.612288",
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "6878200c-227e-4f25-ade2-9e3088c8d86a",
+    "patient_id": "2c751e10-50ce-4f81-b1b9-955011bc5a15",
+    "status": "active",
+    "started_at": "2025-10-28T20:16:40.612288",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "deca70d9-cecd-4d10-a5b4-6412af0ad8de",
+    "patient_id": "7e66f248-8dbe-4fa1-8b80-f0f5ba40bf73",
+    "status": "active",
+    "started_at": "2025-11-12T20:16:40.612288",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "45a50ff8-f4a3-4a51-ad11-15f90f9d7ad3",
+    "patient_id": "b462ded7-a50b-4176-8448-2f68e18ef258",
+    "status": "completed",
+    "started_at": "2025-11-18T20:16:40.612288",
+    "ended_at": "2025-11-18T21:20:40.612288",
+    "summary": "Ab sapiente sapiente dolores temporibus cumque. Molestiae eveniet a aut.",
+    "llm_model": null
+  },
+  {
+    "conversation_id": "cfe845c0-7881-4dfa-947e-3ce37a9fc27b",
+    "patient_id": "851e71d1-05c2-4217-9e66-77f1b748753a",
+    "status": "active",
+    "started_at": "2025-12-19T20:16:40.612288",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "e1ea4679-99a5-4011-9d49-20b7cc501e12",
+    "patient_id": "69cec4e7-bb8f-41f3-9283-7be50e44862a",
+    "status": "escalated",
+    "started_at": "2025-10-29T20:16:40.612288",
+    "ended_at": "2025-10-29T20:41:40.612288",
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "34fe0dc3-e6b0-49a6-ab5a-09d44b906bd4",
+    "patient_id": "d51f129c-a185-4726-aa8e-1caa63dbd6b5",
+    "status": "active",
+    "started_at": "2025-10-16T20:16:40.612288",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "583c8563-2c76-40eb-8d7f-60b0854f1298",
+    "patient_id": "a102d8e1-a189-4d58-af6b-04ffd71bc2e6",
+    "status": "completed",
+    "started_at": "2025-11-06T20:16:40.612288",
+    "ended_at": "2025-11-06T22:05:40.612288",
+    "summary": "Placeat iusto odit temporibus consequatur. Quia nulla nam quidem quas. Animi illum laboriosam magnam dolore nemo.\nIusto doloribus esse at ipsa dolores tempore.\nIllo consectetur tempora ad eius fugit.",
+    "llm_model": null
+  },
+  {
+    "conversation_id": "6d07d59c-5c10-4f90-91ae-bf1b0c50d235",
+    "patient_id": "a4f0cfdc-2d28-4f3a-97ac-1d57ec9120f1",
+    "status": "escalated",
+    "started_at": "2025-12-28T20:16:40.612288",
+    "ended_at": "2025-12-28T21:12:40.612288",
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "eff4889c-2c01-4054-9de2-e3f4f54061ae",
+    "patient_id": "de36e035-d1fd-46ca-aa48-4d092e0cbfc9",
+    "status": "active",
+    "started_at": "2025-12-12T20:16:40.612288",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "afc1d732-7aca-434f-9dd0-fcb55aa6912c",
+    "patient_id": "41356927-136b-4a37-8070-b20083e57980",
+    "status": "completed",
+    "started_at": "2025-12-15T20:16:40.612288",
+    "ended_at": "2025-12-15T21:50:40.612288",
+    "summary": "Magnam tempore reiciendis minus laborum. Ea amet quaerat quisquam fugit minus nisi.\nFacilis iste expedita odio. Adipisci architecto sit similique reprehenderit minus.",
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "2b2ee48e-79fa-4472-895a-02b4d69bb9dc",
+    "patient_id": "413820c1-30e6-4400-8fcc-3eb8a5e56bd4",
+    "status": "active",
+    "started_at": "2025-12-25T20:16:40.612288",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "88dc6132-b79c-4e74-b6b5-02699fc296a3",
+    "patient_id": "29531aed-853b-4c0e-a81d-83ca679b79aa",
+    "status": "escalated",
+    "started_at": "2025-12-17T20:16:40.612288",
+    "ended_at": "2025-12-17T22:10:40.612288",
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "56145c55-0f29-4094-a35a-3ece871bd3ab",
+    "patient_id": "8367d489-7dfc-4074-a545-d7d15c71b9cb",
+    "status": "completed",
+    "started_at": "2025-10-15T20:16:40.612288",
+    "ended_at": "2025-10-15T20:46:40.612288",
+    "summary": "Nisi praesentium ipsum a recusandae. Soluta voluptates ab laudantium a necessitatibus suscipit.\nExcepturi aliquam esse vel voluptatibus. Nemo fugiat velit sunt maiores inventore omnis.",
+    "llm_model": null
+  },
+  {
+    "conversation_id": "fac34529-3ba2-45e6-b9e3-980c04248e0d",
+    "patient_id": "1f9fa492-5e01-44fe-8294-97e7243a2dbd",
+    "status": "escalated",
+    "started_at": "2025-12-18T20:16:40.612288",
+    "ended_at": "2025-12-18T21:12:40.612288",
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "23f5c066-b9ad-4192-8409-624b3ba1cc05",
+    "patient_id": "714b5b09-ea54-4df4-95c9-98250e834a98",
+    "status": "completed",
+    "started_at": "2025-12-06T20:16:40.612288",
+    "ended_at": "2025-12-06T21:32:40.612288",
+    "summary": "Minus ducimus modi officia aut minus. Recusandae quis ducimus maiores autem laudantium consequatur. Delectus facilis rem numquam sequi eum.\nNecessitatibus voluptates minus.",
+    "llm_model": null
+  },
+  {
+    "conversation_id": "718917aa-e9f9-44e2-9d07-8ab67b863993",
+    "patient_id": "2cc06c27-2ddb-4b2e-be57-becfe0035fab",
+    "status": "escalated",
+    "started_at": "2025-12-20T20:16:40.612288",
+    "ended_at": "2025-12-20T21:50:40.612288",
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "2f3d2692-44d7-4bea-bbfd-75edf86a6e35",
+    "patient_id": "cc4d8f28-91e8-4f41-bebd-a7aa51e78b69",
+    "status": "active",
+    "started_at": "2025-10-12T20:16:40.612288",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "c81bed36-6729-4f5d-870d-b95d9f9c5997",
+    "patient_id": "e8ccdb8a-bf84-4041-ab06-f1207a935056",
+    "status": "escalated",
+    "started_at": "2025-10-20T20:16:40.612288",
+    "ended_at": "2025-10-20T20:56:40.612288",
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "79f5338d-0c9f-4d06-b5f6-55606c9a801f",
+    "patient_id": "69cec4e7-bb8f-41f3-9283-7be50e44862a",
+    "status": "completed",
+    "started_at": "2026-01-01T20:16:40.612288",
+    "ended_at": "2026-01-01T20:25:40.612288",
+    "summary": "Repellendus possimus debitis repellendus accusamus dolor inventore officia. Earum incidunt doloribus reiciendis hic sunt. Totam vitae quam amet.",
+    "llm_model": null
+  },
+  {
+    "conversation_id": "bd50ae72-ce82-4f93-b132-26c0d591c6c9",
+    "patient_id": "085a3fe7-df62-428d-bd8b-a8b7a19ede70",
+    "status": "active",
+    "started_at": "2026-01-05T20:16:40.612288",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "c9a838df-1215-400c-bcf3-fb9479a625ba",
+    "patient_id": "f8b4002d-797b-4bc6-a985-1e6875fa12b9",
+    "status": "active",
+    "started_at": "2026-01-03T20:16:40.612288",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "d2b5119e-c935-4626-87e0-9e9648f535a7",
+    "patient_id": "56b7777f-1bba-4d0b-891d-d6b07cdcbddc",
+    "status": "escalated",
+    "started_at": "2025-11-18T20:16:40.612288",
+    "ended_at": "2025-11-18T21:15:40.612288",
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "81026948-6008-4df2-aaac-be9dfe7041b0",
+    "patient_id": "b153d818-1137-4fe7-be7e-c0caf303da17",
+    "status": "completed",
+    "started_at": "2026-01-08T20:16:40.612288",
+    "ended_at": "2026-01-08T21:05:40.612288",
+    "summary": "Veritatis asperiores sapiente consequuntur ducimus voluptatum magni. Et nostrum quidem temporibus maxime consectetur.",
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "aaf0e0d5-31dc-45d2-8f10-5d93f217baef",
+    "patient_id": "c3fe736e-d769-41be-9841-9d8726360a35",
+    "status": "escalated",
+    "started_at": "2025-11-19T20:16:40.612288",
+    "ended_at": "2025-11-19T21:58:40.612288",
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "dfb3f7fa-bb84-4e75-92e6-e230f8f56a8f",
+    "patient_id": "1d16dc76-4884-46f5-9431-d133bf9427f0",
+    "status": "active",
+    "started_at": "2025-12-02T20:16:40.612288",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "e5c63a4a-ad14-4759-b811-ac1f4470ffc1",
+    "patient_id": "26390737-764e-420c-a332-ce2ae59f1aba",
+    "status": "completed",
+    "started_at": "2025-10-16T20:16:40.612288",
+    "ended_at": "2025-10-16T20:27:40.612288",
+    "summary": "Vitae molestias nostrum et et nisi. Consequuntur officiis corporis delectus. Tenetur laudantium mollitia eveniet voluptates accusamus.",
+    "llm_model": null
+  },
+  {
+    "conversation_id": "c128aaa6-7fa0-4628-8671-e3a7b0885758",
+    "patient_id": "32cce234-00b6-4e2a-92f0-863b66515b39",
+    "status": "escalated",
+    "started_at": "2025-11-15T20:16:40.612288",
+    "ended_at": "2025-11-15T21:35:40.612288",
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "067fa85f-10b8-45ef-93f0-db7c605f1091",
+    "patient_id": "31b7e33b-9dbf-4137-b9d4-dbe439c08121",
+    "status": "active",
+    "started_at": "2025-12-11T20:16:40.612288",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "56e6e3a2-90ec-448a-8d68-9a7ec447e31a",
+    "patient_id": "1685d365-291c-4a34-aa2b-90457bdb00cf",
+    "status": "active",
+    "started_at": "2025-10-22T20:16:40.612288",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "293bcbcb-9d7e-4110-9b13-acb8c8e3fc69",
+    "patient_id": "4432c407-3c1c-45e6-848a-3d497cc26833",
+    "status": "escalated",
+    "started_at": "2025-10-21T20:16:40.612288",
+    "ended_at": "2025-10-21T21:09:40.612288",
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "42e0c260-fd8a-48a6-aa9f-f3b64df11395",
+    "patient_id": "53896062-7234-4bf6-a552-98a019c837dd",
+    "status": "completed",
+    "started_at": "2025-11-17T20:16:40.612288",
+    "ended_at": "2025-11-17T21:55:40.612288",
+    "summary": "Iste deleniti laboriosam necessitatibus impedit perspiciatis. Laboriosam impedit ducimus.\nVoluptas doloribus et natus. Praesentium nemo necessitatibus quos nisi alias minus.",
+    "llm_model": null
+  },
+  {
+    "conversation_id": "837afe38-b6ca-4d63-8fbb-2532159ac42a",
+    "patient_id": "7e0946fd-2572-4e9c-a285-8c96ccacb1d6",
+    "status": "escalated",
+    "started_at": "2025-12-12T20:16:40.612288",
+    "ended_at": "2025-12-12T21:27:40.612288",
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "0775d589-3945-48d7-904e-609bdb52c38c",
+    "patient_id": "6e9712d6-0006-4299-8567-7ab16b7d2211",
+    "status": "completed",
+    "started_at": "2025-11-02T20:16:40.612288",
+    "ended_at": "2025-11-02T20:59:40.612288",
+    "summary": "Temporibus quibusdam architecto. Fugit ea maiores voluptatem neque iusto.\nIpsa at ut cum labore dolore dignissimos. Sint delectus quidem quisquam quasi quos. Atque atque minus.",
+    "llm_model": null
+  },
+  {
+    "conversation_id": "d5b4480c-bce7-4f73-be44-c7e6a12cc02d",
+    "patient_id": "8e1b9fd1-177b-4eb8-a167-3c3913ece4b5",
+    "status": "active",
+    "started_at": "2025-12-09T20:16:40.612288",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "85c6e97f-9bf7-4625-903f-d295748dade9",
+    "patient_id": "56b7777f-1bba-4d0b-891d-d6b07cdcbddc",
+    "status": "active",
+    "started_at": "2025-11-09T20:16:40.612288",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "19b7be1d-414b-47e4-921e-aa5861fae3cc",
+    "patient_id": "def5e814-f8a2-4879-a7ee-bfa7f0d116a5",
+    "status": "completed",
+    "started_at": "2025-12-14T20:16:40.612288",
+    "ended_at": "2025-12-14T20:45:40.612288",
+    "summary": "Quia minima earum nemo. Ipsum voluptatem non nisi dolore eum.",
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "6999d150-f559-4aa0-982c-0b8a479b8469",
+    "patient_id": "742b20c7-04c6-487d-8b11-69289dc64577",
+    "status": "completed",
+    "started_at": "2025-12-24T20:16:40.612288",
+    "ended_at": "2025-12-24T20:59:40.612288",
+    "summary": "Dolor dolorem exercitationem fuga autem odio. Accusamus corrupti velit nihil amet eveniet. Excepturi sit pariatur reiciendis dolorem ab.",
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "74245ff3-ebdd-4e09-b222-cdebcf3360e0",
+    "patient_id": "b3e4a165-b109-41b0-8070-58bd7d8dc345",
+    "status": "active",
+    "started_at": "2026-01-06T20:16:40.612288",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "39bca44d-9d52-4b85-ba45-3bab24010488",
+    "patient_id": "c01de166-d4b8-4d80-b074-41cff2570e46",
+    "status": "active",
+    "started_at": "2025-10-19T20:16:40.612288",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "4beed634-721e-437a-a762-d22d19542752",
+    "patient_id": "862e5cd9-5956-422e-be4f-b34c9c7d6d87",
+    "status": "completed",
+    "started_at": "2025-10-27T20:16:40.612288",
+    "ended_at": "2025-10-27T22:03:40.612288",
+    "summary": "Eum commodi laudantium. Nihil temporibus aut sunt excepturi repellendus incidunt saepe.\nModi quas dolore laboriosam molestiae. Voluptatum fuga voluptate modi dolorum.",
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "da591a83-82ce-4ca4-b50c-21d43e7aa014",
+    "patient_id": "b67aac80-fdbc-4084-af78-154e2386c97a",
+    "status": "active",
+    "started_at": "2025-12-30T20:16:40.612288",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "2565bbd5-edb9-4662-add5-ad180d609cf8",
+    "patient_id": "789d164f-ff1b-4c56-b184-a19d7ef9770d",
+    "status": "active",
+    "started_at": "2026-01-02T20:16:40.612288",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "964c64e4-89cd-433d-820b-08fe1e1768b2",
+    "patient_id": "6733e90d-7bd9-4f79-a6f0-5fdf05dd2841",
+    "status": "escalated",
+    "started_at": "2025-12-24T20:16:40.612288",
+    "ended_at": "2025-12-24T20:58:40.612288",
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "bf50a45d-bf78-4541-b15d-7e45827f3329",
+    "patient_id": "fb5f8b77-1942-4bfc-b183-8ba32c4e5c5b",
+    "status": "completed",
+    "started_at": "2025-11-22T20:16:40.612288",
+    "ended_at": "2025-11-22T21:21:40.612288",
+    "summary": "Dignissimos officia libero ad cupiditate. Et velit blanditiis.\nQuasi alias aliquid alias voluptates odio. Fugit commodi dolor velit quae mollitia laudantium.\nRepellendus quidem animi molestiae.",
+    "llm_model": null
+  },
+  {
+    "conversation_id": "75bce561-8898-4af5-8309-da910acd627d",
+    "patient_id": "0af5dc36-11a3-4dd5-84eb-ee679bf74374",
+    "status": "escalated",
+    "started_at": "2025-12-10T20:16:40.612288",
+    "ended_at": "2025-12-10T21:27:40.612288",
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "73db52a6-e649-4e4a-9694-a97d119aaaa4",
+    "patient_id": "46521aee-32f2-4302-a977-9bc5a900df41",
+    "status": "completed",
+    "started_at": "2025-12-02T20:16:40.612288",
+    "ended_at": "2025-12-02T20:49:40.612288",
+    "summary": "Id ut ipsum eius. Voluptatum laudantium reprehenderit unde accusamus iusto. Veniam voluptate laudantium laborum facere explicabo cum quas.",
+    "llm_model": null
+  },
+  {
+    "conversation_id": "b37fbe1f-60fe-4db2-a600-0e5d94f5fb36",
+    "patient_id": "814d8f82-745d-41f1-9b9a-3249279a2979",
+    "status": "completed",
+    "started_at": "2025-11-06T20:16:40.613231",
+    "ended_at": "2025-11-06T21:55:40.613231",
+    "summary": "Blanditiis vel quaerat non. Exercitationem nisi harum veniam animi officia labore suscipit. Temporibus numquam reprehenderit aliquam perspiciatis.",
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "5c3902d0-d8ce-42ef-9d36-14e0e4b97881",
+    "patient_id": "e428bc00-6900-418d-9694-75d0a9783fd4",
+    "status": "active",
+    "started_at": "2025-11-18T20:16:40.613231",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "f80a481f-cd17-4d36-9e96-5ab5686524f3",
+    "patient_id": "811d6d5b-03ac-4ddd-882e-66222d44d7f8",
+    "status": "active",
+    "started_at": "2025-12-14T20:16:40.613231",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "176f40e0-aca9-4b61-8fe2-ad77460f4b79",
+    "patient_id": "28235a5c-c305-41a2-af49-a15d7a5c11f2",
+    "status": "escalated",
+    "started_at": "2025-11-10T20:16:40.613231",
+    "ended_at": "2025-11-10T21:20:40.613231",
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "892756fe-1333-49db-8463-e9ad3eeeb7d4",
+    "patient_id": "1df2c7c4-4f4a-4e19-85ed-2449bdcac7a1",
+    "status": "escalated",
+    "started_at": "2025-12-22T20:16:40.613231",
+    "ended_at": "2025-12-22T22:16:40.613231",
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "cbc64bb9-fe2e-40e8-82d4-96df594bebc9",
+    "patient_id": "607af705-9710-4ce6-9ee4-7f766f129946",
+    "status": "escalated",
+    "started_at": "2025-12-08T20:16:40.613231",
+    "ended_at": "2025-12-08T21:12:40.613231",
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "e981efcb-9f92-4edb-a418-90061c8c2225",
+    "patient_id": "35c3cacb-6188-40ff-8de5-3351bab118f7",
+    "status": "active",
+    "started_at": "2025-10-18T20:16:40.613231",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "f9ed5790-0789-42e0-a590-cc544ac81354",
+    "patient_id": "ebb37611-c7ba-40ad-aeeb-911fbed1e7a4",
+    "status": "escalated",
+    "started_at": "2025-12-05T20:16:40.613231",
+    "ended_at": "2025-12-05T21:15:40.613231",
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "ac56a1bf-7496-458c-9c23-af5708e0ed60",
+    "patient_id": "a0cfdba2-c03f-4ea4-9731-9fd431b13768",
+    "status": "escalated",
+    "started_at": "2025-12-29T20:16:40.613231",
+    "ended_at": "2025-12-29T21:46:40.613231",
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "86a28247-8afe-4512-b11f-e673ef18431d",
+    "patient_id": "4f92932e-067e-484f-b3df-2024d293c162",
+    "status": "completed",
+    "started_at": "2025-11-29T20:16:40.613231",
+    "ended_at": "2025-11-29T21:55:40.613231",
+    "summary": "Rerum ex excepturi nemo animi nobis provident. Quod porro minus veniam.\nEos et suscipit dolorem laudantium. Neque nemo aut ratione. Numquam cumque eum ea sint. Culpa delectus beatae necessitatibus.",
+    "llm_model": null
+  },
+  {
+    "conversation_id": "00343df0-36ef-4949-80a9-5f4ef3895078",
+    "patient_id": "43fcb1da-3eb6-42a8-8c8e-177f43185517",
+    "status": "completed",
+    "started_at": "2025-12-05T20:16:40.613231",
+    "ended_at": "2025-12-05T20:49:40.613231",
+    "summary": "Asperiores non ea omnis culpa. Eveniet est atque ut tenetur quod in voluptatibus. Tenetur iure enim doloribus eligendi optio quasi fuga.",
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "059d9a78-350f-41d2-96bd-76f0173ff84f",
+    "patient_id": "d2d3921a-3000-4bc6-937d-4a4bd8ee90dd",
+    "status": "active",
+    "started_at": "2025-11-14T20:16:40.613231",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "10446767-76a3-4e84-8b25-dd7caa433979",
+    "patient_id": "6ae89618-c5ec-4c56-8413-c3573b2a5c26",
+    "status": "escalated",
+    "started_at": "2025-12-07T20:16:40.613231",
+    "ended_at": "2025-12-07T22:13:40.613231",
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "97d5db35-06e2-4905-824c-e0e24e271cc3",
+    "patient_id": "769988d0-b761-45fe-a25f-c82d35b078de",
+    "status": "escalated",
+    "started_at": "2026-01-08T20:16:40.613231",
+    "ended_at": "2026-01-08T21:20:40.613231",
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "230e27db-ca27-4581-91df-86762af6095f",
+    "patient_id": "97b3effc-4bd6-4c21-ad5b-12d9df6be84e",
+    "status": "active",
+    "started_at": "2025-12-27T20:16:40.613231",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "29f9ec6b-5235-4650-9758-f81b0dda7622",
+    "patient_id": "53896062-7234-4bf6-a552-98a019c837dd",
+    "status": "active",
+    "started_at": "2025-11-09T20:16:40.613231",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "761fb9e7-d2f2-4970-bc44-6493ce0e54a3",
+    "patient_id": "8eab1796-3471-4d15-a017-c7d716cdf122",
+    "status": "escalated",
+    "started_at": "2025-10-16T20:16:40.613231",
+    "ended_at": "2025-10-16T20:38:40.613231",
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "8a639090-e509-4100-8380-9f25f6d438d0",
+    "patient_id": "d42468e7-f442-4792-9097-24a75412e84a",
+    "status": "escalated",
+    "started_at": "2025-10-27T20:16:40.613231",
+    "ended_at": "2025-10-27T21:31:40.613231",
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "becc99eb-91a9-45c0-b0f2-2c6bc744b62e",
+    "patient_id": "6cefae25-26dd-4413-9fa8-8cd654dc24bc",
+    "status": "active",
+    "started_at": "2025-11-19T20:16:40.613231",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "6572f4b4-644f-498d-aef7-f3dac152ecf9",
+    "patient_id": "45a9bf00-0c0d-415a-b501-deab3e9c9b85",
+    "status": "escalated",
+    "started_at": "2025-12-08T20:16:40.613231",
+    "ended_at": "2025-12-08T21:24:40.613231",
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "1f95a755-ed96-4263-b6c2-4262ea39ccdd",
+    "patient_id": "440f5d17-4695-441e-8cf7-df6dc4ca9657",
+    "status": "active",
+    "started_at": "2025-12-14T20:16:40.613231",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "6e0f1194-1e76-47a5-88d6-ef8ade701f29",
+    "patient_id": "938738d6-51b7-4bab-816e-ad3cfecb4a96",
+    "status": "active",
+    "started_at": "2025-11-27T20:16:40.613231",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "aa80dc3a-3365-482d-99e7-06006a4e3c0a",
+    "patient_id": "36511c2a-62aa-4cde-a746-42557c480e03",
+    "status": "completed",
+    "started_at": "2025-10-19T20:16:40.613231",
+    "ended_at": "2025-10-19T22:11:40.613231",
+    "summary": "Libero distinctio a consectetur. Harum maiores repudiandae eos autem quis deleniti quos. Minus delectus tempore exercitationem veniam ad.",
+    "llm_model": null
+  },
+  {
+    "conversation_id": "645be5c5-d41a-43c2-963d-f4a9f491aef4",
+    "patient_id": "6ce9248f-5eff-4e2d-8d4c-17a7a95bdcd0",
+    "status": "completed",
+    "started_at": "2025-11-16T20:16:40.613231",
+    "ended_at": "2025-11-16T21:03:40.613231",
+    "summary": "Facilis eum modi sunt explicabo. Harum natus molestiae voluptatum reiciendis enim iure.\nOdio dolorum provident sint quasi expedita. Ea recusandae vitae ducimus. Fugit ab quas.",
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "f4f79e19-9952-45c9-a77f-40ce9b5a84dd",
+    "patient_id": "742b20c7-04c6-487d-8b11-69289dc64577",
+    "status": "completed",
+    "started_at": "2025-12-22T20:16:40.613231",
+    "ended_at": "2025-12-22T21:44:40.613231",
+    "summary": "Velit consectetur iusto quas aut. Eum officiis tempora enim voluptate delectus esse eius. Tempore repellendus repellendus.\nEa veritatis aspernatur illum.",
+    "llm_model": null
+  },
+  {
+    "conversation_id": "caa57d10-5d94-4d51-bc70-4be1383d72b1",
+    "patient_id": "f0372799-26bd-4185-a990-9b92bbfb9d84",
+    "status": "escalated",
+    "started_at": "2025-11-07T20:16:40.613231",
+    "ended_at": "2025-11-07T22:02:40.613231",
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "e2234cfd-589a-4628-b3b6-40a9ac5c9b7a",
+    "patient_id": "3dd7367a-e18d-4bd0-ba83-a3ed0a571051",
+    "status": "escalated",
+    "started_at": "2025-12-12T20:16:40.613231",
+    "ended_at": "2025-12-12T20:27:40.613231",
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "7bd0f77d-498f-47d4-a57c-a7d8d438bb43",
+    "patient_id": "02b79f6b-59bc-45ef-8449-d917214db530",
+    "status": "completed",
+    "started_at": "2026-01-08T20:16:40.613231",
+    "ended_at": "2026-01-08T21:17:40.613231",
+    "summary": "Laborum nobis voluptatum autem a reprehenderit esse. Esse incidunt adipisci quia nulla.\nQuas sint laudantium deleniti occaecati nulla. Facilis neque consequatur odio voluptates aliquid.",
+    "llm_model": null
+  },
+  {
+    "conversation_id": "abcebe1c-a0f8-4331-947a-5fa9e2aa1b4f",
+    "patient_id": "86197d4b-c3b9-4b8a-9e76-7a42b872ac6c",
+    "status": "active",
+    "started_at": "2025-12-08T20:16:40.613231",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "f8ba5395-c6c6-452e-811d-c4e83d0ae447",
+    "patient_id": "0b15429d-c5f9-4052-9666-8e3dece4a968",
+    "status": "active",
+    "started_at": "2025-11-29T20:16:40.613231",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "b2453598-119a-4ba8-a46f-27c1d28633c4",
+    "patient_id": "06de9b56-f749-44e3-b89e-f16294533e99",
+    "status": "completed",
+    "started_at": "2026-01-06T20:16:40.613231",
+    "ended_at": "2026-01-06T22:06:40.613231",
+    "summary": "Consequuntur accusantium id culpa nemo expedita. Fugiat aspernatur aliquam quam necessitatibus dolorum at.",
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "83feab00-a308-46fd-9851-0ae588622954",
+    "patient_id": "176ca565-39a1-427c-87b9-ac7e84293516",
+    "status": "active",
+    "started_at": "2025-12-16T20:16:40.613231",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "512c8b16-9b5f-445d-bba1-9607cb4778b2",
+    "patient_id": "8eab1796-3471-4d15-a017-c7d716cdf122",
+    "status": "active",
+    "started_at": "2025-11-11T20:16:40.613231",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "273d5425-b4ba-463a-a950-fd2a76f18391",
+    "patient_id": "0516301b-38c7-4f5a-9be0-0a565c883134",
+    "status": "escalated",
+    "started_at": "2025-11-23T20:16:40.613231",
+    "ended_at": "2025-11-23T21:00:40.613231",
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "8620fa13-f568-40f9-8c26-b10d0b91cc06",
+    "patient_id": "84b89726-b603-4302-bc73-0c6a673a79df",
+    "status": "escalated",
+    "started_at": "2025-12-07T20:16:40.613231",
+    "ended_at": "2025-12-07T21:25:40.613231",
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "b15ad17c-2363-4977-b921-b48fbc7cf9a7",
+    "patient_id": "40d03367-c083-41b0-8b30-e64dc576a475",
+    "status": "escalated",
+    "started_at": "2025-11-06T20:16:40.613231",
+    "ended_at": "2025-11-06T20:21:40.613231",
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "ac66007a-9161-4e6f-96cf-285d0842b285",
+    "patient_id": "af164c32-52f4-4f9a-b474-e3011b9abbad",
+    "status": "escalated",
+    "started_at": "2025-11-18T20:16:40.613231",
+    "ended_at": "2025-11-18T21:42:40.613231",
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "d7bd28e4-147c-4d8e-88ac-3020cc81ad17",
+    "patient_id": "cbd3c024-397a-42ea-a71e-fe35f2024a28",
+    "status": "active",
+    "started_at": "2025-12-22T20:16:40.613231",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "917cdc5c-1305-4c58-9442-21fb15770784",
+    "patient_id": "2638372a-bb71-4b06-9703-21a387e3a3f9",
+    "status": "escalated",
+    "started_at": "2025-11-07T20:16:40.613231",
+    "ended_at": "2025-11-07T21:13:40.613231",
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "7b8b26a4-57ab-41e2-a4bb-102e8f2e64f2",
+    "patient_id": "8aa384ff-27cc-4803-9252-e0286d8e8093",
+    "status": "active",
+    "started_at": "2025-12-23T20:16:40.613231",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "8e8d5931-e88f-45da-a36c-4061065909de",
+    "patient_id": "b9587db2-104b-4529-9397-28001562695a",
+    "status": "active",
+    "started_at": "2025-12-11T20:16:40.613231",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "41df60aa-305e-4402-a43f-1591defc4dd1",
+    "patient_id": "66350c7e-6816-4e9d-b4fe-d12844c76fdd",
+    "status": "escalated",
+    "started_at": "2025-10-30T20:16:40.613231",
+    "ended_at": "2025-10-30T22:07:40.613231",
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "23188584-f3ba-4709-a2f2-76abbd8d87ae",
+    "patient_id": "862e5cd9-5956-422e-be4f-b34c9c7d6d87",
+    "status": "completed",
+    "started_at": "2025-10-30T20:16:40.613231",
+    "ended_at": "2025-10-30T21:24:40.613231",
+    "summary": "Illo aperiam ratione temporibus ratione ipsa et. Iusto error corporis possimus tempore earum quisquam. Debitis quos optio ab. Rem occaecati doloribus reiciendis quidem possimus earum quaerat.",
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "e0187db3-0656-4947-970b-b7b6a6882268",
+    "patient_id": "8eab1796-3471-4d15-a017-c7d716cdf122",
+    "status": "active",
+    "started_at": "2025-10-17T20:16:40.613231",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "9c370267-2e29-47f2-8eb2-d8d3100ce903",
+    "patient_id": "2216912f-d894-4a52-9805-4f2e97f186fc",
+    "status": "completed",
+    "started_at": "2025-10-18T20:16:40.613231",
+    "ended_at": "2025-10-18T22:06:40.613231",
+    "summary": "Cupiditate culpa illo laudantium. Ipsa ipsam sed labore ullam. Officiis dolorem commodi praesentium quibusdam.",
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "be56e872-60fb-4756-beb9-85ea32ba86c1",
+    "patient_id": "a7553544-dcb3-4213-b25b-58937406c30a",
+    "status": "escalated",
+    "started_at": "2025-11-08T20:16:40.613231",
+    "ended_at": "2025-11-08T20:53:40.613231",
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "d3fa7eb5-7511-41ff-90e8-785adb5748d7",
+    "patient_id": "ab360276-3ece-4d69-93ac-acf7e5417436",
+    "status": "escalated",
+    "started_at": "2025-10-15T20:16:40.613231",
+    "ended_at": "2025-10-15T21:15:40.613231",
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "56410371-4361-43e2-a283-f8328c1b75e9",
+    "patient_id": "05012004-5b27-4a9f-9faf-cd58d510affd",
+    "status": "active",
+    "started_at": "2025-12-11T20:16:40.613231",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "81420d27-4d08-4cd4-a0b3-40b9eb74d57d",
+    "patient_id": "d4202164-3640-4f3e-92b4-70dd677158cc",
+    "status": "completed",
+    "started_at": "2025-12-20T20:16:40.613231",
+    "ended_at": "2025-12-20T21:27:40.613231",
+    "summary": "Quasi ullam recusandae reprehenderit esse. Sed eligendi distinctio cupiditate.\nTempora temporibus expedita saepe. Cupiditate eaque ullam rerum. Odit voluptates expedita porro ab.",
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "8a506590-e4e8-4db9-b045-a3a18e345a92",
+    "patient_id": "53119114-f101-46da-b0da-ced3af631c68",
+    "status": "active",
+    "started_at": "2025-10-15T20:16:40.613231",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "e34ce2ce-4edd-46cf-a7be-7e87f81185ef",
+    "patient_id": "4241eb3e-8e4c-472c-a820-1a2ae23eb37b",
+    "status": "active",
+    "started_at": "2025-12-27T20:16:40.613231",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "7c84b666-0283-49b6-aa7a-2697f73f0c45",
+    "patient_id": "cd836d66-552e-4d80-880f-f83eb85d46db",
+    "status": "active",
+    "started_at": "2025-12-21T20:16:40.613231",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "134ee5ef-94e7-402b-a780-7601a1d686b0",
+    "patient_id": "c6d2e7d6-4588-4c8f-b57c-782b83cccfd4",
+    "status": "active",
+    "started_at": "2025-11-02T20:16:40.613231",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "71bb1428-d839-47eb-b709-cef35ae890c8",
+    "patient_id": "69a880e0-0097-4fbc-85cf-3801f048692a",
+    "status": "escalated",
+    "started_at": "2025-12-03T20:16:40.613231",
+    "ended_at": "2025-12-03T21:16:40.613231",
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "92b7290f-d79c-401a-aded-111742416ef1",
+    "patient_id": "fa0cf969-8946-4bce-803d-530e1e896f36",
+    "status": "completed",
+    "started_at": "2025-12-16T20:16:40.613231",
+    "ended_at": "2025-12-16T20:56:40.613231",
+    "summary": "Beatae ipsam voluptate vel.\nEst enim id laboriosam nemo possimus. Ratione eveniet quod dolore excepturi ab nemo. Excepturi deserunt deserunt quasi temporibus quibusdam.",
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "e47f7838-d66c-4737-a8ac-6afd2e5c4d0a",
+    "patient_id": "e7d90d2b-6407-423f-b203-da9dc6671512",
+    "status": "active",
+    "started_at": "2025-12-24T20:16:40.613231",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "f8746911-43d2-4200-b944-30ef622b1cb3",
+    "patient_id": "2638372a-bb71-4b06-9703-21a387e3a3f9",
+    "status": "escalated",
+    "started_at": "2025-10-20T20:16:40.613231",
+    "ended_at": "2025-10-20T20:37:40.613231",
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "905978ea-143e-4923-b005-909bfd9dd75c",
+    "patient_id": "0bed5bc2-eeeb-48ab-a675-a608c9d6d6f8",
+    "status": "active",
+    "started_at": "2025-10-12T20:16:40.613231",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "9e4f1981-5991-4337-ba01-41896e0d5b7a",
+    "patient_id": "2fdd1f8b-1ffe-450e-ac5d-6eb67175cb0e",
+    "status": "completed",
+    "started_at": "2025-12-17T20:16:40.613231",
+    "ended_at": "2025-12-17T21:28:40.613231",
+    "summary": "Accusantium suscipit ipsa veniam. Reprehenderit non aperiam excepturi tempore voluptatibus consequatur.\nBeatae laudantium natus dolore quos sit enim. Qui dolorum ducimus sed at repellendus vel.",
+    "llm_model": null
+  },
+  {
+    "conversation_id": "ba5e73f2-a346-4d8a-90e8-de1c330ce639",
+    "patient_id": "3556109f-84f3-472d-83fe-4fcc217eddf7",
+    "status": "active",
+    "started_at": "2025-11-11T20:16:40.613231",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "0ea5d3d9-f071-46a1-99e1-2ea3a7ef4cd2",
+    "patient_id": "efdae467-24e3-4ac3-a370-46788ebac74e",
+    "status": "active",
+    "started_at": "2026-01-05T20:16:40.613231",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "db483daf-1471-4ac8-9488-4525781ee483",
+    "patient_id": "1794e7aa-7836-4737-9ee8-6596421fa711",
+    "status": "active",
+    "started_at": "2026-01-01T20:16:40.613231",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "5d52da73-17fb-4c2c-b908-ab39312f446b",
+    "patient_id": "93fc203f-cb83-42e9-a8f0-8b6d317e4c6b",
+    "status": "active",
+    "started_at": "2026-01-06T20:16:40.613231",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "cd70b68d-f44a-448e-bbb1-69eae374e55c",
+    "patient_id": "d0eb209a-8927-4ad0-af55-48417b5169a9",
+    "status": "escalated",
+    "started_at": "2025-10-22T20:16:40.613231",
+    "ended_at": "2025-10-22T21:54:40.613231",
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "ccbe1b01-d87a-45ba-aaf4-98eeb5711b4e",
+    "patient_id": "5ae3c59f-898b-4b62-a89a-549641a87dc4",
+    "status": "escalated",
+    "started_at": "2025-10-24T20:16:40.613231",
+    "ended_at": "2025-10-24T22:12:40.613231",
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "2bf56139-a08a-4385-9138-ea5d047e0b1b",
+    "patient_id": "917d8902-710c-4d0b-95c6-db460ec4200a",
+    "status": "escalated",
+    "started_at": "2025-12-20T20:16:40.613231",
+    "ended_at": "2025-12-20T20:23:40.613231",
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "8158b038-ec9f-4efc-85bf-d19b88722805",
+    "patient_id": "ab8652ee-ffb7-4c3f-8eac-61727e5b9f10",
+    "status": "completed",
+    "started_at": "2026-01-04T20:16:40.613231",
+    "ended_at": "2026-01-04T20:53:40.613231",
+    "summary": "Quaerat aperiam ut veniam quia nobis vel. Inventore tenetur totam modi veniam ex ipsam. Minus quo nesciunt magnam atque animi.",
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "d11fa4f8-6998-4f00-8e44-7eedfa143dc7",
+    "patient_id": "b0e85c7d-38d8-4cb9-9d19-a0eabecb5758",
+    "status": "escalated",
+    "started_at": "2025-10-23T20:16:40.613231",
+    "ended_at": "2025-10-23T20:50:40.613231",
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "686399bb-195f-4c38-8239-8f8c49b92b28",
+    "patient_id": "2d6cbfb8-27ae-459c-b712-a848d59cc559",
+    "status": "escalated",
+    "started_at": "2026-01-04T20:16:40.613231",
+    "ended_at": "2026-01-04T20:56:40.613231",
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "c790b4bc-da16-4cad-b2d7-26d54112c140",
+    "patient_id": "c6e9f6da-e28d-41e9-ab8f-4502b0fab852",
+    "status": "escalated",
+    "started_at": "2025-12-26T20:16:40.613231",
+    "ended_at": "2025-12-26T21:10:40.613231",
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "243ce04e-ea4d-4ef4-838a-43a3328e3f26",
+    "patient_id": "776c7f38-e446-4471-a13f-62f8e25c7b7b",
+    "status": "active",
+    "started_at": "2025-11-14T20:16:40.613231",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "1743953b-a49c-4ded-adff-051916d51315",
+    "patient_id": "a4a6ad76-e09c-4529-a865-9c693e494252",
+    "status": "completed",
+    "started_at": "2025-10-18T20:16:40.613231",
+    "ended_at": "2025-10-18T20:53:40.613231",
+    "summary": "Saepe aspernatur recusandae optio animi perferendis voluptatum. Ipsa commodi quam debitis molestias illo sunt. Laboriosam ducimus quo reprehenderit est maxime impedit.",
+    "llm_model": null
+  },
+  {
+    "conversation_id": "024961c7-6dee-492c-9596-697f6a944c10",
+    "patient_id": "6ad60064-103c-4d8f-98ea-6785ddeaad3d",
+    "status": "escalated",
+    "started_at": "2025-12-27T20:16:40.613231",
+    "ended_at": "2025-12-27T21:37:40.613231",
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "67fdf5ee-f55f-4e1a-8d27-7d089d346c0f",
+    "patient_id": "5509a2a0-2c0d-473c-a744-f167da367391",
+    "status": "escalated",
+    "started_at": "2026-01-08T20:16:40.613231",
+    "ended_at": "2026-01-08T21:51:40.613231",
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "a33bd99a-8459-4adb-8af4-85449f206598",
+    "patient_id": "36688149-1bf8-436d-b7e7-f494951d2ee3",
+    "status": "completed",
+    "started_at": "2025-10-15T20:16:40.613231",
+    "ended_at": "2025-10-15T22:08:40.613231",
+    "summary": "Tempora dolore provident architecto necessitatibus ab.\nQuidem esse animi ullam possimus. Aperiam ipsam placeat quam sed maiores.\nDicta a similique. Consequatur inventore nostrum totam odio.",
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "c075f4eb-dd64-4d5a-a2e9-2ca2f144b511",
+    "patient_id": "5d7f73bd-4d4c-40e5-b644-8dc37a3e4dc8",
+    "status": "escalated",
+    "started_at": "2025-12-09T20:16:40.613231",
+    "ended_at": "2025-12-09T21:28:40.613231",
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "f6dd678f-1e12-4436-8610-12d05b48dc15",
+    "patient_id": "8e0cc432-6953-4a53-9614-7ccedfc6dace",
+    "status": "completed",
+    "started_at": "2025-11-28T20:16:40.613231",
+    "ended_at": "2025-11-28T21:22:40.613231",
+    "summary": "Sint libero saepe eos sapiente quaerat dignissimos. Saepe in natus quibusdam dolorum placeat perspiciatis.",
+    "llm_model": null
+  },
+  {
+    "conversation_id": "38060f57-0afc-4270-b496-1da570d0181d",
+    "patient_id": "015afe27-ee0a-4af0-aed3-ded15eaa1677",
+    "status": "completed",
+    "started_at": "2025-12-20T20:16:40.613231",
+    "ended_at": "2025-12-20T22:02:40.613231",
+    "summary": "Optio distinctio placeat. Nesciunt expedita quis labore ipsa ad totam at.\nArchitecto qui excepturi similique. Consequuntur consequatur alias voluptatum. Aut voluptate odit.",
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "45f971df-ff12-4e98-82aa-b4fbc2eb2079",
+    "patient_id": "b2851df4-d886-4937-9169-bed931b8e681",
+    "status": "completed",
+    "started_at": "2025-10-24T20:16:40.613231",
+    "ended_at": "2025-10-24T22:05:40.613231",
+    "summary": "Dolor consectetur est at delectus quidem possimus placeat. Quaerat quibusdam quas quasi quam ducimus numquam. Quos eius impedit. Excepturi occaecati praesentium aperiam dolorem facere.",
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "c8ef3704-92b7-40e4-8e9d-e524ea4f507a",
+    "patient_id": "1651b3ac-eac4-4d02-946f-9a2e31d4a26a",
+    "status": "escalated",
+    "started_at": "2026-01-07T20:16:40.613231",
+    "ended_at": "2026-01-07T20:28:40.613231",
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "c24bfcf9-72ff-40ff-b931-32033e42e4f1",
+    "patient_id": "f8e82b06-0147-403c-9ccf-e63851ce5f9c",
+    "status": "escalated",
+    "started_at": "2025-10-31T20:16:40.613231",
+    "ended_at": "2025-10-31T22:14:40.613231",
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "d707245f-496a-4217-b7df-6879d1ac5d7c",
+    "patient_id": "cc452afe-d303-4740-bb84-4d64c4b60f6c",
+    "status": "escalated",
+    "started_at": "2025-12-15T20:16:40.613231",
+    "ended_at": "2025-12-15T20:31:40.613231",
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "aa705b77-cf33-4a72-bb34-bcc65eed2a54",
+    "patient_id": "107ead8d-a72a-4bbe-8f55-27acffc1163f",
+    "status": "completed",
+    "started_at": "2025-12-01T20:16:40.613231",
+    "ended_at": "2025-12-01T22:15:40.613231",
+    "summary": "Doloribus consectetur praesentium reiciendis dolore repudiandae.",
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "1ad89b80-b2d8-446d-89a6-a45e9a89fd4e",
+    "patient_id": "bb736f71-85bb-4480-9c38-9e1673d9219b",
+    "status": "escalated",
+    "started_at": "2025-11-16T20:16:40.614305",
+    "ended_at": "2025-11-16T20:41:40.614305",
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "15c32348-a698-4bed-852c-970e3ab98772",
+    "patient_id": "2fd0a887-f8d4-4ab2-b070-37ff0a6a6689",
+    "status": "active",
+    "started_at": "2025-11-05T20:16:40.614305",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "36506120-1f6e-4a0b-b253-2b59a9e61ab0",
+    "patient_id": "4df29598-0629-4484-9d44-ec1324b2a9a8",
+    "status": "active",
+    "started_at": "2026-01-07T20:16:40.614305",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "9cd768d7-01fa-497a-bfd8-1d8e9b144b8f",
+    "patient_id": "9e9aa73e-7d14-4496-9cd4-88b32077c084",
+    "status": "completed",
+    "started_at": "2025-12-08T20:16:40.614305",
+    "ended_at": "2025-12-08T21:07:40.614305",
+    "summary": "Impedit labore facilis harum soluta. A soluta velit excepturi a tenetur inventore. Labore nesciunt repellat laboriosam repellendus maiores.",
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "da654751-3149-47d4-84ed-d4b3b382624f",
+    "patient_id": "9da69a83-b266-4c82-9c24-e907474f93c6",
+    "status": "active",
+    "started_at": "2025-11-11T20:16:40.614305",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "bdbda09c-cc52-4357-8707-fdcb54c09d1e",
+    "patient_id": "abe9ad1c-cb62-4fb8-bdcb-3d5aab81c72d",
+    "status": "completed",
+    "started_at": "2025-11-03T20:16:40.614305",
+    "ended_at": "2025-11-03T21:02:40.614305",
+    "summary": "Nobis eum illo doloremque corporis nemo culpa. Fuga quisquam similique aperiam atque earum impedit. Occaecati fuga repellendus.\nSint aperiam magni quod voluptates hic commodi.",
+    "llm_model": null
+  },
+  {
+    "conversation_id": "f959d4af-1f38-4438-ae8f-d175fa9e2bf3",
+    "patient_id": "92be2545-19a6-4203-a656-056ffab0995e",
+    "status": "active",
+    "started_at": "2025-10-24T20:16:40.614305",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "4ac4e718-b28f-4059-a59c-d9db9a0ff002",
+    "patient_id": "d42b452f-d86e-438e-86e2-7a119314a07b",
+    "status": "active",
+    "started_at": "2025-10-17T20:16:40.614305",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "24b12978-60f0-458e-b77b-2149ac8f44c0",
+    "patient_id": "4df29598-0629-4484-9d44-ec1324b2a9a8",
+    "status": "active",
+    "started_at": "2025-10-19T20:16:40.614305",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "935c0aae-9f63-41cd-b282-9a15e840e526",
+    "patient_id": "6b6b4214-3b09-401c-8665-f370722647e2",
+    "status": "escalated",
+    "started_at": "2025-10-18T20:16:40.614305",
+    "ended_at": "2025-10-18T22:01:40.614305",
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "1bac61ae-8682-46f9-9b9e-cba13c7b59ff",
+    "patient_id": "9e03cba4-0cf4-4d70-a2c3-57dc8bd3f4b8",
+    "status": "completed",
+    "started_at": "2025-10-29T20:16:40.614305",
+    "ended_at": "2025-10-29T20:43:40.614305",
+    "summary": "Maiores repudiandae laborum vel laborum magnam. Nemo provident corrupti laudantium. Iste consectetur quae soluta.",
+    "llm_model": null
+  },
+  {
+    "conversation_id": "e2bb95b5-6d45-4c25-9285-6c6fb8b03d88",
+    "patient_id": "5eb5a575-7d80-4bfe-81f9-3171c955ee34",
+    "status": "escalated",
+    "started_at": "2025-10-25T20:16:40.614305",
+    "ended_at": "2025-10-25T21:04:40.614305",
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "abcd4adb-e548-4785-bc73-84a36cb99cb7",
+    "patient_id": "05012004-5b27-4a9f-9faf-cd58d510affd",
+    "status": "completed",
+    "started_at": "2025-11-18T20:16:40.614305",
+    "ended_at": "2025-11-18T20:24:40.614305",
+    "summary": "Ab occaecati quibusdam id dolores sed. Facilis natus ad temporibus veritatis nesciunt minus. Harum aliquam ratione ratione voluptas eligendi voluptates.",
+    "llm_model": null
+  },
+  {
+    "conversation_id": "782e85c9-2cab-49ab-a79b-76e74f8bfaad",
+    "patient_id": "8b994518-a620-4245-bf13-85baf9d25329",
+    "status": "active",
+    "started_at": "2025-11-30T20:16:40.614305",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "f0800202-6bd8-4524-942e-2128d8193e62",
+    "patient_id": "130e627f-05ef-4f45-9eae-e575f7df19d1",
+    "status": "completed",
+    "started_at": "2025-10-29T20:16:40.614305",
+    "ended_at": "2025-10-29T21:47:40.614305",
+    "summary": "Quidem sapiente perferendis asperiores.\nRepellat voluptas reiciendis et cum. Quia minima perspiciatis sunt veniam.",
+    "llm_model": null
+  },
+  {
+    "conversation_id": "bd97d3fc-4e0d-490d-a008-22bde3803f78",
+    "patient_id": "ed5e48be-07a2-4446-87c0-ca402f0cc309",
+    "status": "completed",
+    "started_at": "2025-11-23T20:16:40.614305",
+    "ended_at": "2025-11-23T21:37:40.614305",
+    "summary": "Quis sit distinctio culpa consectetur incidunt mollitia. Aspernatur iste ad.\nEsse laboriosam in reprehenderit. Libero iure culpa pariatur ex fuga. Voluptates in nulla esse dolor occaecati sit.",
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "e17bc076-87ee-4eac-bd2a-d961a97c766c",
+    "patient_id": "74cc88ad-8bc2-4959-a0f5-bde9fb72a63c",
+    "status": "completed",
+    "started_at": "2026-01-06T20:16:40.614305",
+    "ended_at": "2026-01-06T20:21:40.614305",
+    "summary": "Modi molestiae quam facere reiciendis accusantium. Possimus perferendis unde nam autem unde. Eveniet cumque nesciunt eligendi iure quia dolorum. Harum porro id blanditiis.",
+    "llm_model": null
+  },
+  {
+    "conversation_id": "6e51c222-a3fd-4cc1-956a-6565398ba226",
+    "patient_id": "867302dc-f33a-4f96-92ef-6c94b3cbfc9e",
+    "status": "completed",
+    "started_at": "2025-11-17T20:16:40.614305",
+    "ended_at": "2025-11-17T20:47:40.614305",
+    "summary": "Velit provident debitis quia excepturi dolor. Praesentium quae ut praesentium autem qui.",
+    "llm_model": null
+  },
+  {
+    "conversation_id": "f199aef2-a268-4672-af8f-f9f88b019890",
+    "patient_id": "6e9033c7-0aa2-40fc-96b4-ff289889e7b1",
+    "status": "completed",
+    "started_at": "2025-12-04T20:16:40.614305",
+    "ended_at": "2025-12-04T21:03:40.614305",
+    "summary": "Accusantium esse quaerat reiciendis nesciunt voluptatum. Placeat ad numquam delectus quam nobis officia. Quidem doloribus velit exercitationem recusandae autem.",
+    "llm_model": null
+  },
+  {
+    "conversation_id": "6ca093b8-355a-4e35-a6c7-2b9512e0ba29",
+    "patient_id": "d2e08a89-2363-493f-8761-c0cc6b705d7c",
+    "status": "active",
+    "started_at": "2025-11-02T20:16:40.614305",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "5ace5082-ec12-456c-b90f-b1bab3f2aeaf",
+    "patient_id": "b0e85c7d-38d8-4cb9-9d19-a0eabecb5758",
+    "status": "escalated",
+    "started_at": "2025-11-24T20:16:40.614305",
+    "ended_at": "2025-11-24T22:02:40.614305",
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "a912f677-8963-44d0-918b-af951b0c8915",
+    "patient_id": "dd6b6b98-acf6-4bae-add0-c2b5c97a17e3",
+    "status": "completed",
+    "started_at": "2025-10-23T20:16:40.614305",
+    "ended_at": "2025-10-23T21:54:40.614305",
+    "summary": "Ea provident unde reprehenderit. Perspiciatis deserunt reprehenderit id. Totam nulla similique doloremque qui magni doloribus quis.",
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "029b360c-8275-4670-aa63-0e1fe51dbefe",
+    "patient_id": "985c56a4-1be6-4525-84b8-790ff6612ec1",
+    "status": "active",
+    "started_at": "2025-12-09T20:16:40.614305",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "4cfb91d5-f25f-4d58-8c18-bb51b55432b5",
+    "patient_id": "a4e22470-edbf-4df6-9824-ee73594b3bab",
+    "status": "completed",
+    "started_at": "2025-12-07T20:16:40.614305",
+    "ended_at": "2025-12-07T21:29:40.614305",
+    "summary": "Distinctio inventore amet culpa beatae modi. Ipsam magni nobis a.\nQuos fugit pariatur quo quis. In ea sit quos culpa.",
+    "llm_model": null
+  },
+  {
+    "conversation_id": "1d1a71e1-d590-4ffd-b596-f621effa3999",
+    "patient_id": "0bb7380e-3b4d-44a1-aa0b-946d968dadea",
+    "status": "escalated",
+    "started_at": "2025-11-25T20:16:40.614305",
+    "ended_at": "2025-11-25T20:54:40.614305",
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "8b2b59b9-0916-4da8-9406-263deb6f4b5a",
+    "patient_id": "e118a116-42e4-4f99-acd1-71ffa9f7fe1c",
+    "status": "escalated",
+    "started_at": "2026-01-05T20:16:40.614305",
+    "ended_at": "2026-01-05T21:28:40.614305",
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "ba095df9-b5a4-4dc4-b753-5eb9365cab97",
+    "patient_id": "ee0d7dae-713a-40d6-bdc5-46c382cf3a18",
+    "status": "active",
+    "started_at": "2026-01-04T20:16:40.614305",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "848fa2c2-02cf-4842-86ee-767d6de6a83d",
+    "patient_id": "670d8293-d105-4744-a9a8-efe0a98c43db",
+    "status": "completed",
+    "started_at": "2025-12-09T20:16:40.614305",
+    "ended_at": "2025-12-09T20:51:40.614305",
+    "summary": "Neque nulla delectus non unde exercitationem totam. Eaque ipsa impedit ducimus quod.\nCumque mollitia quasi rem optio necessitatibus. Hic accusamus at doloribus.",
+    "llm_model": null
+  },
+  {
+    "conversation_id": "d973a720-104a-4176-910e-0919cf7562ff",
+    "patient_id": "1b0abcb4-747e-4fb0-b0e5-b0151db2e0d6",
+    "status": "completed",
+    "started_at": "2025-11-16T20:16:40.614305",
+    "ended_at": "2025-11-16T21:56:40.614305",
+    "summary": "Labore vel cum. Cumque nulla repellendus molestiae magni. Qui eaque id eum modi quam.",
+    "llm_model": null
+  },
+  {
+    "conversation_id": "e2bd09e4-9e76-4bac-83d0-0c0437c4b957",
+    "patient_id": "6e9712d6-0006-4299-8567-7ab16b7d2211",
+    "status": "completed",
+    "started_at": "2025-12-21T20:16:40.614305",
+    "ended_at": "2025-12-21T20:31:40.614305",
+    "summary": "Delectus eveniet sed incidunt molestiae. Eius id corrupti dolores nostrum est.\nCorrupti eligendi corrupti consequuntur nihil perferendis eius reiciendis. Quae quasi quidem nihil.",
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "a6f9ea77-7f11-415f-99e6-092793df0855",
+    "patient_id": "d1414f73-9946-4089-9b11-d96d6ee7d3b8",
+    "status": "escalated",
+    "started_at": "2025-11-01T20:16:40.614305",
+    "ended_at": "2025-11-01T20:35:40.614305",
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "03e0fe8f-cf02-44e7-a14a-9df9f3292b6b",
+    "patient_id": "d1dd79f1-ab91-45bd-8e92-ba462b985997",
+    "status": "escalated",
+    "started_at": "2025-11-13T20:16:40.614305",
+    "ended_at": "2025-11-13T20:54:40.614305",
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "aa582806-35a0-41a4-af2a-336d7f8c4e4b",
+    "patient_id": "92be2545-19a6-4203-a656-056ffab0995e",
+    "status": "escalated",
+    "started_at": "2025-10-16T20:16:40.614305",
+    "ended_at": "2025-10-16T22:07:40.614305",
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "dc5bf3cd-cb4a-45fc-95a1-62af9a0a682a",
+    "patient_id": "db89a168-f2f1-4df0-96bf-e218a2d5bb86",
+    "status": "completed",
+    "started_at": "2025-10-26T20:16:40.614305",
+    "ended_at": "2025-10-26T21:16:40.614305",
+    "summary": "Similique possimus commodi pariatur facere. Veritatis adipisci excepturi neque vitae cum aut. Praesentium vel veniam facilis hic. Assumenda qui exercitationem libero non quod.",
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "6a43d791-0842-4041-9fda-31a07e33893d",
+    "patient_id": "4eb85b6c-58e6-459b-8397-21ebcb6c57d1",
+    "status": "completed",
+    "started_at": "2025-12-09T20:16:40.614305",
+    "ended_at": "2025-12-09T21:53:40.614305",
+    "summary": "Ipsa blanditiis molestias excepturi. Animi ex illo ex fugit consequuntur aut. Molestias quisquam repellendus ipsa quasi consequatur.\nAccusantium enim corporis ex quam.",
+    "llm_model": null
+  },
+  {
+    "conversation_id": "6a73072e-2368-4b35-bc7a-4c1ab6ae00aa",
+    "patient_id": "7abe0350-448e-4cb5-9abd-09433d4a5bf8",
+    "status": "active",
+    "started_at": "2025-11-21T20:16:40.614305",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "050c249b-f116-494f-afe1-919284ba9967",
+    "patient_id": "413820c1-30e6-4400-8fcc-3eb8a5e56bd4",
+    "status": "escalated",
+    "started_at": "2025-10-13T20:16:40.614305",
+    "ended_at": "2025-10-13T21:59:40.614305",
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "b2bc98ab-3428-4d91-9b5b-eb8f4bf963ab",
+    "patient_id": "b4e6715f-280d-40c9-a8b9-5687b7e365bc",
+    "status": "completed",
+    "started_at": "2025-10-24T20:16:40.614305",
+    "ended_at": "2025-10-24T21:14:40.614305",
+    "summary": "Impedit minima quod. Repudiandae magni voluptates sit voluptatibus porro quasi. Voluptatum quam debitis.",
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "8973c127-2a8e-449c-bf0f-36ebd34076db",
+    "patient_id": "5dab716f-b41c-4dbe-b24f-df8f0634ca69",
+    "status": "completed",
+    "started_at": "2025-11-14T20:16:40.614305",
+    "ended_at": "2025-11-14T22:00:40.614305",
+    "summary": "Vel sit vel. Ducimus velit adipisci quisquam. Explicabo architecto distinctio.\nAut esse dolor nulla iste. Aperiam quae error rem dicta exercitationem. Totam eum consectetur ducimus.",
+    "llm_model": null
+  },
+  {
+    "conversation_id": "95f09a27-a6d8-46b5-87d7-f1244d8b1265",
+    "patient_id": "e8ccdb8a-bf84-4041-ab06-f1207a935056",
+    "status": "active",
+    "started_at": "2025-11-20T20:16:40.614305",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "f9f7ee60-2c9e-43b2-bce2-a0c4ae9f9da3",
+    "patient_id": "a0cfdba2-c03f-4ea4-9731-9fd431b13768",
+    "status": "active",
+    "started_at": "2025-12-05T20:16:40.614305",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "55a95884-9650-443c-adc1-4f024ea75c61",
+    "patient_id": "8e1b9fd1-177b-4eb8-a167-3c3913ece4b5",
+    "status": "completed",
+    "started_at": "2025-11-27T20:16:40.614305",
+    "ended_at": "2025-11-27T21:06:40.614305",
+    "summary": "Architecto iure natus temporibus dolorem. Sint fugit repellat id.\nEst illo labore. Sequi illo eligendi hic impedit delectus quae. Aliquam qui reiciendis eveniet eum illo.",
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "edf4ab3f-6a4d-4aaa-9a0c-63d788fb5531",
+    "patient_id": "f0f4742e-78f4-4ded-85b4-896f7f942bb2",
+    "status": "escalated",
+    "started_at": "2025-10-26T20:16:40.614305",
+    "ended_at": "2025-10-26T20:38:40.614305",
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "119022c5-ad23-407f-b2ee-aa77c368f5d4",
+    "patient_id": "1ca642f6-5eb8-4e50-b308-410bf8c58447",
+    "status": "escalated",
+    "started_at": "2025-11-30T20:16:40.614305",
+    "ended_at": "2025-11-30T20:39:40.614305",
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "46b03a2d-6ca4-4b5a-b237-1cc0436c0855",
+    "patient_id": "a95ed632-a106-48bc-935d-1be1b5623ecc",
+    "status": "active",
+    "started_at": "2025-11-15T20:16:40.614305",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "c7dd08df-74a7-4536-a1fc-63d69ac7aa5d",
+    "patient_id": "40fec2ba-3118-4be4-a600-4319605829ed",
+    "status": "completed",
+    "started_at": "2025-12-13T20:16:40.614305",
+    "ended_at": "2025-12-13T21:42:40.614305",
+    "summary": "Dolore sequi ratione esse beatae. Optio nobis dolor nam eius nulla.",
+    "llm_model": null
+  },
+  {
+    "conversation_id": "466b0a46-9399-4258-8326-b318b296962c",
+    "patient_id": "2f5b88f7-bcd0-475c-b40f-a2899e82836a",
+    "status": "active",
+    "started_at": "2025-12-09T20:16:40.614305",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "f5e59940-b71c-4e67-bb76-893dc2d020b1",
+    "patient_id": "82d91cde-8e3b-47d3-883a-abecd6cf39d5",
+    "status": "escalated",
+    "started_at": "2025-10-24T20:16:40.614305",
+    "ended_at": "2025-10-24T20:57:40.614305",
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "4170e88f-9c9c-43e8-93bd-5beb1fcd43f3",
+    "patient_id": "06de9b56-f749-44e3-b89e-f16294533e99",
+    "status": "escalated",
+    "started_at": "2026-01-01T20:16:40.614305",
+    "ended_at": "2026-01-01T21:53:40.614305",
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "15239d63-0e42-4573-a35e-f32891e1d125",
+    "patient_id": "2d3d2b95-6c63-4495-b1e1-e1f1e2503300",
+    "status": "escalated",
+    "started_at": "2025-11-03T20:16:40.614305",
+    "ended_at": "2025-11-03T20:28:40.614305",
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "a2fe584b-c49d-40ec-a8d5-4c0bd28b5034",
+    "patient_id": "88108e85-6884-419e-a074-63342fc67f58",
+    "status": "escalated",
+    "started_at": "2025-11-23T20:16:40.614305",
+    "ended_at": "2025-11-23T21:22:40.614305",
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "cfdcbd37-6d8e-41d9-9b13-7824220f3fee",
+    "patient_id": "34b57711-82c5-4d05-a11a-dc3b4231b81b",
+    "status": "completed",
+    "started_at": "2025-11-23T20:16:40.614305",
+    "ended_at": "2025-11-23T20:26:40.614305",
+    "summary": "Temporibus sint in repellendus et ad. Libero officia maiores eligendi voluptatibus blanditiis.",
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "ce268301-1371-45bd-bb8e-d6e61ae951f5",
+    "patient_id": "abc4f64e-56f9-4ba9-98e1-c56bbbefabbf",
+    "status": "active",
+    "started_at": "2025-12-25T20:16:40.614305",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "eaf8262c-4508-46aa-982c-48e014ed3a5b",
+    "patient_id": "72ca75dd-9e40-4f9d-9389-0b5389827015",
+    "status": "active",
+    "started_at": "2025-10-20T20:16:40.614305",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "a930edf9-2050-49a4-a6cd-afcb821afc0e",
+    "patient_id": "ead932a3-28eb-4de5-be2d-a01650fa492b",
+    "status": "escalated",
+    "started_at": "2025-10-19T20:16:40.614305",
+    "ended_at": "2025-10-19T21:03:40.614305",
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "458abf3d-2aec-4e47-bc2b-3530369b3eaf",
+    "patient_id": "cbd3c024-397a-42ea-a71e-fe35f2024a28",
+    "status": "active",
+    "started_at": "2025-12-21T20:16:40.614305",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "cd81cdd6-a068-46c2-8777-579e424eae82",
+    "patient_id": "aefe3d79-53a3-435e-a42f-b43a6ffe4334",
+    "status": "active",
+    "started_at": "2025-12-16T20:16:40.614305",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "1f8208df-f9a7-482f-adff-339219c7d981",
+    "patient_id": "dd6e14c5-3cb2-4093-b856-7da65910023d",
+    "status": "escalated",
+    "started_at": "2025-11-13T20:16:40.614305",
+    "ended_at": "2025-11-13T22:01:40.614305",
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "5e292004-6409-4b99-a87e-330fcb9b91fa",
+    "patient_id": "9e03cba4-0cf4-4d70-a2c3-57dc8bd3f4b8",
+    "status": "active",
+    "started_at": "2025-12-05T20:16:40.614305",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "de6fefa4-016a-4b3a-81a8-045051204112",
+    "patient_id": "4911ecb8-8b1e-4ece-9ca2-edbc5160f9d6",
+    "status": "active",
+    "started_at": "2025-10-17T20:16:40.614305",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "2a885735-d49d-4e41-b53a-305e12ea73be",
+    "patient_id": "1d920dab-351a-442b-b511-7ae5a6295951",
+    "status": "active",
+    "started_at": "2025-12-10T20:16:40.614305",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "f167ce72-ad58-4bcd-a5d7-aea51714cb02",
+    "patient_id": "194c7024-eac0-49c5-b4be-35ed8d99ab9e",
+    "status": "escalated",
+    "started_at": "2025-11-07T20:16:40.614305",
+    "ended_at": "2025-11-07T20:54:40.614305",
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "063b532a-d595-4133-b13e-a679f947ffef",
+    "patient_id": "fe32176c-1e86-40b5-86c2-c305dbce7308",
+    "status": "completed",
+    "started_at": "2025-11-08T20:16:40.614305",
+    "ended_at": "2025-11-08T20:47:40.614305",
+    "summary": "Odit molestiae placeat quod. Aliquam deleniti provident blanditiis voluptate quisquam.\nExpedita esse quibusdam officia. Voluptate temporibus magnam totam expedita.",
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "5d894e44-b79f-45a7-9c9e-b56676b3479d",
+    "patient_id": "efdae467-24e3-4ac3-a370-46788ebac74e",
+    "status": "completed",
+    "started_at": "2025-10-27T20:16:40.614305",
+    "ended_at": "2025-10-27T21:37:40.614305",
+    "summary": "Cupiditate et facilis dolorem.\nDolor error quaerat. Iusto iusto iste iusto dolor nisi.",
+    "llm_model": null
+  },
+  {
+    "conversation_id": "df3edc6b-2adc-4e00-8cca-d22be966fa8a",
+    "patient_id": "ed5e48be-07a2-4446-87c0-ca402f0cc309",
+    "status": "active",
+    "started_at": "2025-11-20T20:16:40.614305",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "483cfdc8-387d-4674-a2f6-b1f78414087a",
+    "patient_id": "4acd48ef-5635-4982-9109-7eb0e90d6b0a",
+    "status": "active",
+    "started_at": "2025-11-24T20:16:40.615290",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "240d0ed7-66c8-446f-ac2b-e3921aa13fff",
+    "patient_id": "53119114-f101-46da-b0da-ced3af631c68",
+    "status": "active",
+    "started_at": "2026-01-06T20:16:40.615290",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "79caac98-6878-44fa-8392-e6ec8ba4b9fe",
+    "patient_id": "82727f09-2cab-47e1-ad03-afba023c9b0b",
+    "status": "escalated",
+    "started_at": "2025-11-16T20:16:40.615290",
+    "ended_at": "2025-11-16T22:14:40.615290",
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "9a4caff1-5581-4a71-b626-e9813678c1cc",
+    "patient_id": "0af5dc36-11a3-4dd5-84eb-ee679bf74374",
+    "status": "escalated",
+    "started_at": "2025-12-17T20:16:40.615290",
+    "ended_at": "2025-12-17T20:50:40.615290",
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "3773e8e3-24d5-4861-bd7f-1ba306f55fa5",
+    "patient_id": "7a945a81-7a82-41fe-9752-a03ac50cd03a",
+    "status": "escalated",
+    "started_at": "2025-12-23T20:16:40.615290",
+    "ended_at": "2025-12-23T20:46:40.615290",
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "591f6302-555d-4134-b2be-1c219eedd04a",
+    "patient_id": "ab8652ee-ffb7-4c3f-8eac-61727e5b9f10",
+    "status": "completed",
+    "started_at": "2025-10-18T20:16:40.615290",
+    "ended_at": "2025-10-18T21:25:40.615290",
+    "summary": "Excepturi dolor similique molestiae similique praesentium explicabo. Ullam officia soluta quibusdam quis iusto.",
+    "llm_model": null
+  },
+  {
+    "conversation_id": "43d1ae24-4c1a-49c9-a8cd-3ea1bc273923",
+    "patient_id": "2beb2b22-bb82-4233-95a0-c573a0ec946b",
+    "status": "active",
+    "started_at": "2025-11-29T20:16:40.615290",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "5901799c-1c62-435f-95d7-0d3490abb78c",
+    "patient_id": "ca2c6446-5614-4a0f-a952-b7e20ea6de43",
+    "status": "completed",
+    "started_at": "2026-01-08T20:16:40.615290",
+    "ended_at": "2026-01-08T21:00:40.615290",
+    "summary": "Harum cum id unde fugit. Beatae rem labore officia perferendis nisi molestiae enim. Nobis ducimus iure molestias tempore ut.\nIpsa nostrum recusandae facere. Consequatur velit nemo amet fugit minus.",
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "87b95df2-388d-49bd-88ea-9932bcd02a2b",
+    "patient_id": "2216912f-d894-4a52-9805-4f2e97f186fc",
+    "status": "active",
+    "started_at": "2025-10-29T20:16:40.615290",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "92b5f1f5-9f31-4d5a-915d-0f146e3c977d",
+    "patient_id": "c12caf41-0700-4533-a98c-08f7720b857f",
+    "status": "escalated",
+    "started_at": "2025-10-15T20:16:40.615290",
+    "ended_at": "2025-10-15T20:26:40.615290",
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "e5ae6be5-7277-42f1-9bed-67eb2c6c6708",
+    "patient_id": "d2b90ced-76a2-4a1f-922e-6fbd732ad907",
+    "status": "escalated",
+    "started_at": "2025-10-30T20:16:40.615290",
+    "ended_at": "2025-10-30T20:25:40.615290",
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "7e1ef5da-e009-421f-93aa-bff9f30c420a",
+    "patient_id": "00b2aca1-3346-4e8b-b829-39de4f7ccda8",
+    "status": "active",
+    "started_at": "2025-10-16T20:16:40.615290",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "c11bdc48-378a-4202-8f86-d0b08bf04ca9",
+    "patient_id": "fade0514-b3be-4d98-a4f6-d56a53a93081",
+    "status": "active",
+    "started_at": "2025-10-28T20:16:40.615290",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "0baf928d-400d-41b4-8ee3-41800d8b42eb",
+    "patient_id": "f8ec5118-eb35-45fc-849e-095986c97736",
+    "status": "completed",
+    "started_at": "2025-12-22T20:16:40.615290",
+    "ended_at": "2025-12-22T21:28:40.615290",
+    "summary": "Enim dolor minima aperiam libero. Alias asperiores atque asperiores. Debitis eligendi optio dolorem reiciendis laborum quod.\nQuis facere iste. Porro quo doloremque doloremque et vel. Labore quia a.",
+    "llm_model": null
+  },
+  {
+    "conversation_id": "36150f98-334d-4384-8dff-52ac2d7afd29",
+    "patient_id": "a3bd36aa-ca1a-4cbe-83ab-321830322961",
+    "status": "completed",
+    "started_at": "2025-10-17T20:16:40.615290",
+    "ended_at": "2025-10-17T22:09:40.615290",
+    "summary": "Repellendus pariatur ut. Deserunt enim at saepe.",
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "9b7f48db-bf76-479c-8c16-17fbbc6f7bff",
+    "patient_id": "ea367935-4bc7-414e-864c-d0e524ddeb57",
+    "status": "active",
+    "started_at": "2026-01-04T20:16:40.615290",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "a38e4c57-feb6-47e0-8b5d-3ebf72106f3d",
+    "patient_id": "45a9bf00-0c0d-415a-b501-deab3e9c9b85",
+    "status": "escalated",
+    "started_at": "2025-12-30T20:16:40.615290",
+    "ended_at": "2025-12-30T22:09:40.615290",
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "0b9facc1-0b4e-4db5-955c-7e2f5a1d6d96",
+    "patient_id": "aeafcbbe-eb71-4506-b55c-f238645e7570",
+    "status": "escalated",
+    "started_at": "2025-12-26T20:16:40.615290",
+    "ended_at": "2025-12-26T22:08:40.615290",
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "db4004c1-075f-4ba2-ab60-576659d9aaca",
+    "patient_id": "7e3478ba-8f36-4883-8ba6-bb8dbdb9f495",
+    "status": "completed",
+    "started_at": "2025-12-24T20:16:40.615290",
+    "ended_at": "2025-12-24T21:06:40.615290",
+    "summary": "Perferendis praesentium adipisci soluta sed dolorum sit magni. Quod sint nostrum voluptatum beatae maxime. Perspiciatis vel dolores asperiores sapiente temporibus.",
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "74fab76f-9a92-4a0b-88fc-953fcedc260f",
+    "patient_id": "2fea8583-fe6d-40bd-98c2-ee8043aa580d",
+    "status": "active",
+    "started_at": "2025-11-11T20:16:40.615290",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "d876c4b6-a42e-4316-8850-b9a270915bc6",
+    "patient_id": "be037b20-6850-4306-8d04-9117d690e60c",
+    "status": "active",
+    "started_at": "2025-10-12T20:16:40.615290",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "d4ec8d25-4e73-4339-8dcc-90792fbe03d6",
+    "patient_id": "9d08a534-92e2-4bfc-9ffa-8a8f863d3049",
+    "status": "completed",
+    "started_at": "2025-12-02T20:16:40.615290",
+    "ended_at": "2025-12-02T21:27:40.615290",
+    "summary": "Ipsa aut nulla velit laboriosam necessitatibus ipsum. Vero ipsam quae laboriosam. Cum dolore expedita sequi.",
+    "llm_model": null
+  },
+  {
+    "conversation_id": "7a6b92c5-6c53-41f9-bc31-b2d2670e633b",
+    "patient_id": "107ead8d-a72a-4bbe-8f55-27acffc1163f",
+    "status": "active",
+    "started_at": "2025-12-20T20:16:40.615290",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "fa09fc85-1cb6-4d78-9388-5887818bfb92",
+    "patient_id": "68d62bac-f5b8-4334-be64-0c8ee2de82fe",
+    "status": "completed",
+    "started_at": "2025-10-26T20:16:40.615290",
+    "ended_at": "2025-10-26T21:57:40.615290",
+    "summary": "Quos dolores deserunt sed. Officiis sed eius facere ea eum provident esse.\nIpsum deleniti mollitia at id.\nLaboriosam ut accusamus quod praesentium molestias. Neque placeat reiciendis ut.",
+    "llm_model": null
+  },
+  {
+    "conversation_id": "9e45aa6b-34b2-44ab-a5c4-630c23acb22a",
+    "patient_id": "41cdf157-dee5-42ad-b719-693c9744b270",
+    "status": "active",
+    "started_at": "2026-01-03T20:16:40.615290",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "5ac37403-f4a1-419a-a0a8-dc5d4b4a5d2b",
+    "patient_id": "86197d4b-c3b9-4b8a-9e76-7a42b872ac6c",
+    "status": "completed",
+    "started_at": "2025-12-09T20:16:40.615290",
+    "ended_at": "2025-12-09T21:43:40.615290",
+    "summary": "Quo quaerat nemo corporis quam iusto cumque quibusdam. In aliquid quam vero veritatis culpa.\nEos perspiciatis modi doloremque dolorum quae consectetur. Soluta id voluptatem soluta impedit quam.",
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "7b36abf1-6c72-485f-98ce-4df3e903a9e3",
+    "patient_id": "6733e90d-7bd9-4f79-a6f0-5fdf05dd2841",
+    "status": "active",
+    "started_at": "2025-11-05T20:16:40.615290",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "3a1d2cd1-64d6-440c-89c5-2fb7c6cbbf71",
+    "patient_id": "4d99e30a-bb36-4550-88c7-dcd5f268bccc",
+    "status": "active",
+    "started_at": "2026-01-06T20:16:40.615290",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "208a156a-d372-4442-bef4-65fd9e853c5b",
+    "patient_id": "4dcee3b1-4804-4dbb-bbd0-de95407e7d2a",
+    "status": "completed",
+    "started_at": "2025-10-26T20:16:40.615290",
+    "ended_at": "2025-10-26T20:56:40.615290",
+    "summary": "Architecto cupiditate velit eligendi ad. Veniam qui ex voluptate.\nBeatae itaque magnam dolore tempora illo neque. Ipsam voluptates eum.",
+    "llm_model": null
+  },
+  {
+    "conversation_id": "48b41872-10e5-47a9-898f-0586ddf001e9",
+    "patient_id": "b0b8f36d-57ec-4407-b3b5-fa55570119f2",
+    "status": "escalated",
+    "started_at": "2025-11-21T20:16:40.615290",
+    "ended_at": "2025-11-21T20:30:40.615290",
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "ebe0bacf-6a50-4be6-b134-95fa53bb79d1",
+    "patient_id": "91c03fe7-f3d8-440d-ba9c-f5e3a5820ee1",
+    "status": "active",
+    "started_at": "2025-11-01T20:16:40.615290",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "ab781688-b102-4199-8521-121a09c3db77",
+    "patient_id": "a2dd825f-026d-461a-9e30-784bb4e30aca",
+    "status": "completed",
+    "started_at": "2025-11-22T20:16:40.615290",
+    "ended_at": "2025-11-22T20:46:40.615290",
+    "summary": "Iste magnam quasi.\nEst ad quia dolor hic quasi quibusdam. Eius nobis cum voluptatum assumenda iure.\nDignissimos illum iure perspiciatis dignissimos labore. Nam necessitatibus amet ducimus optio.",
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "600cc040-3800-40c0-8942-b9334b503cb2",
+    "patient_id": "620aed09-fe9d-43f2-a1f8-2214f043af93",
+    "status": "escalated",
+    "started_at": "2025-11-17T20:16:40.615290",
+    "ended_at": "2025-11-17T20:37:40.615290",
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "ab8b8268-bab4-48c6-b1f7-780b12219047",
+    "patient_id": "5b77fc89-9ac4-41c7-a59f-8d7dfce98fca",
+    "status": "completed",
+    "started_at": "2025-10-16T20:16:40.615290",
+    "ended_at": "2025-10-16T21:57:40.615290",
+    "summary": "Officia placeat fugit quia sit eveniet.\nSoluta natus laboriosam repudiandae laboriosam. Voluptatibus at harum necessitatibus eos corrupti magni eos. Labore praesentium iste assumenda ducimus animi.",
+    "llm_model": null
+  },
+  {
+    "conversation_id": "f58fe942-b63c-4e5d-96d6-7d051f0e0426",
+    "patient_id": "fe32176c-1e86-40b5-86c2-c305dbce7308",
+    "status": "active",
+    "started_at": "2025-10-31T20:16:40.615290",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "6224f747-5120-49a9-ad71-bfca9ed54e29",
+    "patient_id": "789d164f-ff1b-4c56-b184-a19d7ef9770d",
+    "status": "active",
+    "started_at": "2025-11-02T20:16:40.615290",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "730888b6-c684-4bd4-8ba3-e7447ff61f04",
+    "patient_id": "fad14828-21f9-41d9-973f-df057686da17",
+    "status": "completed",
+    "started_at": "2025-10-13T20:16:40.615290",
+    "ended_at": "2025-10-13T20:41:40.615290",
+    "summary": "Corrupti minima enim incidunt repellat molestias delectus. Nulla aliquid doloremque voluptas ab placeat nihil.",
+    "llm_model": null
+  },
+  {
+    "conversation_id": "2066a088-415c-494d-820d-cc891738060e",
+    "patient_id": "1e574950-aa54-482a-b3a5-28d061888176",
+    "status": "escalated",
+    "started_at": "2025-11-20T20:16:40.615290",
+    "ended_at": "2025-11-20T21:20:40.615290",
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "64543213-695a-4aff-8de5-948a2c1de9d2",
+    "patient_id": "53119114-f101-46da-b0da-ced3af631c68",
+    "status": "active",
+    "started_at": "2026-01-01T20:16:40.615290",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "50c9b9b4-38e5-4c9b-a321-f9342eebe2cb",
+    "patient_id": "a0cfdba2-c03f-4ea4-9731-9fd431b13768",
+    "status": "active",
+    "started_at": "2025-10-16T20:16:40.615290",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "1c8f5475-395f-4a70-a541-f7cf518dcae6",
+    "patient_id": "66350c7e-6816-4e9d-b4fe-d12844c76fdd",
+    "status": "completed",
+    "started_at": "2025-11-02T20:16:40.615290",
+    "ended_at": "2025-11-02T21:52:40.615290",
+    "summary": "Necessitatibus sit blanditiis consequatur quasi. Maxime pariatur et repellendus ex.",
+    "llm_model": null
+  },
+  {
+    "conversation_id": "eeb17f53-5576-4446-be59-30b1c9e76d1e",
+    "patient_id": "4ea65c9a-94da-4fc7-99c6-c3933443dd13",
+    "status": "completed",
+    "started_at": "2025-11-12T20:16:40.615290",
+    "ended_at": "2025-11-12T20:26:40.615290",
+    "summary": "Odit nam nam deleniti nisi dolore. Pariatur nesciunt molestiae voluptates.\nDeleniti similique modi quis. Et architecto sunt commodi libero vero.",
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "1530185c-8d70-47f8-aa34-b993defa01ad",
+    "patient_id": "2216912f-d894-4a52-9805-4f2e97f186fc",
+    "status": "escalated",
+    "started_at": "2025-11-15T20:16:40.615290",
+    "ended_at": "2025-11-15T22:16:40.615290",
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "a3e2f2b2-d3e9-4aac-b668-02c1dc503dfd",
+    "patient_id": "4eb85b6c-58e6-459b-8397-21ebcb6c57d1",
+    "status": "completed",
+    "started_at": "2025-12-27T20:16:40.615290",
+    "ended_at": "2025-12-27T21:52:40.615290",
+    "summary": "Nostrum doloremque libero ullam beatae quas saepe dolore. Veritatis placeat nulla nostrum laborum accusamus perspiciatis repellat.",
+    "llm_model": null
+  },
+  {
+    "conversation_id": "0760b8f5-c97e-40a3-8c90-4ad312955a7f",
+    "patient_id": "92930148-5d0e-42b2-89f6-b0cb57d4f98c",
+    "status": "active",
+    "started_at": "2025-11-24T20:16:40.615290",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "a43ac139-24ab-4543-83f0-50318117eaec",
+    "patient_id": "33b8cf9e-62e9-40ca-a9e5-be784c24921f",
+    "status": "completed",
+    "started_at": "2025-12-03T20:16:40.615290",
+    "ended_at": "2025-12-03T21:45:40.615290",
+    "summary": "Architecto aspernatur eius neque ad expedita pariatur quasi. Asperiores dolorem debitis labore dolorum fugiat. Fugit repellendus velit accusamus suscipit beatae.",
+    "llm_model": null
+  },
+  {
+    "conversation_id": "d6044ca0-995f-4fa7-b4c4-ab3c298aee0a",
+    "patient_id": "c01de166-d4b8-4d80-b074-41cff2570e46",
+    "status": "escalated",
+    "started_at": "2025-10-15T20:16:40.615290",
+    "ended_at": "2025-10-15T20:38:40.615290",
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "79277263-0754-446e-b075-b0353b96c1b9",
+    "patient_id": "01944e89-60d0-4060-9093-343857b998f7",
+    "status": "completed",
+    "started_at": "2025-10-28T20:16:40.615290",
+    "ended_at": "2025-10-28T21:52:40.615290",
+    "summary": "Quia alias minus repellat culpa maxime maxime. Sint ut assumenda aliquam deleniti numquam.\nEa excepturi necessitatibus ratione libero. Explicabo excepturi sit repellendus saepe temporibus.",
+    "llm_model": null
+  },
+  {
+    "conversation_id": "7732a29d-5ee5-4e3b-9c44-f36d33fda99a",
+    "patient_id": "498ca955-7c99-42a8-a155-43b0a8020f28",
+    "status": "completed",
+    "started_at": "2025-12-23T20:16:40.615290",
+    "ended_at": "2025-12-23T22:16:40.615290",
+    "summary": "Saepe minima ex eligendi beatae maxime alias. Autem illum eius. Distinctio illum corporis aperiam itaque possimus.\nDolorem numquam libero quidem optio. Quaerat inventore odio illo temporibus.",
+    "llm_model": null
+  },
+  {
+    "conversation_id": "b6a86739-6b1f-498b-a629-5f673ebedb8c",
+    "patient_id": "7e0b2079-8ab7-47b6-89e7-e4bf22eef4f9",
+    "status": "active",
+    "started_at": "2025-10-14T20:16:40.615290",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "c785754b-8f03-47b5-893a-fee0b5520a04",
+    "patient_id": "835bf514-6fdf-48c8-ac9e-1945dd7e5cf0",
+    "status": "active",
+    "started_at": "2026-01-08T20:16:40.615290",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "f50bd468-951d-40fd-8173-fc60963f4c50",
+    "patient_id": "d2b90ced-76a2-4a1f-922e-6fbd732ad907",
+    "status": "completed",
+    "started_at": "2025-10-19T20:16:40.615290",
+    "ended_at": "2025-10-19T21:03:40.615290",
+    "summary": "Quasi quod magni sapiente sunt accusamus. Quia facilis unde reprehenderit. Voluptate repudiandae similique quibusdam suscipit ut.\nDolor delectus molestiae commodi.",
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "1505e8f2-fa91-4133-92c8-f686f2c5aa25",
+    "patient_id": "d00a9b03-1be0-45a4-831c-e4f30e118459",
+    "status": "escalated",
+    "started_at": "2025-12-20T20:16:40.615290",
+    "ended_at": "2025-12-20T20:34:40.615290",
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "4f0c4115-400b-4763-8c52-00d4922521e2",
+    "patient_id": "cf500081-55e5-4ecb-8299-bc410a9c19cc",
+    "status": "escalated",
+    "started_at": "2025-11-30T20:16:40.615290",
+    "ended_at": "2025-11-30T21:24:40.615290",
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "fca8b2cf-b3d5-4efc-874d-e116cafd5614",
+    "patient_id": "cf500081-55e5-4ecb-8299-bc410a9c19cc",
+    "status": "escalated",
+    "started_at": "2025-11-10T20:16:40.615290",
+    "ended_at": "2025-11-10T20:33:40.615290",
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "39d3a56a-a240-4076-bb90-0910d085bbf5",
+    "patient_id": "f7e1684d-ea76-4fd3-ae1c-cd1c1819071e",
+    "status": "escalated",
+    "started_at": "2025-10-17T20:16:40.615290",
+    "ended_at": "2025-10-17T20:45:40.615290",
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "e0178301-0a8a-4c20-bfe5-2e9cc0b346ed",
+    "patient_id": "abe9ad1c-cb62-4fb8-bdcb-3d5aab81c72d",
+    "status": "escalated",
+    "started_at": "2026-01-09T20:16:40.615290",
+    "ended_at": "2026-01-09T21:49:40.615290",
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "3e2e1dde-2777-4fed-84ed-373cc56168a1",
+    "patient_id": "2b84cce6-32c8-4c1d-839a-3e1886dc8a57",
+    "status": "completed",
+    "started_at": "2025-11-17T20:16:40.615290",
+    "ended_at": "2025-11-17T20:43:40.615290",
+    "summary": "Illum dolorem ab explicabo. Eos unde ut optio facilis. Mollitia incidunt vitae nam cupiditate.\nAliquam maiores iusto ullam nobis ut. Odit nam esse suscipit nemo. Sunt natus magni dolorum eum.",
+    "llm_model": null
+  },
+  {
+    "conversation_id": "b279b76f-3763-45e3-b41f-e139020dd1b3",
+    "patient_id": "6d50e9b4-04b5-437f-a86c-bddabc82a7f7",
+    "status": "escalated",
+    "started_at": "2025-11-02T20:16:40.615290",
+    "ended_at": "2025-11-02T21:21:40.615290",
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "697a7173-bc2d-4799-9619-3f0148830076",
+    "patient_id": "9d7df8c7-8079-4ba3-a35d-c30260c5c2bc",
+    "status": "completed",
+    "started_at": "2026-01-08T20:16:40.615290",
+    "ended_at": "2026-01-08T21:17:40.615290",
+    "summary": "Aliquid qui eveniet soluta. Culpa dolorem iusto error quia.\nOmnis ullam nam temporibus.\nVel saepe incidunt libero placeat hic. Amet non rerum blanditiis iste reiciendis adipisci.",
+    "llm_model": null
+  },
+  {
+    "conversation_id": "267eeb52-2b18-442f-ad00-959b72fc8b7c",
+    "patient_id": "8bd49e2a-67b0-4427-a12d-b47026ee59a2",
+    "status": "escalated",
+    "started_at": "2025-10-22T20:16:40.615290",
+    "ended_at": "2025-10-22T21:38:40.615290",
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "29e69727-6bb3-4f1f-a3ed-c55450c6c257",
+    "patient_id": "dd6e14c5-3cb2-4093-b856-7da65910023d",
+    "status": "active",
+    "started_at": "2025-11-09T20:16:40.615290",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "78b7e89f-da12-4255-bc5b-b8c8a91e838b",
+    "patient_id": "d8c063c5-191e-4d14-9f8f-6e4b1e063cff",
+    "status": "completed",
+    "started_at": "2025-11-03T20:16:40.615290",
+    "ended_at": "2025-11-03T20:55:40.615290",
+    "summary": "Occaecati nisi voluptatem aliquam commodi perferendis minima. Alias sapiente fugit esse iusto. Architecto amet corrupti saepe repudiandae.",
+    "llm_model": null
+  },
+  {
+    "conversation_id": "66cfb902-8062-4ec5-bff6-4745b9f0b565",
+    "patient_id": "38dc6ff2-b754-4f23-93f4-ba63f9ab3d8d",
+    "status": "completed",
+    "started_at": "2025-12-10T20:16:40.615290",
+    "ended_at": "2025-12-10T21:33:40.615290",
+    "summary": "Delectus expedita magni.\nIpsum necessitatibus eveniet ipsam laudantium. Voluptas soluta tempora earum pariatur recusandae temporibus numquam. Id autem eaque similique quibusdam architecto quo.",
+    "llm_model": null
+  },
+  {
+    "conversation_id": "6231457e-ecb4-4eb0-8e51-e9eda742771b",
+    "patient_id": "b0b8f36d-57ec-4407-b3b5-fa55570119f2",
+    "status": "escalated",
+    "started_at": "2025-12-29T20:16:40.615290",
+    "ended_at": "2025-12-29T20:53:40.615290",
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "7f0c19d9-b960-4565-b9c4-a650d55eb628",
+    "patient_id": "d42468e7-f442-4792-9097-24a75412e84a",
+    "status": "completed",
+    "started_at": "2026-01-08T20:16:40.615290",
+    "ended_at": "2026-01-08T21:01:40.615290",
+    "summary": "Rerum deleniti ipsum assumenda itaque placeat. Quibusdam nisi nobis odio ad nisi eligendi. Odio laudantium cumque pariatur et error.",
+    "llm_model": null
+  },
+  {
+    "conversation_id": "756d28a9-2ebb-4d1d-a16a-2edc4dadcbfc",
+    "patient_id": "bb58d826-54d3-4e03-b1aa-ebe1dcc1df7a",
+    "status": "completed",
+    "started_at": "2025-11-08T20:16:40.615290",
+    "ended_at": "2025-11-08T21:39:40.615290",
+    "summary": "Fugit labore magni culpa similique. Ad culpa quaerat voluptate ullam quasi. Iste minima minima quos nam repudiandae esse hic. Voluptate eum provident provident iusto dicta.",
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "a8900ab8-aa84-459b-95b8-545d81c4c185",
+    "patient_id": "7921375a-3c26-42ce-8a9f-72138bb93cb2",
+    "status": "active",
+    "started_at": "2025-10-27T20:16:40.616303",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "00662310-266f-4bde-afb0-45af51f1ee50",
+    "patient_id": "dc2fc6ac-caf0-4483-ad30-c309bbe3a124",
+    "status": "active",
+    "started_at": "2025-12-14T20:16:40.616303",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "016846bb-b604-484d-ae80-167f723b5543",
+    "patient_id": "852cd5b2-5792-43c8-a50a-0a721ec6f946",
+    "status": "active",
+    "started_at": "2025-10-26T20:16:40.616303",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "96d07a1c-d008-4c66-8634-e20607976c2c",
+    "patient_id": "1fa9c9b4-0b00-4249-afc3-b9a5cd93e071",
+    "status": "completed",
+    "started_at": "2025-11-10T20:16:40.616303",
+    "ended_at": "2025-11-10T21:30:40.616303",
+    "summary": "Quo voluptas quibusdam culpa rerum. Ad praesentium est deserunt.",
+    "llm_model": null
+  },
+  {
+    "conversation_id": "0de7f331-a5c5-4391-94f4-8988a6582e8e",
+    "patient_id": "aefe3d79-53a3-435e-a42f-b43a6ffe4334",
+    "status": "escalated",
+    "started_at": "2026-01-02T20:16:40.616303",
+    "ended_at": "2026-01-02T21:28:40.616303",
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "9c5c1384-2ccf-4cbe-b2c1-497e80fa0b17",
+    "patient_id": "cb75161f-ce92-4c3c-bb79-4131df3ae7e0",
+    "status": "escalated",
+    "started_at": "2025-11-12T20:16:40.616303",
+    "ended_at": "2025-11-12T20:49:40.616303",
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "d72ed347-4855-45ed-9a2e-28431eb985de",
+    "patient_id": "2f5b88f7-bcd0-475c-b40f-a2899e82836a",
+    "status": "escalated",
+    "started_at": "2025-11-07T20:16:40.616303",
+    "ended_at": "2025-11-07T20:51:40.616303",
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "ebf114c6-44c1-473d-9d58-5aa0f381591b",
+    "patient_id": "92b50586-ed06-4192-972c-2ecb66d8abc8",
+    "status": "escalated",
+    "started_at": "2025-10-17T20:16:40.616303",
+    "ended_at": "2025-10-17T20:44:40.616303",
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "f56b38d0-7164-4d3b-890b-729d849f3d63",
+    "patient_id": "9da69a83-b266-4c82-9c24-e907474f93c6",
+    "status": "escalated",
+    "started_at": "2026-01-01T20:16:40.616303",
+    "ended_at": "2026-01-01T20:26:40.616303",
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "17ed80c8-08c6-4fb5-8b46-4595225ec9e6",
+    "patient_id": "fda07387-13b4-4bab-8a52-2b6bb770ffc6",
+    "status": "active",
+    "started_at": "2025-12-20T20:16:40.616303",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "5250840a-2415-45d5-8efa-ae284a2b9f8b",
+    "patient_id": "429f1fa8-7f73-4ed5-8c2e-5e845cd4f96a",
+    "status": "escalated",
+    "started_at": "2025-12-13T20:16:40.616303",
+    "ended_at": "2025-12-13T21:11:40.616303",
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "265bb1aa-32cc-490a-97dc-f10fb5ed9e58",
+    "patient_id": "67a11dd7-087c-43ba-9749-a53d884e2dfd",
+    "status": "active",
+    "started_at": "2025-11-24T20:16:40.616303",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "97074e41-8fc8-490b-bf2b-86801afde8a0",
+    "patient_id": "3f7e989c-4b85-4bfa-967b-70341a2fce71",
+    "status": "escalated",
+    "started_at": "2025-10-29T20:16:40.616303",
+    "ended_at": "2025-10-29T21:24:40.616303",
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "a3481fa7-3d6d-4374-abf0-675496587adf",
+    "patient_id": "b1e55282-7d6d-4fa7-bce4-cdf3d1417fef",
+    "status": "completed",
+    "started_at": "2025-12-27T20:16:40.616303",
+    "ended_at": "2025-12-27T20:51:40.616303",
+    "summary": "Unde alias dolorum illo repudiandae laborum. Voluptas perferendis iure deserunt ipsam ex amet. Officia et odit iusto consequuntur nulla perferendis.",
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "310f41e0-0a5e-41fa-9701-c0a786335cfb",
+    "patient_id": "6f36e576-1e40-47d5-b93e-14c5177f47fc",
+    "status": "active",
+    "started_at": "2025-11-09T20:16:40.616303",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "21a907e7-fbe8-49c5-a342-9d9a76b2636f",
+    "patient_id": "0ca5a9c2-5d81-41ff-8fca-f629bcb176d7",
+    "status": "escalated",
+    "started_at": "2025-12-23T20:16:40.616303",
+    "ended_at": "2025-12-23T21:32:40.616303",
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "ba7bb4ab-c3f0-45b2-b783-4a9dc2c63f13",
+    "patient_id": "2beb2b22-bb82-4233-95a0-c573a0ec946b",
+    "status": "escalated",
+    "started_at": "2025-12-30T20:16:40.616303",
+    "ended_at": "2025-12-30T21:25:40.616303",
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "3ef14ace-a31e-4842-a4e2-84976066d01f",
+    "patient_id": "36511c2a-62aa-4cde-a746-42557c480e03",
+    "status": "completed",
+    "started_at": "2025-11-02T20:16:40.616303",
+    "ended_at": "2025-11-02T21:29:40.616303",
+    "summary": "Architecto rerum esse accusantium. Ullam ullam voluptates cumque. Repellendus earum placeat commodi.",
+    "llm_model": null
+  },
+  {
+    "conversation_id": "018a1fe7-de4b-41e0-9336-e4358cda2b90",
+    "patient_id": "9a62f0fe-babc-49a3-8e48-142103d7b4f4",
+    "status": "completed",
+    "started_at": "2025-11-01T20:16:40.616303",
+    "ended_at": "2025-11-01T21:12:40.616303",
+    "summary": "Repudiandae adipisci rem esse animi quas ducimus. Quidem deleniti tempora nesciunt tempore.\nQuibusdam excepturi nam sed. Sed est quibusdam cum.",
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "e21b139b-fdb0-499f-b3c0-3848890386fe",
+    "patient_id": "16563543-f84a-4862-9b9b-b28cdafac112",
+    "status": "escalated",
+    "started_at": "2026-01-03T20:16:40.616303",
+    "ended_at": "2026-01-03T21:12:40.616303",
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "8048deae-c1c1-4879-b74f-4fde9157919a",
+    "patient_id": "0af5dc36-11a3-4dd5-84eb-ee679bf74374",
+    "status": "escalated",
+    "started_at": "2025-11-28T20:16:40.616303",
+    "ended_at": "2025-11-28T21:00:40.616303",
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "87c7d3a9-8356-4cc2-9ad2-355e4a6ca5bf",
+    "patient_id": "751b77e4-fb12-453c-81bd-11e4ba08d86b",
+    "status": "completed",
+    "started_at": "2025-11-09T20:16:40.616303",
+    "ended_at": "2025-11-09T20:38:40.616303",
+    "summary": "Laudantium assumenda fuga nesciunt magni assumenda. Odit architecto illum eius delectus nobis tenetur nulla.\nOccaecati dolorem sapiente commodi atque nemo corrupti.",
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "39b978db-caea-426d-8450-8dca7d636955",
+    "patient_id": "de36e035-d1fd-46ca-aa48-4d092e0cbfc9",
+    "status": "active",
+    "started_at": "2025-10-31T20:16:40.616303",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "44495c79-b275-4a18-938b-5105ca7487ac",
+    "patient_id": "52aad7d6-a30c-44d2-82ae-7f5a68676a62",
+    "status": "active",
+    "started_at": "2025-11-20T20:16:40.616303",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "ffecd210-9ba1-4066-a08a-af5d44560b28",
+    "patient_id": "9a62f0fe-babc-49a3-8e48-142103d7b4f4",
+    "status": "completed",
+    "started_at": "2025-12-20T20:16:40.616303",
+    "ended_at": "2025-12-20T21:09:40.616303",
+    "summary": "Veniam distinctio laboriosam alias repellat qui doloremque eos. Iusto veritatis quas laborum aliquam nemo in. Molestias illo voluptatibus adipisci distinctio fugiat porro iure.",
+    "llm_model": null
+  },
+  {
+    "conversation_id": "ed5375da-e133-41a1-b0b6-583884b2bc46",
+    "patient_id": "1d16dc76-4884-46f5-9431-d133bf9427f0",
+    "status": "active",
+    "started_at": "2025-12-01T20:16:40.616303",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "6041de12-d0eb-43f8-9908-f46412488003",
+    "patient_id": "9b049164-e41d-41b0-b397-19f8ba557676",
+    "status": "escalated",
+    "started_at": "2025-10-17T20:16:40.616303",
+    "ended_at": "2025-10-17T20:28:40.616303",
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "8707434a-4790-40e1-a114-4b9bd1257572",
+    "patient_id": "f0609bd2-8a79-4f89-8bcd-9a478eb1ab00",
+    "status": "completed",
+    "started_at": "2025-11-07T20:16:40.616303",
+    "ended_at": "2025-11-07T21:43:40.616303",
+    "summary": "Mollitia asperiores quisquam minus distinctio id. Occaecati asperiores quaerat eos impedit qui similique.\nFacilis pariatur quos id nam. Debitis delectus aperiam. Dolores rerum minus quia.",
+    "llm_model": null
+  },
+  {
+    "conversation_id": "cc06b6ee-52d9-4c7c-90da-4272b8acb213",
+    "patient_id": "972f69ba-c8c7-4522-8051-7b936e82296a",
+    "status": "completed",
+    "started_at": "2025-11-02T20:16:40.616303",
+    "ended_at": "2025-11-02T21:23:40.616303",
+    "summary": "Illo quo maiores dolore. Asperiores a dolor occaecati officiis laborum. Nihil expedita quo cum placeat beatae eligendi.\nRepellendus magnam necessitatibus pariatur repudiandae.",
+    "llm_model": null
+  },
+  {
+    "conversation_id": "18df0049-0b2d-4852-8dd9-3b3c4d3d6c05",
+    "patient_id": "fade0514-b3be-4d98-a4f6-d56a53a93081",
+    "status": "escalated",
+    "started_at": "2025-11-28T20:16:40.616303",
+    "ended_at": "2025-11-28T20:34:40.616303",
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "1491bffa-272c-4764-9a22-a187ca652ca3",
+    "patient_id": "301008d5-dbe0-4b93-8a80-b42da08f78c2",
+    "status": "active",
+    "started_at": "2026-01-04T20:16:40.616303",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "811e2479-dfb7-46ba-8d54-4068063ace93",
+    "patient_id": "e187f77f-b687-420c-a931-655b4876c8cb",
+    "status": "escalated",
+    "started_at": "2025-11-03T20:16:40.616303",
+    "ended_at": "2025-11-03T22:10:40.616303",
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "3f03fab7-e37c-4382-bd59-96a41bfba3d7",
+    "patient_id": "69cec4e7-bb8f-41f3-9283-7be50e44862a",
+    "status": "completed",
+    "started_at": "2025-11-05T20:16:40.616303",
+    "ended_at": "2025-11-05T20:52:40.616303",
+    "summary": "Eum vero magnam quae quae cupiditate necessitatibus. Similique nihil voluptatum necessitatibus.",
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "05b16a41-fbd7-4111-9e20-897c1ff5b864",
+    "patient_id": "eda7dcee-fbe7-4ee0-955e-a6a95a5b3510",
+    "status": "completed",
+    "started_at": "2025-12-15T20:16:40.616303",
+    "ended_at": "2025-12-15T21:14:40.616303",
+    "summary": "At veniam ex aliquam modi ipsum. Quia veritatis sed corrupti. Corporis quia sed libero quisquam tempora occaecati. Provident ea illum pariatur cumque odit pariatur.",
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "629645ca-3822-43b8-99b3-b0dc8a92b876",
+    "patient_id": "d5a2e489-74b0-45ea-bbbf-31a36b0a47bf",
+    "status": "escalated",
+    "started_at": "2025-12-28T20:16:40.616303",
+    "ended_at": "2025-12-28T20:52:40.616303",
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "f7b4ac9d-0f0c-4b90-98ef-6f9662449e53",
+    "patient_id": "9baea97c-bcac-4b71-81be-c236303ed465",
+    "status": "completed",
+    "started_at": "2025-11-01T20:16:40.616303",
+    "ended_at": "2025-11-01T20:42:40.616303",
+    "summary": "Odit totam praesentium inventore facere molestiae quibusdam. Distinctio consequuntur architecto.",
+    "llm_model": null
+  },
+  {
+    "conversation_id": "fcf12dbc-044f-43e8-a066-effc18d15c02",
+    "patient_id": "3f7e989c-4b85-4bfa-967b-70341a2fce71",
+    "status": "escalated",
+    "started_at": "2025-10-24T20:16:40.616303",
+    "ended_at": "2025-10-24T21:51:40.616303",
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "e3140a57-236e-4fb8-a407-c9b3076c7eb3",
+    "patient_id": "b28fddd4-8a65-4a5b-9006-74646b4ab6d6",
+    "status": "active",
+    "started_at": "2025-11-04T20:16:40.616303",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "3d4ccd11-6e3d-4649-b5a7-0c6811c5cbb9",
+    "patient_id": "867302dc-f33a-4f96-92ef-6c94b3cbfc9e",
+    "status": "active",
+    "started_at": "2025-11-06T20:16:40.616303",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "a1bab4e2-2f23-4534-b967-79a35f91d6ac",
+    "patient_id": "194c7024-eac0-49c5-b4be-35ed8d99ab9e",
+    "status": "escalated",
+    "started_at": "2025-12-28T20:16:40.616303",
+    "ended_at": "2025-12-28T21:27:40.616303",
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "b93d0428-849b-4ea7-a8f0-028e04659223",
+    "patient_id": "59de26b2-4782-4128-b982-683f9f094def",
+    "status": "completed",
+    "started_at": "2025-11-12T20:16:40.616303",
+    "ended_at": "2025-11-12T21:25:40.616303",
+    "summary": "Distinctio fugit voluptatum animi delectus recusandae quisquam a. Delectus suscipit nihil illo iure.",
+    "llm_model": null
+  },
+  {
+    "conversation_id": "3ab6bb21-c0c1-431d-b907-2ec82b0b22f7",
+    "patient_id": "cc4f099f-055b-4495-93aa-5b681c9d5a51",
+    "status": "escalated",
+    "started_at": "2025-10-17T20:16:40.616303",
+    "ended_at": "2025-10-17T21:29:40.616303",
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "787b57d4-23da-4cc1-ba95-d8a3de6c6344",
+    "patient_id": "0c291371-c733-477d-a9a4-72930110f9fb",
+    "status": "active",
+    "started_at": "2025-11-30T20:16:40.616303",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "cd99def2-2437-47ad-b351-c85cbef0cdd0",
+    "patient_id": "213d8959-b1bb-4a39-93e8-9290b748aea3",
+    "status": "completed",
+    "started_at": "2025-11-23T20:16:40.616303",
+    "ended_at": "2025-11-23T21:15:40.616303",
+    "summary": "Labore mollitia provident praesentium porro libero expedita natus. Nesciunt reprehenderit qui sapiente placeat voluptates quisquam dicta.",
+    "llm_model": null
+  },
+  {
+    "conversation_id": "7276343d-bcfe-4b48-88ff-df850bdcd34f",
+    "patient_id": "be11d0a2-0c9d-405e-83e4-f9677ff5e0c5",
+    "status": "active",
+    "started_at": "2025-12-24T20:16:40.616303",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "246be0ea-d03a-4986-95db-81612215ec87",
+    "patient_id": "bcd7f754-a6dd-4d8b-be5f-d5f372951f00",
+    "status": "completed",
+    "started_at": "2025-11-07T20:16:40.616303",
+    "ended_at": "2025-11-07T21:47:40.616303",
+    "summary": "A reprehenderit optio necessitatibus possimus laborum ad. Beatae saepe debitis tempore velit.\nEx reiciendis at natus sint corrupti suscipit. Modi quae sequi quisquam.",
+    "llm_model": null
+  },
+  {
+    "conversation_id": "307d41fc-2462-4250-8133-84bffeed35ad",
+    "patient_id": "a0cfdba2-c03f-4ea4-9731-9fd431b13768",
+    "status": "completed",
+    "started_at": "2026-01-01T20:16:40.616303",
+    "ended_at": "2026-01-01T21:10:40.616303",
+    "summary": "Corporis odit asperiores recusandae aperiam numquam. Non possimus repellat placeat nostrum consequatur. Saepe veritatis illo optio ad.",
+    "llm_model": null
+  },
+  {
+    "conversation_id": "b5d033cd-4045-47ce-b098-300cd8278e05",
+    "patient_id": "c2d777a6-f546-481e-8468-fb86d23e8334",
+    "status": "escalated",
+    "started_at": "2025-10-16T20:16:40.616303",
+    "ended_at": "2025-10-16T20:36:40.616303",
+    "summary": null,
+    "llm_model": "gpt-4"
+  },
+  {
+    "conversation_id": "d8aecd13-5e76-4da8-bee1-128ae3f552c3",
+    "patient_id": "985c56a4-1be6-4525-84b8-790ff6612ec1",
+    "status": "active",
+    "started_at": "2025-11-26T20:16:40.616303",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "eb006ada-ae9e-4164-a19a-decdc64de0fb",
+    "patient_id": "b9587db2-104b-4529-9397-28001562695a",
+    "status": "escalated",
+    "started_at": "2025-12-29T20:16:40.616303",
+    "ended_at": "2025-12-29T20:26:40.616303",
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "bdd7a84b-9868-4407-8fde-47219053e9cb",
+    "patient_id": "7e66f248-8dbe-4fa1-8b80-f0f5ba40bf73",
+    "status": "escalated",
+    "started_at": "2025-11-24T20:16:40.616303",
+    "ended_at": "2025-11-24T22:10:40.616303",
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "4323703a-a707-4ba2-967a-e995032750c5",
+    "patient_id": "d8c063c5-191e-4d14-9f8f-6e4b1e063cff",
+    "status": "completed",
+    "started_at": "2025-11-16T20:16:40.616303",
+    "ended_at": "2025-11-16T20:40:40.616303",
+    "summary": "Molestias illo natus esse optio numquam pariatur.\nVoluptatibus dolores aut doloribus ut assumenda. A molestiae odit cumque voluptatum architecto debitis modi.",
+    "llm_model": null
+  },
+  {
+    "conversation_id": "61f500bf-39dd-4cc7-be8f-f65ed453f07b",
+    "patient_id": "0a6965c3-7945-47dc-a2c1-f83fcbc3cc91",
+    "status": "active",
+    "started_at": "2025-10-20T20:16:40.616303",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  },
+  {
+    "conversation_id": "a454822f-e54a-446d-aedf-3be74a9c7f85",
+    "patient_id": "11fc554b-214e-45da-b3ea-2c2d27234641",
+    "status": "completed",
+    "started_at": "2025-10-18T20:16:40.616303",
+    "ended_at": "2025-10-18T20:29:40.616303",
+    "summary": "Sequi at modi architecto maiores. Odio distinctio perspiciatis magnam illum animi.\nAutem doloremque dicta dolore ducimus harum. Corrupti esse reiciendis.",
+    "llm_model": null
+  },
+  {
+    "conversation_id": "2689f23d-4b48-46f9-bc99-2a8677296fd2",
+    "patient_id": "1df2c7c4-4f4a-4e19-85ed-2449bdcac7a1",
+    "status": "active",
+    "started_at": "2025-11-24T20:16:40.616303",
+    "ended_at": null,
+    "summary": null,
+    "llm_model": null
+  }
+]

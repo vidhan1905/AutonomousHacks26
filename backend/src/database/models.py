@@ -68,7 +68,13 @@ class ServicePerson(Base):
     is_available = Column(Boolean, nullable=False, server_default="true")
 
     # Relationships
-    tickets = relationship("Ticket", back_populates="assigned_service_person")
+    # Note: primaryjoin specified to disambiguate between assigned_to and accepted_by
+    # Using string-based primaryjoin since Ticket is defined later
+    tickets = relationship(
+        "Ticket", 
+        back_populates="assigned_service_person",
+        primaryjoin="ServicePerson.service_person_id == Ticket.assigned_to"
+    )
     appointments = relationship("Appointment", back_populates="service_person")
     expertise_records = relationship("DoctorExpertise", back_populates="service_person")
     case_history = relationship("DoctorCaseHistory", back_populates="service_person")
