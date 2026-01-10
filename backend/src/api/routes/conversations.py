@@ -170,16 +170,50 @@ async def send_message(
                         verification_completed = True
                         break
     
-    # Patient is only verified if verification has been completed in the conversation
-    # Always start with False for first message - LLM must verify first
-    patient_verified = verification_completed and conversation.patient_id is not None
+    # Patient is only verified if verification has been completed in THIS conversation
+    # For the first message, always start with False - LLM must verify first
+    # Even if conversation.patient_id exists (from login), we still need to verify in this conversation
+    if is_first_message:
+        patient_verified = False  # Always False for first message, must verify
+    else:
+        patient_verified = verification_completed and conversation.patient_id is not None
     
     # Extract patient info from previous messages if available
+    history_shown = False  # Detect if history was already shown
+    waiting_for_datetime = False  # Detect if we're waiting for date/time
+    ranked_doctors = None  # Detect if doctors were already ranked
+    service_type_determined = None  # Detect if service type was determined
+    
     for msg in previous_messages:
         if msg.sender_type == "patient":
             message_history.append(HumanMessage(content=msg.content))
         elif msg.sender_type == "llm":
             message_history.append(AIMessage(content=msg.content))
+            # Check if this LLM message shows history
+            if patient_verified and msg.content:
+                history_indicators = ["medical history", "visit history", "previous", "past history", "history summary", "what help do you need"]
+                if any(indicator.lower() in msg.content.lower() for indicator in history_indicators):
+                    history_shown = True
+                # Check if we're waiting for date/time
+                if "what date and time would work best" in msg.content.lower() or "provide your preferred date and time" in msg.content.lower() or "date and time would work" in msg.content.lower():
+                    waiting_for_datetime = True
+                # Check if doctors were ranked (look for ranking indicators or metadata)
+                if msg.message_metadata and isinstance(msg.message_metadata, dict):
+                    # Try to extract ranked doctors from metadata if available
+                    if msg.message_metadata.get("ranked_doctors"):
+                        ranked_doctors = msg.message_metadata.get("ranked_doctors")
+                    if msg.message_metadata.get("service_type"):
+                        service_type_determined = msg.message_metadata.get("service_type")
+                    if msg.message_metadata.get("waiting_for_datetime"):
+                        waiting_for_datetime = True
+                # Also check message content for indicators
+                if "rank #" in msg.content.lower() or ("top" in msg.content.lower() and "doctor" in msg.content.lower()):
+                    # If metadata doesn't have it, at least mark that we're in doctor recommendation flow
+                    if not ranked_doctors:
+                        # We can't extract from content, but we know doctors were ranked
+                        pass
+                if "what date and time would work best" in msg.content.lower() or "provide your preferred date and time" in msg.content.lower():
+                    waiting_for_datetime = True
     
     # Add current message
     message_history.append(HumanMessage(content=request.content))
@@ -212,10 +246,12 @@ async def send_message(
         "summary": None,
         "ticket_created": False,
         "next_action": "continue" if patient_verified else "collect_info",
-        "history_shown": False,
-        "service_type_determined": None,
-        "ranked_doctors": None,
-        "doctor_tickets_created": False
+        "history_shown": history_shown,  # Preserve history_shown from previous messages
+        "service_type_determined": service_type_determined,  # Preserve service_type from previous messages
+        "ranked_doctors": ranked_doctors,  # Preserve ranked_doctors from previous messages
+        "doctor_tickets_created": False,
+        "waiting_for_appointment_datetime": waiting_for_datetime,  # Preserve waiting_for_datetime from previous messages
+        "appointment_datetime": None
     }
     
     # Run agent with increased recursion limit
@@ -273,6 +309,7 @@ async def send_message(
         doctor_tickets_created = final_state.get("doctor_tickets_created", False)
         service_type_determined = final_state.get("service_type_determined")
         doctor_tickets = final_state.get("doctor_tickets", [])
+        waiting_for_datetime = final_state.get("waiting_for_appointment_datetime", False)
         
         is_doctor_recommendation = (
             doctor_tickets_created and 
@@ -280,9 +317,17 @@ async def send_message(
             len(ranked_doctors) > 0
         )
         
+        # Also check if we're asking for date/time (before tickets are created)
+        is_asking_for_datetime = (
+            waiting_for_datetime and 
+            ranked_doctors and 
+            len(ranked_doctors) > 0 and
+            not doctor_tickets_created
+        )
+        
         # Prepare message metadata
         message_metadata = None
-        if is_doctor_recommendation:
+        if is_doctor_recommendation or is_asking_for_datetime:
             # Format doctor recommendations with ticket IDs
             doctors_with_tickets = []
             ticket_map = {t["doctor_id"]: t["ticket_id"] for t in doctor_tickets}
@@ -298,12 +343,36 @@ async def send_message(
                     "ticket_id": ticket_map.get(doctor["doctor_id"])
                 })
             
-            message_metadata = {
-                "type": "doctor_recommendation",
-                "doctors": doctors_with_tickets,
-                "service_type": service_type_determined,
-                "tickets_created": len(doctor_tickets)
-            }
+            if is_doctor_recommendation:
+                # Tickets already created
+                message_metadata = {
+                    "type": "doctor_recommendation",
+                    "doctors": doctors_with_tickets,
+                    "service_type": service_type_determined,
+                    "ranked_doctors": ranked_doctors,  # Store raw ranked_doctors for state restoration
+                    "tickets_created": len(doctor_tickets)
+                }
+            else:
+                # Asking for date/time - store ranked_doctors for state restoration
+                doctors_list = []
+                for doctor in ranked_doctors[:5]:
+                    doctors_list.append({
+                        "doctor_id": doctor.get("doctor_id") or doctor.get("doctor_id"),
+                        "name": doctor.get("name"),
+                        "service_type": doctor.get("service_type"),
+                        "specialization": doctor.get("specialization"),
+                        "rank": doctor.get("rank"),
+                        "reason": doctor.get("reason")
+                    })
+                
+                message_metadata = {
+                    "type": "doctor_recommendation",
+                    "doctors": doctors_list,
+                    "service_type": service_type_determined,
+                    "ranked_doctors": ranked_doctors,  # Store raw ranked_doctors for state restoration
+                    "waiting_for_datetime": True,
+                    "tickets_created": 0
+                }
         
         # Save LLM message
         llm_message = Message(
