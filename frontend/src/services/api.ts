@@ -30,9 +30,10 @@ export const authApi = {
     return response.data
   },
   
-  patientLogin: async (phoneNumber: string) => {
+  patientLogin: async (phoneNumber: string, password: string) => {
     const response = await api.post('/api/auth/login/patient', {
       phone_number: phoneNumber,
+      password: password,
     })
     return response.data
   },

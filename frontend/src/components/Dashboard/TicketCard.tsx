@@ -26,6 +26,10 @@ export default function TicketCard({ ticket, onClick }: TicketCardProps) {
   const navigate = useNavigate()
 
   const handleClick = () => {
+    if (!ticket.ticket_id) {
+      console.error('Ticket ID is missing')
+      return
+    }
     if (onClick) {
       onClick(ticket)
     } else {
@@ -41,22 +45,22 @@ export default function TicketCard({ ticket, onClick }: TicketCardProps) {
       <div className="flex items-start justify-between mb-4">
         <div>
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-            {ticket.service_type.replace('_', ' ').toUpperCase()}
+            {ticket.service_type?.replace('_', ' ').toUpperCase() || ticket.service_type || 'Unknown Service'}
           </h3>
           <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-            {new Date(ticket.created_at).toLocaleDateString()}
+            {ticket.created_at ? new Date(ticket.created_at).toLocaleDateString() : 'Unknown date'}
           </p>
         </div>
         <div className="flex space-x-2">
-          <span className={`px-2 py-1 rounded-full text-xs font-medium ${priorityColors[ticket.priority as keyof typeof priorityColors]}`}>
+          <span className={`px-2 py-1 rounded-full text-xs font-medium ${priorityColors[ticket.priority as keyof typeof priorityColors] || 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200'}`}>
             Priority {ticket.priority}
           </span>
-          <span className={`px-2 py-1 rounded-full text-xs font-medium ${statusColors[ticket.status as keyof typeof statusColors]}`}>
-            {ticket.status}
+          <span className={`px-2 py-1 rounded-full text-xs font-medium ${statusColors[ticket.status as keyof typeof statusColors] || 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200'}`}>
+            {ticket.status?.replace('_', ' ') || ticket.status || 'Unknown'}
           </span>
         </div>
       </div>
-      <p className="text-gray-700 dark:text-gray-300 text-sm line-clamp-2">{ticket.description}</p>
+      <p className="text-gray-700 dark:text-gray-300 text-sm line-clamp-2">{ticket.description || 'No description available'}</p>
       {ticket.assigned_to && (
         <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">Assigned</p>
       )}

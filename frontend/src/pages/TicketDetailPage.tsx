@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { ticketApi } from '../services/api'
 import { useAuthStore } from '../hooks/useAuth'
@@ -29,17 +29,12 @@ export default function TicketDetailPage() {
   const [error, setError] = useState<string | null>(null)
   const [actionLoading, setActionLoading] = useState(false)
 
-  useEffect(() => {
-    if (ticketId) {
-      loadTicket()
-    }
-  }, [ticketId])
-
-  const loadTicket = async () => {
+  const loadTicket = useCallback(async () => {
+    if (!ticketId) return
     try {
       setLoading(true)
       setError(null)
-      const ticketData = await ticketApi.get(ticketId!)
+      const ticketData = await ticketApi.get(ticketId)
       setTicket(ticketData)
     } catch (err: any) {
       console.error('Failed to load ticket:', err)
@@ -47,7 +42,11 @@ export default function TicketDetailPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [ticketId])
+
+  useEffect(() => {
+    loadTicket()
+  }, [loadTicket])
 
   const handleAcceptReject = async (action: 'accept' | 'reject') => {
     if (!ticketId || !ticket) return
@@ -137,7 +136,7 @@ export default function TicketDetailPage() {
               <div>
                 <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Ticket Details</h1>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
-                  Ticket ID: {ticket.ticket_id.substring(0, 8)}...
+                  Ticket ID: {ticket.ticket_id ? `${ticket.ticket_id.substring(0, 8)}...` : 'N/A'}
                 </p>
               </div>
             </div>
@@ -164,25 +163,25 @@ export default function TicketDetailPage() {
               <div className="flex items-start justify-between mb-4">
                 <div>
                   <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-                    {ticket.service_type.replace('_', ' ').toUpperCase()}
+                    {ticket.service_type?.replace('_', ' ').toUpperCase() || ticket.service_type || 'Unknown Service'}
                   </h2>
                   <p className="text-sm text-gray-600 dark:text-gray-400">
-                    Created: {new Date(ticket.created_at).toLocaleString()}
+                    Created: {ticket.created_at ? new Date(ticket.created_at).toLocaleString() : 'Unknown'}
                   </p>
                 </div>
                 <div className="flex space-x-2">
-                  <span className={`px-3 py-1 rounded-full text-sm font-medium ${priorityColors[ticket.priority as keyof typeof priorityColors]}`}>
+                  <span className={`px-3 py-1 rounded-full text-sm font-medium ${priorityColors[ticket.priority as keyof typeof priorityColors] || 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200'}`}>
                     Priority {ticket.priority}
                   </span>
-                  <span className={`px-3 py-1 rounded-full text-sm font-medium ${statusColors[ticket.status as keyof typeof statusColors]}`}>
-                    {ticket.status.replace('_', ' ')}
+                  <span className={`px-3 py-1 rounded-full text-sm font-medium ${statusColors[ticket.status as keyof typeof statusColors] || 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200'}`}>
+                    {ticket.status?.replace('_', ' ') || ticket.status}
                   </span>
                 </div>
               </div>
 
               <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
                 <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Description</h3>
-                <p className="text-gray-900 dark:text-gray-100 whitespace-pre-wrap">{ticket.description}</p>
+                <p className="text-gray-900 dark:text-gray-100 whitespace-pre-wrap">{ticket.description || 'No description provided'}</p>
               </div>
 
               {ticket.current_symptoms && (
@@ -316,7 +315,7 @@ export default function TicketDetailPage() {
                     <div>
                       <p className="text-gray-600 dark:text-gray-400">Assigned At</p>
                       <p className="text-gray-900 dark:text-gray-100 font-medium">
-                        {new Date(ticket.assigned_at).toLocaleString()}
+                        {ticket.assigned_at ? new Date(ticket.assigned_at).toLocaleString() : 'Unknown'}
                       </p>
                     </div>
                   )}
@@ -324,7 +323,7 @@ export default function TicketDetailPage() {
                     <div>
                       <p className="text-gray-600 dark:text-gray-400">Completed At</p>
                       <p className="text-gray-900 dark:text-gray-100 font-medium">
-                        {new Date(ticket.completed_at).toLocaleString()}
+                        {ticket.completed_at ? new Date(ticket.completed_at).toLocaleString() : 'Unknown'}
                       </p>
                     </div>
                   )}

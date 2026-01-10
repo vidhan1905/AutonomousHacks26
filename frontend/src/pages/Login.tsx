@@ -37,7 +37,12 @@ export default function Login() {
         navigate('/dashboard/patient')
       } else if (!isSignUp && userType === 'patient') {
         // Patient login
-        await patientLogin(phoneNumber)
+        if (!password) {
+          setError('Password is required for login')
+          setLoading(false)
+          return
+        }
+        await patientLogin(phoneNumber, password)
         navigate('/dashboard/patient')
       } else {
         // Service person login
@@ -157,13 +162,13 @@ export default function Login() {
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Password
                 </label>
-                <input
+                  <input
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  required={isSignUp}
+                  required
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500 dark:bg-gray-700 dark:text-white"
-                  placeholder={isSignUp ? "Choose a password" : "Enter your password (optional for login)"}
+                  placeholder={isSignUp ? "Choose a password" : "Enter your password"}
                 />
               </div>
             </>
