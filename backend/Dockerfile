@@ -20,6 +20,9 @@ RUN pip install --no-cache-dir --upgrade pip && \
 # Copy alembic configuration
 COPY alembic.ini ./
 
+# Copy scripts directory (for data loading)
+COPY scripts/ ./scripts/
+
 # Copy backend source code
 COPY backend/ ./backend/
 

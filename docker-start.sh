@@ -1,8 +1,10 @@
 #!/bin/bash
 
-# Docker Quick Start Script
+# Docker Deployment Script
+# Handles complete deployment: migrations, checkpointer setup, and data loading
 
-set -e
+# Don't exit on error - we want to continue even if some steps have issues
+set +e
 
 # Ensure Docker is in PATH (for macOS Docker Desktop)
 export PATH="/usr/local/bin:/Applications/Docker.app/Contents/Resources/bin:$PATH"
@@ -38,20 +40,85 @@ docker compose up -d --build
 
 # Wait for postgres to be ready
 echo "⏳ Waiting for PostgreSQL to be ready..."
-sleep 5
+MAX_WAIT=30
+WAIT_COUNT=0
+while [ $WAIT_COUNT -lt $MAX_WAIT ]; do
+    if docker compose exec -T postgres pg_isready -U postgres > /dev/null 2>&1; then
+        echo "✓ PostgreSQL is ready!"
+        break
+    fi
+    echo "   Waiting for PostgreSQL... ($WAIT_COUNT/$MAX_WAIT seconds)"
+    sleep 2
+    WAIT_COUNT=$((WAIT_COUNT + 2))
+done
+
+if [ $WAIT_COUNT -ge $MAX_WAIT ]; then
+    echo "⚠️  PostgreSQL may not be ready, but continuing..."
+fi
 
 # Run migrations
-echo "📊 Running database migrations..."
-docker compose exec -T backend alembic upgrade head || echo "⚠️  Migration failed, but continuing..."
+echo ""
+echo "📊 Step 1/3: Running database migrations..."
+if docker compose exec -T backend alembic upgrade head; then
+    echo "✓ Migrations completed successfully"
+else
+    echo "⚠️  Migration had issues, but continuing..."
+fi
 
-echo "✅ Setup complete!"
+# Setup checkpointer tables
+echo ""
+echo "🔧 Step 2/3: Setting up checkpointer tables..."
+echo "   (This may take 30-60 seconds on first run...)"
+if docker compose exec -T backend python backend/scripts/setup_checkpointer.py; then
+    echo "✓ Checkpointer tables setup complete"
+else
+    echo "⚠️  Checkpointer setup had issues, but continuing..."
+    echo "   Note: Checkpointer will auto-setup on first use if needed"
+fi
+
+# Automatically load sample data
+echo ""
+echo "📦 Step 3/3: Loading sample data into PostgreSQL..."
+if docker compose exec -T backend python scripts/generate_dataset.py; then
+    echo "✓ Sample data loaded successfully"
+    DATA_LOADED=true
+else
+    echo "⚠️  Data loading had issues, but continuing..."
+    DATA_LOADED=false
+fi
+
+echo ""
+echo "═══════════════════════════════════════════════════════════"
+echo "✅ Deployment complete!"
+echo "═══════════════════════════════════════════════════════════"
 echo ""
 echo "📍 Access the application:"
-echo "   Frontend: http://localhost:3000"
+echo "   Frontend:    http://localhost:3000"
 echo "   Backend API: http://localhost:8000"
-echo "   API Docs: http://localhost:8000/docs"
+echo "   API Docs:    http://localhost:8000/docs"
+echo "   Health:      http://localhost:8000/health"
 echo ""
+
+if [ "$DATA_LOADED" = true ]; then
+    echo "📋 Test Credentials:"
+    echo "   Patient Login:"
+    echo "     Phone: 001-852-326-5094x079"
+    echo "     Name:  April Maldonado"
+    echo "     DOB:   1955-02-28"
+    echo ""
+    echo "   Service Person Login:"
+    echo "     Username: blood_test_1 (or any {service_type}_1)"
+    echo "     Password: password123"
+    echo ""
+    echo "   Admin Login:"
+    echo "     Username: admin_1"
+    echo "     Password: admin123"
+    echo ""
+fi
+
 echo "📋 Useful commands:"
-echo "   View logs: docker compose logs -f"
-echo "   Stop: docker compose down"
-echo "   Restart: docker compose restart"
+echo "   View logs:    docker compose logs -f"
+echo "   Stop:         docker compose down"
+echo "   Restart:      docker compose restart"
+echo "   Rebuild:      docker compose up -d --build"
+echo ""
