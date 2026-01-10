@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import TicketCard from './TicketCard'
 import TicketFilters from './TicketFilters'
 import type { Ticket } from '../../types'
@@ -16,11 +16,7 @@ export default function TicketDashboard({ userType: _userType, onTicketClick }: 
   const [serviceTypeFilter, setServiceTypeFilter] = useState('all')
   const [priorityFilter, setPriorityFilter] = useState('all')
 
-  useEffect(() => {
-    loadTickets()
-  }, [statusFilter, serviceTypeFilter, priorityFilter])
-
-  const loadTickets = async () => {
+  const loadTickets = useCallback(async () => {
     setLoading(true)
     try {
       const filters: any = {}
@@ -32,10 +28,15 @@ export default function TicketDashboard({ userType: _userType, onTicketClick }: 
       setTickets(data)
     } catch (error) {
       console.error('Failed to load tickets:', error)
+      setTickets([])
     } finally {
       setLoading(false)
     }
-  }
+  }, [statusFilter, serviceTypeFilter, priorityFilter])
+
+  useEffect(() => {
+    loadTickets()
+  }, [loadTickets])
 
   if (loading) {
     return (
