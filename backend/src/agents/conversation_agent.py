@@ -45,6 +45,9 @@ class AgentState(TypedDict):
     service_type_determined: Optional[str]
     ranked_doctors: Optional[List[dict]]
     doctor_tickets_created: bool
+    waiting_for_appointment_datetime: bool
+    appointment_datetime: Optional[str]
+    user_request: Optional[str]
 
 
 # Initialize LLM
@@ -665,6 +668,13 @@ Patient ID: {patient_id}
         
         # STEP 2: User provided request - do doctor recommendation workflow
         elif history_shown and not doctor_tickets_created:
+            # Check if tickets were actually created successfully (even if state says False due to timing)
+            doctor_tickets = state.get("doctor_tickets", [])
+            if doctor_tickets and len(doctor_tickets) > 0:
+                # Tickets were created successfully - don't treat as error
+                doctor_tickets_created = True
+                state["doctor_tickets_created"] = True
+                state["tickets_creation_success"] = True
             # Get last user message
             last_user_message = None
             for msg in reversed(messages):
@@ -672,6 +682,77 @@ Patient ID: {patient_id}
                     last_user_message = msg.content
                     break
             
+            # Check if we're waiting for appointment datetime
+            waiting_for_datetime = state.get("waiting_for_appointment_datetime", False)
+            appointment_datetime = state.get("appointment_datetime")
+            user_request = state.get("user_request")
+            
+            # If we don't have datetime yet, ask for it FIRST
+            if not waiting_for_datetime and not appointment_datetime:
+                # Store the user request
+                user_request = last_user_message
+                # Ask for date/time
+                system_prompt = f"""You are a helpful AI assistant for a hospital. The patient has been verified and you've shown their history.
+
+The patient said: "{last_user_message or 'No request'}"
+
+IMPORTANT: Before proceeding with doctor recommendations, you MUST ask the patient for their preferred appointment date and time.
+
+Your response should be:
+"I understand you need help with: {last_user_message or 'your request'}. To help you find the best available doctors, I'll need to know when you'd like to schedule your appointment. 
+
+Please provide your preferred date and time. For example:
+- "tomorrow at 10:00 AM"
+- "next week on Tuesday at 11:00 AM"
+- "2025-01-15 at 2:00 PM"
+- "next Monday at 3:00 PM"
+
+What date and time would work best for you?"
+
+Do NOT call any tools yet. Just ask for the date/time and END."""
+                
+                messages = state["messages"]
+                if not hasattr(messages[-1], "content") or "helpful AI assistant" not in str(messages[-1].content):
+                    messages = [AIMessage(content=system_prompt)] + messages
+                response = llm_with_tools.invoke(messages)
+                return {
+                    **state,
+                    "messages": [response],
+                    "waiting_for_appointment_datetime": True,
+                    "user_request": user_request
+                }
+            
+            # If we're waiting for datetime, try to extract it from the message
+            if waiting_for_datetime and not appointment_datetime:
+                extracted_datetime = extract_datetime_from_message(last_user_message)
+                if not extracted_datetime:
+                    # Date/time not found, ask again
+                    system_prompt = """I need to know when you'd like to schedule the appointment. Please provide a date and time. 
+
+For example:
+- "tomorrow at 10:00 AM"
+- "next week on Tuesday at 11:00 AM"
+- "2025-01-15 at 2:00 PM"
+- "next Monday at 3:00 PM"
+
+What date and time would work best for you?"""
+                    response = AIMessage(content=system_prompt)
+                    return {
+                        **state,
+                        "messages": [response],
+                        "waiting_for_appointment_datetime": True
+                    }
+                else:
+                    # Date/time found! Store it and proceed with doctor recommendation
+                    appointment_datetime = extracted_datetime
+                    state = {
+                        **state,
+                        "appointment_datetime": appointment_datetime,
+                        "waiting_for_appointment_datetime": False
+                    }
+                    # Continue to doctor recommendation workflow below
+            
+            # Now proceed with doctor recommendation (we have datetime)
             # Check for error states from previous tool calls
             doctors_found = state.get("doctors_found", None)
             doctors_error = state.get("doctors_error")
@@ -732,7 +813,11 @@ Patient ID: {patient_id}
                 }
             
             # Handle error case: Ticket creation failed
-            if tickets_creation_success is False:
+            # Only treat as error if tickets_creation_success is explicitly False AND we have an error
+            # If tickets were created successfully (even if fewer than 5), that's success, not error
+            # Also check if doctor_tickets exist - if they do, tickets were created successfully
+            doctor_tickets = state.get("doctor_tickets", [])
+            if tickets_creation_success is False and tickets_creation_error and (not doctor_tickets or len(doctor_tickets) == 0):
                 system_prompt = f"""You are a helpful AI assistant for a hospital. Doctors were ranked but ticket creation failed.
 
 The patient said: "{last_user_message or 'No request'}"
@@ -770,17 +855,19 @@ Patient ID: {patient_id}
             ]) if history_records else "No previous history"
             
             # Determine priority from user request
-            user_request_lower = (last_user_message or "").lower()
-            priority = 5 if any(word in user_request_lower for word in ["urgent", "emergency", "immediate", "broken", "severe"]) else 3
+            user_request_for_priority = user_request or last_user_message or ""
+            user_request_lower = user_request_for_priority.lower()
+            priority = 5 if any(word in user_request_lower for word in ["urgent", "emergency", "immediate", "broken", "severe", "accident"]) else 3
             
             system_prompt = f"""You are a helpful AI assistant for a hospital. The patient has been verified and you've shown their history.
 
-The patient said: "{last_user_message or 'No request'}"
+The patient said: "{user_request or last_user_message or 'No request'}"
+Appointment Date/Time: {appointment_datetime or 'Not provided'}
 
 CRITICAL WORKFLOW - You MUST call all 3 tools in this EXACT order, then END:
 
 STEP 1: Determine service_type from the request:
-   - "broken leg/hand/arm", "fracture", "bone", "orthopedic" → "orthopedics"
+   - "broken leg/hand/arm", "fracture", "bone", "orthopedic", "accident" → "orthopedics"
    - "heart", "chest pain", "cardiac" → "cardiology"
    - "headache", "neurological", "brain" → "neurology"
    - "blood test", "lab work" → "blood_test"
@@ -798,14 +885,20 @@ STEP 1: Determine service_type from the request:
 
 STEP 2: You MUST call get_service_persons_by_type FIRST:
    - Call: get_service_persons_by_type(service_type=[determined_type])
+   - This will ONLY return doctors where is_active=True (available doctors)
    - Wait for the result before proceeding
-   - If the result shows status="error" or count=0 or empty doctors list, inform the user politely that no doctors are available for this service type and END gracefully
+   - If the result shows status="error" or count=0 or empty doctors list, inform the user politely that no doctors are currently available for this service type and END gracefully
 
 STEP 3: You MUST call rank_doctors_with_llm SECOND:
-   - Use the doctors list from get_service_persons_by_type result
+   - Use the doctors list from get_service_persons_by_type result (these are already filtered to is_active=True)
+   - IMPORTANT: All doctors in the list are already available (is_active=True), so prioritize based on:
+     * Specialization match with patient history
+     * Service type alignment
+     * Patient's current symptoms/needs
+     * Relevance to the medical condition
    - Call: rank_doctors_with_llm(
        patient_history=[patient_history from state],
-       user_request="{last_user_message or 'No request'}",
+       user_request="{user_request or last_user_message or 'No request'}",
        doctors=[list from step 2 result],
        service_type=[determined type]
      )
@@ -819,18 +912,20 @@ STEP 4: You MUST call create_multiple_tickets THIRD:
        conversation_id="{state.get('conversation_id', '')}",
        ranked_doctors=[result from step 3 - use the ranked_doctors list],
        service_type=[determined type],
-       description="{last_user_message or 'Patient request'}",
+       description="{user_request or last_user_message or 'Patient request'} (Preferred appointment time: {appointment_datetime or 'Not specified'})",
        patient_details={{"name": "{collected_info.get('name', 'Unknown')}", "phone": "{collected_info.get('phone', '')}", "patient_id": "{patient_id}"}},
        past_history_summary="{past_history_summary[:500]}",
-       llm_summary="Top doctors ranked based on patient history and current needs",
+       llm_summary="Top doctors ranked based on patient history and current needs. Preferred appointment: {appointment_datetime or 'Not specified'}",
        priority={priority}
      )
    - This will create tickets for ALL ranked doctors (up to 5, or fewer if not enough available)
    - If ticket creation fails (status="error"), inform the user and END gracefully
 
-STEP 5: After create_multiple_tickets completes, format your response showing:
-   - All ranked doctors with their ranks (1-5), names, reasons, and ticket IDs
-   - Confirm that tickets have been created
+STEP 5: After create_multiple_tickets completes successfully (status="success"), format your response showing:
+   - All ranked doctors with their ranks, names, reasons, and ticket IDs
+   - IMPORTANT: It's perfectly normal to have fewer than 5 doctors (e.g., 2, 3, or 4 doctors). This is NOT an error - it just means fewer doctors are available for this service type.
+   - Confirm that tickets have been created successfully for the preferred appointment time: {appointment_datetime or 'Not specified'}
+   - Be positive and helpful - tell the patient their appointment tickets have been created successfully
 
 STEP 6: END immediately - Do NOT call any more tools after create_multiple_tickets
 
@@ -840,7 +935,9 @@ MANDATORY REQUIREMENTS:
 - Do NOT call tools in a different order
 - Do NOT call create_multiple_tickets without first calling rank_doctors_with_llm
 - create_multiple_tickets MUST receive the ranked_doctors from rank_doctors_with_llm result
-- After create_multiple_tickets succeeds, END immediately
+- After create_multiple_tickets succeeds (status="success"), END immediately and show success message
+- Remember: get_service_persons_by_type already filters to is_active=True doctors only
+- IMPORTANT: Having fewer than 5 doctors (e.g., 2 or 3) is perfectly normal and should be treated as SUCCESS, not an error
 
 Patient ID: {patient_id}
 """
@@ -889,36 +986,42 @@ IMPORTANT:
         ai_messages = [m for m in messages if isinstance(m, AIMessage) and not ("helpful AI assistant" in m.content or "You are a helpful" in m.content)]
         is_first_message = len(human_messages) == 1 and len(ai_messages) == 0
         
-        if is_first_message:
-            # FIRST MESSAGE: Must ask for verification details immediately
-            system_prompt = """You are a helpful AI assistant for a hospital call center.
+        # Also check if the last user message is a greeting and we haven't asked for verification yet
+        last_user_message = None
+        if human_messages:
+            last_user_message = human_messages[-1].content.lower() if hasattr(human_messages[-1], 'content') else ""
+        
+        # Check if verification was already requested
+        verification_requested = any(
+            isinstance(msg, AIMessage) and (
+                "verify your identity" in msg.content.lower() or
+                "provide me with your" in msg.content.lower() or
+                ("full name" in msg.content.lower() and "phone number" in msg.content.lower())
+            )
+            for msg in messages
+        )
+        
+        # If it's the first message OR user sent a greeting and verification wasn't requested yet
+        greeting_keywords = ["hello", "hi", "hey", "good morning", "good afternoon", "good evening", "greetings"]
+        is_greeting = last_user_message and any(greeting in last_user_message for greeting in greeting_keywords)
+        
+        if is_first_message or (is_greeting and not verification_requested):
+            # FIRST MESSAGE OR GREETING: Must ask for verification details immediately
+            # Return a direct hardcoded message - don't let LLM generate it
+            # This ensures consistency and prevents LLM from ignoring instructions
+            verification_request = AIMessage(content="""Hello! I'm your AI assistant here to help you. To verify your identity and access your medical records, I'll need a few details. Could you please provide me with your:
 
-CRITICAL FIRST STEP - YOU MUST DO THIS NOW:
-When a patient first contacts you, your FIRST response MUST be to ask for their verification details. Do NOT greet them or ask how you can help until AFTER they provide their information.
-
-Your FIRST message should be:
-"Hello! I'm your AI assistant here to help you. To verify your identity and access your medical records, I'll need a few details. Could you please provide me with your:
 1. Full name
 2. Phone number  
 3. Date of birth (in YYYY-MM-DD format, e.g., 1955-02-28)
 
-Once you provide these details, I'll be able to assist you with scheduling appointments, creating service tickets, or answering any questions you may have."
+Once you provide these details, I'll be able to assist you with scheduling appointments, creating service tickets, or answering any questions you may have.""")
 
-DO NOT:
-- Ask "How can I help you?" or "What can I do for you?" until AFTER verification
-- Make any tool calls (verify_patient, create_patient, etc.) until the user provides their information
-- Skip asking for verification details
-
-ONLY AFTER the user provides their name, phone, and date of birth:
-1. Extract the information from their message:
-   - name: Extract the full name (e.g., "April Maldonado")
-   - phone: Extract the phone number exactly as provided (e.g., "001-852-326-5094x079")
-   - date_of_birth: Extract and convert to YYYY-MM-DD format (e.g., "1955-02-28")
-2. IMMEDIATELY call verify_patient(name=extracted_name, phone=extracted_phone, date_of_birth=extracted_dob)
-3. If verify_patient returns found=True: call get_patient_history(patient_id=result["patient_id"])
-4. If verify_patient returns found=False: call create_patient(name=..., phone=..., date_of_birth=...)
-
-Remember: Your FIRST response must ask for verification details. Do not proceed with anything else until you have this information."""
+            print(f"DEBUG: Returning hardcoded verification request for first message or greeting")
+            return {
+                **state,
+                "messages": [verification_request]
+            }
         else:
             # SUBSEQUENT MESSAGES: Check if info collected, if not ask again or extract it
             collected = state.get("collected_info", {})
