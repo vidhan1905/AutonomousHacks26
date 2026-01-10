@@ -14,7 +14,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 from backend.src.database.connection import Base
 from backend.src.database.models import (
     Patient, Admin, ServicePerson, Conversation, Message,
-    Ticket, Appointment, PatientHistory, TicketUpdate
+    Ticket, Appointment, PatientHistory, TicketUpdate,
+    DoctorExpertise, DoctorCaseHistory, TicketAssignment, PatientHistorySummary
 )
 
 # this is the Alembic Config object, which provides
