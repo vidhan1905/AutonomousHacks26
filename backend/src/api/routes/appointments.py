@@ -6,10 +6,14 @@ from pydantic import BaseModel
 from typing import Optional
 from datetime import datetime
 import uuid
+import logging
 
 from backend.src.database.connection import get_db
 from backend.src.database.models import Appointment
 from backend.src.api.dependencies import get_current_user
+from backend.src.utils.category_normalizer import normalize_category_value
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/api/appointments", tags=["appointments"])
 
@@ -55,7 +59,17 @@ async def list_appointments(
     if service_person_id:
         query = query.where(Appointment.service_person_id == uuid.UUID(service_person_id))
     if status:
-        query = query.where(Appointment.status == status)
+        try:
+            normalized_status = await normalize_category_value(
+                table_name="appointments",
+                column_name="status",
+                user_input=status,
+                context="Filtering appointments by status"
+            )
+            query = query.where(Appointment.status == normalized_status)
+        except Exception as e:
+            logger.warning(f"Failed to normalize status '{status}': {e}. Using original value.")
+            query = query.where(Appointment.status == status)
     
     result = await db.execute(query.order_by(Appointment.scheduled_date))
     appointments = result.scalars().all()

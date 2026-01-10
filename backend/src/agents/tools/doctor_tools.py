@@ -8,6 +8,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from backend.src.database.models import ServicePerson, Ticket
 from backend.src.database.connection import async_session_maker
+from backend.src.utils.category_normalizer import normalize_category_value
 import uuid
 import asyncio
 import concurrent.futures
@@ -55,11 +56,24 @@ async def _get_service_persons_by_type_async(service_type: str, session_maker=No
         from backend.src.database.connection import async_session_maker
         session_maker = async_session_maker
     
+    # Normalize service_type before SQL query
+    try:
+        normalized_service_type = await normalize_category_value(
+            table_name="service_persons",
+            column_name="service_type",
+            user_input=service_type,
+            context="Querying doctors by service type"
+        )
+    except Exception as e:
+        import logging
+        logging.warning(f"Failed to normalize service_type '{service_type}': {e}. Using original value.")
+        normalized_service_type = service_type
+    
     async with session_maker() as session:
         try:
             result = await session.execute(
                 select(ServicePerson).where(
-                    ServicePerson.service_type == service_type,
+                    ServicePerson.service_type == normalized_service_type,
                     ServicePerson.is_active == True
                 )
             )
@@ -77,7 +91,7 @@ async def _get_service_persons_by_type_async(service_type: str, session_maker=No
             
             return {
                 "status": "success",
-                "service_type": service_type,
+                "service_type": normalized_service_type,
                 "doctors": doctors_list,
                 "count": len(doctors_list)
             }
@@ -306,6 +320,31 @@ async def _create_multiple_tickets_async(
         from backend.src.database.connection import async_session_maker
         session_maker = async_session_maker
     
+    # Normalize service_type and priority before creating tickets
+    try:
+        normalized_service_type = await normalize_category_value(
+            table_name="tickets",
+            column_name="service_type",
+            user_input=service_type,
+            context="Creating tickets for multiple doctors"
+        )
+    except Exception as e:
+        import logging
+        logging.warning(f"Failed to normalize service_type '{service_type}': {e}. Using original value.")
+        normalized_service_type = service_type
+    
+    try:
+        normalized_priority = await normalize_category_value(
+            table_name="tickets",
+            column_name="priority",
+            user_input=priority,
+            context="Creating tickets for multiple doctors"
+        )
+    except Exception as e:
+        import logging
+        logging.warning(f"Failed to normalize priority '{priority}': {e}. Using original value.")
+        normalized_priority = priority
+    
     async with session_maker() as session:
         try:
             # Validation: Ensure we have ranked doctors
@@ -333,9 +372,9 @@ async def _create_multiple_tickets_async(
                     ticket = Ticket(
                         conversation_id=uuid.UUID(conversation_id),
                         patient_id=uuid.UUID(patient_id),
-                        service_type=service_type,
+                        service_type=normalized_service_type,
                         description=description,
-                        priority=priority,
+                        priority=normalized_priority,
                         assigned_to=uuid.UUID(doctor["doctor_id"]),
                         patient_details=patient_details,
                         past_history_summary=past_history_summary,

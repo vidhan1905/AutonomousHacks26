@@ -206,6 +206,42 @@ def collect_info_node(state: AgentState) -> AgentState:
     missing = state.get("required_fields_missing", [])
     retry_count = state.get("retry_count", {})
     
+    # First, try to extract info from the last user message if we haven't already
+    messages = state["messages"]
+    last_user_message = None
+    for msg in reversed(messages):
+        if isinstance(msg, HumanMessage):
+            last_user_message = msg.content
+            break
+    
+    # If we have a user message and haven't extracted yet, try to extract
+    if last_user_message and not (collected.get("name") and collected.get("phone") and collected.get("date_of_birth")):
+        import re
+        # Quick check if message looks like verification info
+        date_pattern = r'\d{4}[-/]\d{1,2}[-/]\d{1,2}|\d{1,2}[-/]\d{1,2}[-/]\d{4}'
+        phone_pattern = r'[\d\s\-\.\(\)xX]{7,}'
+        name_pattern = r'[A-Z][a-z]+(?:\s+[A-Z][a-z]+)+|[A-Z][a-z]+\s+[A-Z][a-z]+'
+        
+        has_date = bool(re.search(date_pattern, last_user_message))
+        has_phone_pattern = bool(re.search(phone_pattern, last_user_message))
+        has_name_pattern = bool(re.search(name_pattern, last_user_message))
+        
+        if sum([has_date, has_phone_pattern, has_name_pattern]) >= 2:
+            # Looks like verification info - try to extract
+            try:
+                extraction_result = extract_patient_info.invoke({"message": last_user_message})
+                if extraction_result.get("success") and extraction_result.get("extracted"):
+                    extracted = extraction_result.get("extracted", {})
+                    if extracted.get("name"):
+                        collected["name"] = extracted["name"]
+                    if extracted.get("phone"):
+                        collected["phone"] = extracted["phone"]
+                    if extracted.get("date_of_birth"):
+                        collected["date_of_birth"] = extracted["date_of_birth"]
+                    print(f"DEBUG: Auto-extracted info: {collected}")
+            except Exception as e:
+                print(f"DEBUG: Auto-extraction failed: {e}")
+    
     # Build prompt to ask for missing fields
     if missing:
         field = missing[0]
@@ -220,11 +256,15 @@ def collect_info_node(state: AgentState) -> AgentState:
         return {
             **state,
             "messages": messages,
+            "collected_info": collected,  # Update with extracted info
             "retry_count": {**retry_count, field: retries + 1}
         }
     
+    # Update state with collected info
+    updated_state = {**state, "collected_info": collected}
+    
     # No missing fields, return state as-is (will end)
-    return state
+    return updated_state
 
 
 def process_tool_results(state: AgentState) -> AgentState:
@@ -1266,38 +1306,131 @@ Once you provide these details, I'll be able to assist you with scheduling appoi
             has_phone = bool(collected.get("phone"))
             has_dob = bool(collected.get("date_of_birth"))
 
+            # Get the last user message to check if they provided info
+            last_user_message = None
+            if human_messages:
+                last_user_message = human_messages[-1].content if hasattr(human_messages[-1], 'content') else ""
+            
+            # Check if the user's message looks like it contains verification info
+            # Look for patterns like name, phone number, and date
+            import re
+            has_verification_info = False
+            if last_user_message:
+                # Check for date pattern (YYYY-MM-DD or similar)
+                date_pattern = r'\d{4}[-/]\d{1,2}[-/]\d{1,2}|\d{1,2}[-/]\d{1,2}[-/]\d{4}'
+                has_date = bool(re.search(date_pattern, last_user_message))
+                # Check for phone pattern (digits, possibly with dashes, dots, spaces, x)
+                # Look for sequences of 7+ digits (phone numbers)
+                phone_pattern = r'\d{7,}|\d{3}[-.\s]?\d{3}[-.\s]?\d{4}'
+                has_phone_pattern = bool(re.search(phone_pattern, last_user_message))
+                # Check for name (at least 2 words, case-insensitive)
+                # Split by newlines, spaces, or commas and check for word patterns
+                words = re.findall(r'\b[A-Za-z]{2,}\b', last_user_message)
+                # If we have 2+ words that look like names (not common words)
+                common_words = {'the', 'is', 'are', 'was', 'were', 'and', 'or', 'but', 'for', 'with', 'my', 'your', 'name', 'phone', 'date', 'birth', 'provide', 'please'}
+                name_words = [w for w in words if w.lower() not in common_words and len(w) >= 2]
+                has_name_pattern = len(name_words) >= 2
+                
+                # Also check if message has multiple lines (common format: name\nphone\ndate)
+                has_multiline = '\n' in last_user_message or len(re.split(r'[\n,;]', last_user_message)) >= 2
+                
+                # If we have at least 2 of these patterns OR multiline format, likely verification info
+                pattern_count = sum([has_date, has_phone_pattern, has_name_pattern])
+                has_verification_info = pattern_count >= 2 or (has_multiline and (has_date or has_phone_pattern))
+
             if not (has_name and has_phone and has_dob):
                 # Still missing info - but first check if user just provided it
-                system_prompt = f"""You are a helpful AI assistant for a hospital. The patient needs to be verified.
+                if has_verification_info:
+                    # User likely provided info - try to extract immediately
+                    try:
+                        extraction_result = extract_patient_info.invoke({"message": last_user_message})
+                        if extraction_result.get("success") and extraction_result.get("extracted"):
+                            extracted = extraction_result.get("extracted", {})
+                            # Update collected_info with extracted values
+                            if extracted.get("name"):
+                                collected["name"] = extracted["name"]
+                            if extracted.get("phone"):
+                                collected["phone"] = extracted["phone"]
+                            if extracted.get("date_of_birth"):
+                                collected["date_of_birth"] = extracted["date_of_birth"]
+                            
+                            # Update state with extracted info
+                            state["collected_info"] = collected
+                            print(f"DEBUG: Auto-extracted info: name={collected.get('name')}, phone={collected.get('phone')}, dob={collected.get('date_of_birth')}")
+                            
+                            # If we have all three fields, tell LLM to verify
+                            if collected.get("name") and collected.get("phone") and collected.get("date_of_birth"):
+                                system_prompt = f"""You are a helpful AI assistant for a hospital. The patient needs to be verified.
 
-CRITICAL WORKFLOW:
-1. **First, check if the user just provided their information** in their latest message
-   - If their message contains name, phone, or date of birth information:
-     a. IMMEDIATELY call extract_patient_info(message=user_message_content) to extract structured data
-     b. After extraction completes, call verify_patient with the extracted information
+I've extracted the following information from the user's message:
+- Name: {collected.get("name")}
+- Phone: {collected.get("phone")}
+- Date of Birth: {collected.get("date_of_birth")}
 
-2. **If extraction found all fields** (name, phone, date_of_birth):
-   - Call verify_patient(name=extracted_name, phone=extracted_phone, date_of_birth=extracted_dob)
-   - Then call get_patient_history(patient_id=result["patient_id"]) if verification successful
-   - Then ask "How can I assist you today?"
+YOU MUST NOW:
+1. Call verify_patient(name="{collected.get("name")}", phone="{collected.get("phone")}", date_of_birth="{collected.get("date_of_birth")}")
+2. After verification succeeds: Call get_patient_history(patient_id=result["patient_id"])
+3. Then respond: "Thank you! I've verified your identity. How can I assist you today?"
 
-3. **If user hasn't provided information yet or extraction found nothing**:
-   - Ask politely for the missing fields
+DO NOT ask for information again - it has already been extracted."""
+                            else:
+                                # Some fields missing, ask for them
+                                missing = []
+                                if not collected.get("name"):
+                                    missing.append("name")
+                                if not collected.get("phone"):
+                                    missing.append("phone")
+                                if not collected.get("date_of_birth"):
+                                    missing.append("date_of_birth")
+                                
+                                system_prompt = f"""You are a helpful AI assistant for a hospital. The patient needs to be verified.
+
+I extracted some information from your message, but I still need: {', '.join(missing)}
+
+Could you please provide: {', '.join(missing)}?
+
+Currently collected: {{"name": "{collected.get("name", "Not provided")}", "phone": "{collected.get("phone", "Not provided")}", "date_of_birth": "{collected.get("date_of_birth", "Not provided")}"}}"""
+                        else:
+                            # Extraction failed, ask LLM to try
+                            system_prompt = f"""You are a helpful AI assistant for a hospital. The patient needs to be verified.
+
+The user's message appears to contain verification information, but automatic extraction failed.
+
+YOU MUST:
+1. Call extract_patient_info(message="{last_user_message}") to extract structured data
+2. After extraction: Call verify_patient with the extracted values
+3. After verification: Call get_patient_history(patient_id=result["patient_id"])
+
+User's message: "{last_user_message}"
+
+MANDATORY: Call extract_patient_info NOW."""
+                    except Exception as e:
+                        print(f"DEBUG: Auto-extraction exception: {e}")
+                        # Fallback to LLM extraction
+                        system_prompt = f"""You are a helpful AI assistant for a hospital. The patient needs to be verified.
+
+CRITICAL: The user's latest message appears to contain verification information.
+
+YOU MUST:
+1. IMMEDIATELY call extract_patient_info(message="{last_user_message}") to extract structured data
+2. After extraction: Call verify_patient with the extracted values
+3. After verification: Call get_patient_history(patient_id=result["patient_id"])
+
+User's message: "{last_user_message}"
+
+MANDATORY: Call extract_patient_info NOW."""
+                else:
+                    # User hasn't provided info yet - ask for it
+                    system_prompt = f"""You are a helpful AI assistant for a hospital. The patient needs to be verified.
+
+You need to collect verification information. Ask the patient politely for:
+1. Full name
+2. Phone number
+3. Date of birth (in YYYY-MM-DD format)
 
 Currently collected: {{"name": "{collected.get("name", "Not provided")}", "phone": "{collected.get("phone", "Not provided")}", "date_of_birth": "{collected.get("date_of_birth", "Not provided")}"}}
 
-IMPORTANT:
-- If you see a message like "My name is April Maldonado, 001-852-326-5094x079 and 1955-02-28"
-  → Use extract_patient_info first, then verify_patient
-- Do NOT ask for information if the user just provided it
-- Do NOT proceed with other services until verification is complete
-
-Example flow:
-User: "My name is April Maldonado, 001-852-326-5094x079 and 1955-02-28"
-You: [Call extract_patient_info(message="My name is April Maldonado, 001-852-326-5094x079 and 1955-02-28")]
-     [After extraction: Call verify_patient(name="April Maldonado", phone="001-852-326-5094x079", date_of_birth="1955-02-28")]
-     [After verification: Call get_patient_history(patient_id=...)]
-     [Respond: "Thank you, April! I've verified your identity and retrieved your medical history. How can I assist you today?"]"""
+Ask for the missing fields only."""
             else:
                 # Has info but not verified yet - should verify
                 system_prompt = """You are a helpful AI assistant for a hospital. The patient has provided their information but verification is pending.
@@ -1335,6 +1468,9 @@ You MUST now call verify_patient with this information to proceed. Extract the e
         updated_state["ranked_doctors"] = state.get("ranked_doctors")
     if "doctor_tickets_created" in state:
         updated_state["doctor_tickets_created"] = state.get("doctor_tickets_created", False)
+    # Preserve collected_info if it was updated
+    if "collected_info" in state:
+        updated_state["collected_info"] = state["collected_info"]
     
     return {
         **updated_state,

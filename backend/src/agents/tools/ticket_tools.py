@@ -5,6 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from backend.src.database.models import Ticket, TicketUpdate
 from backend.src.database.connection import async_session_maker
+from backend.src.utils.category_normalizer import normalize_category_value
 import uuid
 import asyncio
 import concurrent.futures
@@ -22,14 +23,39 @@ async def _create_ticket_async(
         from backend.src.database.connection import async_session_maker
         session_maker = async_session_maker
     
+    # Normalize service_type and priority before creating ticket
+    try:
+        normalized_service_type = await normalize_category_value(
+            table_name="tickets",
+            column_name="service_type",
+            user_input=service_type,
+            context="Creating a new ticket"
+        )
+    except Exception as e:
+        import logging
+        logging.warning(f"Failed to normalize service_type '{service_type}': {e}. Using original value.")
+        normalized_service_type = service_type
+    
+    try:
+        normalized_priority = await normalize_category_value(
+            table_name="tickets",
+            column_name="priority",
+            user_input=priority,
+            context="Creating a new ticket"
+        )
+    except Exception as e:
+        import logging
+        logging.warning(f"Failed to normalize priority '{priority}': {e}. Using original value.")
+        normalized_priority = priority
+    
     async with session_maker() as session:
         try:
             ticket = Ticket(
                 conversation_id=uuid.UUID(conversation_id),
                 patient_id=uuid.UUID(patient_id),
-                service_type=service_type,
+                service_type=normalized_service_type,
                 description=description,
-                priority=priority,
+                priority=normalized_priority,
                 patient_details=patient_details,
                 past_history_summary=past_history_summary,
                 llm_summary=llm_summary,
@@ -41,8 +67,8 @@ async def _create_ticket_async(
             return {
                 "ticket_id": str(ticket.ticket_id),
                 "status": "created",
-                "service_type": service_type,
-                "priority": priority
+                "service_type": normalized_service_type,
+                "priority": normalized_priority
             }
         except Exception as e:
             await session.rollback()
@@ -99,6 +125,19 @@ async def _update_ticket_status_async(ticket_id: str, status: str, updated_by: s
         from backend.src.database.connection import async_session_maker
         session_maker = async_session_maker
     
+    # Normalize status before updating
+    try:
+        normalized_status = await normalize_category_value(
+            table_name="tickets",
+            column_name="status",
+            user_input=status,
+            context="Updating ticket status"
+        )
+    except Exception as e:
+        import logging
+        logging.warning(f"Failed to normalize status '{status}': {e}. Using original value.")
+        normalized_status = status
+    
     async with session_maker() as session:
         try:
             result = await session.execute(
@@ -109,18 +148,18 @@ async def _update_ticket_status_async(ticket_id: str, status: str, updated_by: s
                 return {"status": "error", "error": "Ticket not found"}
             
             old_status = ticket.status
-            ticket.status = status
+            ticket.status = normalized_status
             
             update = TicketUpdate(
                 ticket_id=uuid.UUID(ticket_id),
                 updated_by=uuid.UUID(updated_by),
                 update_type="status_change",
                 old_value=old_status,
-                new_value=status
+                new_value=normalized_status
             )
             session.add(update)
             await session.commit()
-            return {"status": "updated", "ticket_id": ticket_id, "new_status": status}
+            return {"status": "updated", "ticket_id": ticket_id, "new_status": normalized_status}
         except Exception as e:
             await session.rollback()
             return {"status": "error", "error": str(e)}

@@ -6,6 +6,7 @@ from pydantic import BaseModel
 from typing import Optional, List
 import uuid
 from datetime import datetime
+import logging
 
 from backend.src.database.connection import get_db
 from backend.src.database.models import Ticket, TicketUpdate
@@ -15,6 +16,9 @@ from backend.src.api.dependencies import (
     get_current_admin
 )
 from backend.src.database.models import ServicePerson
+from backend.src.utils.category_normalizer import normalize_category_value
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/api/tickets", tags=["tickets"])
 
@@ -67,13 +71,45 @@ async def list_tickets(
         )
     # Admins see all tickets
     
-    # Apply filters
+    # Normalize and apply filters
     if status:
-        query = query.where(Ticket.status == status)
+        try:
+            normalized_status = await normalize_category_value(
+                table_name="tickets",
+                column_name="status",
+                user_input=status,
+                context="Filtering tickets by status"
+            )
+            query = query.where(Ticket.status == normalized_status)
+        except Exception as e:
+            logger.warning(f"Failed to normalize status '{status}': {e}. Using original value.")
+            query = query.where(Ticket.status == status)
+    
     if service_type:
-        query = query.where(Ticket.service_type == service_type)
+        try:
+            normalized_service_type = await normalize_category_value(
+                table_name="tickets",
+                column_name="service_type",
+                user_input=service_type,
+                context="Filtering tickets by service type"
+            )
+            query = query.where(Ticket.service_type == normalized_service_type)
+        except Exception as e:
+            logger.warning(f"Failed to normalize service_type '{service_type}': {e}. Using original value.")
+            query = query.where(Ticket.service_type == service_type)
+    
     if priority:
-        query = query.where(Ticket.priority == priority)
+        try:
+            normalized_priority = await normalize_category_value(
+                table_name="tickets",
+                column_name="priority",
+                user_input=priority,
+                context="Filtering tickets by priority"
+            )
+            query = query.where(Ticket.priority == normalized_priority)
+        except Exception as e:
+            logger.warning(f"Failed to normalize priority '{priority}': {e}. Using original value.")
+            query = query.where(Ticket.priority == priority)
     
     result = await db.execute(query.order_by(Ticket.created_at.desc()))
     tickets = result.scalars().all()
