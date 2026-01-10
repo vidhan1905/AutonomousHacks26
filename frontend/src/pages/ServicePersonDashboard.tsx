@@ -13,13 +13,13 @@ export default function ServicePersonDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="bg-white shadow-sm border-b border-gray-200">
+    <div className="min-h-screen bg-teal-50 dark:bg-gray-900">
+      <header className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Service Person Dashboard</h1>
-              <p className="text-sm text-gray-600">
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Service Person Dashboard</h1>
+              <p className="text-sm text-gray-600 dark:text-gray-400">
                 Welcome, {user?.name || user?.username} - {user?.service_type?.replace('_', ' ')}
               </p>
             </div>
@@ -28,7 +28,7 @@ export default function ServicePersonDashboard() {
                 await logout()
                 navigate('/login')
               }}
-              className="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
+              className="px-4 py-2 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-600"
             >
               Logout
             </button>
@@ -38,7 +38,7 @@ export default function ServicePersonDashboard() {
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div>
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">Your Tickets</h2>
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Your Tickets</h2>
           <TicketDashboard 
             userType="service_person" 
             onTicketClick={handleTicketClick}

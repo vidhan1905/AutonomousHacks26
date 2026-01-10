@@ -4,7 +4,7 @@ export interface User {
   username?: string
   phone?: string
   email?: string
-  type: 'patient' | 'service_person' | 'admin'
+  type: 'patient' | 'service_person'
   service_type?: string
   role?: string
 }

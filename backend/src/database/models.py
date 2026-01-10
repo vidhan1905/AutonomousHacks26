@@ -15,6 +15,7 @@ class Patient(Base):
     name = Column(String, nullable=False)
     phone_number = Column(String, unique=True, nullable=False, index=True)
     email = Column(String, nullable=True)
+    password_hash = Column(String, nullable=True)  # Nullable for existing records
     date_of_birth = Column(Date, nullable=False)
     gender = Column(String, nullable=True)
     address = Column(Text, nullable=True)
