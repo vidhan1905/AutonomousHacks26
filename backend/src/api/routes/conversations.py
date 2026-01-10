@@ -183,10 +183,19 @@ async def send_message(
     waiting_for_datetime = False  # Detect if we're waiting for date/time
     ranked_doctors = None  # Detect if doctors were already ranked
     service_type_determined = None  # Detect if service type was determined
+    appointment_datetime = None  # Detect if appointment datetime was provided
+    user_request = None  # Detect user's original request
     
     for msg in previous_messages:
         if msg.sender_type == "patient":
             message_history.append(HumanMessage(content=msg.content))
+            # Try to extract datetime from patient messages if we're waiting for it
+            if waiting_for_datetime and not appointment_datetime:
+                # Try to extract datetime using the same logic as the agent
+                from backend.src.agents.conversation_agent import extract_datetime_from_message
+                extracted = extract_datetime_from_message(msg.content)
+                if extracted:
+                    appointment_datetime = extracted
         elif msg.sender_type == "llm":
             message_history.append(AIMessage(content=msg.content))
             # Check if this LLM message shows history
@@ -195,7 +204,7 @@ async def send_message(
                 if any(indicator.lower() in msg.content.lower() for indicator in history_indicators):
                     history_shown = True
                 # Check if we're waiting for date/time
-                if "what date and time would work best" in msg.content.lower() or "provide your preferred date and time" in msg.content.lower() or "date and time would work" in msg.content.lower():
+                if "what date and time would work best" in msg.content.lower() or "provide your preferred date and time" in msg.content.lower() or "date and time would work" in msg.content.lower() or "preferred date and time" in msg.content.lower():
                     waiting_for_datetime = True
                 # Check if doctors were ranked (look for ranking indicators or metadata)
                 if msg.message_metadata and isinstance(msg.message_metadata, dict):
@@ -205,7 +214,11 @@ async def send_message(
                     if msg.message_metadata.get("service_type"):
                         service_type_determined = msg.message_metadata.get("service_type")
                     if msg.message_metadata.get("waiting_for_datetime"):
-                        waiting_for_datetime = True
+                        waiting_for_datetime = msg.message_metadata.get("waiting_for_datetime")
+                    if msg.message_metadata.get("appointment_datetime"):
+                        appointment_datetime = msg.message_metadata.get("appointment_datetime")
+                    if msg.message_metadata.get("user_request"):
+                        user_request = msg.message_metadata.get("user_request")
                 # Also check message content for indicators
                 if "rank #" in msg.content.lower() or ("top" in msg.content.lower() and "doctor" in msg.content.lower()):
                     # If metadata doesn't have it, at least mark that we're in doctor recommendation flow
@@ -251,7 +264,8 @@ async def send_message(
         "ranked_doctors": ranked_doctors,  # Preserve ranked_doctors from previous messages
         "doctor_tickets_created": False,
         "waiting_for_appointment_datetime": waiting_for_datetime,  # Preserve waiting_for_datetime from previous messages
-        "appointment_datetime": None
+        "appointment_datetime": appointment_datetime,  # Preserve appointment_datetime from previous messages
+        "user_request": user_request  # Preserve user_request from previous messages
     }
     
     # Run agent with increased recursion limit
@@ -365,12 +379,14 @@ async def send_message(
                         "reason": doctor.get("reason")
                     })
                 
+                user_request_from_state = final_state.get("user_request")
                 message_metadata = {
                     "type": "doctor_recommendation",
                     "doctors": doctors_list,
                     "service_type": service_type_determined,
                     "ranked_doctors": ranked_doctors,  # Store raw ranked_doctors for state restoration
                     "waiting_for_datetime": True,
+                    "user_request": user_request_from_state,  # Store user request for state restoration
                     "tickets_created": 0
                 }
         

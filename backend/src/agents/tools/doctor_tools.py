@@ -148,14 +148,20 @@ async def _rank_doctors_with_llm_async(
         prompt = ChatPromptTemplate.from_messages([
             ("system", """You are a medical assistant helping to rank doctors for a patient.
 Given the patient's medical history, their current request, and available doctors, 
-rank the top 5 most suitable doctors. Consider:
+rank the top 5 most suitable doctors. 
+
+IMPORTANT: All doctors in the provided list are already ACTIVE and AVAILABLE (is_active=True), 
+so you don't need to filter by availability. Focus on ranking based on:
+
 - Specialization match with patient history
 - Service type alignment
 - Patient's current symptoms/needs
 - Relevance to the medical condition
+- Experience and expertise for the specific condition
 
 Provide ranking (1-5) with clear, concise reasoning for each doctor (1-2 sentences each).
-Only rank doctors that are actually in the provided list."""),
+Only rank doctors that are actually in the provided list.
+Prioritize doctors who are most suitable for the patient's specific medical needs."""),
             ("human", """Patient Medical History:
 {history}
 
