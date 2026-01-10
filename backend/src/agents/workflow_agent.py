@@ -974,39 +974,45 @@ Summary:"""
 def confirm_booking_node(state: AgentState) -> AgentState:
     """Node 15: Confirm booking to user using LLM.
     
-    Generates a confirmation message with doctor recommendations and ticket IDs.
+    Generates a simple confirmation message without revealing doctor details or ticket information.
     """
-    doctor_ranking = get_doctor_ranking(state)
-    ranked_doctors = doctor_ranking.ranked_doctors or []
-    ticket_creation = get_ticket_creation(state)
-    doctor_tickets = ticket_creation.doctor_tickets or []
     appointment_prefs = get_appointment_preferences(state)
+    patient_info = get_patient_info(state)
     
-    # Build doctor list
-    ticket_map = {t["doctor_id"]: t["ticket_id"] for t in doctor_tickets}
-    doctors_text = "\n".join([
-        f"{i+1}. Dr. {doc.get('name', 'Unknown')} - {doc.get('service_type', 'Unknown')} (Rank: {doc.get('rank', 'N/A')}) - Ticket ID: {ticket_map.get(doc.get('doctor_id'))}"
-        for i, doc in enumerate(ranked_doctors[:5])
-    ])
+    # Format date/time if available
+    date_time_text = ""
+    if appointment_prefs.preferred_date_time:
+        try:
+            from datetime import datetime
+            dt = datetime.fromisoformat(appointment_prefs.preferred_date_time.replace('Z', '+00:00'))
+            date_time_text = dt.strftime("%B %d, %Y at %I:%M %p")
+        except:
+            date_time_text = appointment_prefs.preferred_date_time
+    
+    # Format service type for display
+    service_type_display = appointment_prefs.service_type.replace('_', ' ').title() if appointment_prefs.service_type else "appointment"
     
     system_prompt = f"""You are a helpful AI assistant for a hospital.
 
-You have successfully created tickets and booked appointments for the patient.
+You have successfully scheduled an appointment for the patient.
 
-DOCTOR RECOMMENDATIONS:
-{doctors_text}
-
-Service Type: {appointment_prefs.service_type}
-Preferred Date/Time: {appointment_prefs.preferred_date_time or 'Not specified'}
-Total Tickets Created: {len(doctor_tickets)}
+PATIENT INFORMATION:
+- Name: {patient_info.name if patient_info.name else 'Patient'}
+- Service Type: {service_type_display}
+- Preferred Date/Time: {date_time_text if date_time_text else 'To be confirmed'}
 
 INSTRUCTIONS:
-1. Congratulate the patient on successful booking
-2. List the recommended doctors in a friendly format
-3. Mention that tickets have been created and assigned
-4. Let them know doctors will review their case
-5. Offer to help with anything else
-6. Be warm and professional
+1. Congratulate the patient (use their name if available) on successful appointment booking
+2. Confirm the service type and date/time in a friendly way
+3. Let them know their appointment has been scheduled successfully
+4. Mention that they will be contacted with further details
+5. Do NOT mention doctors, tickets, or any technical details
+6. Do NOT reveal ticket IDs, doctor names, or assignment details
+7. Be warm, professional, and reassuring
+8. Keep the message concise and simple
+9. Offer to help with anything else they might need
+
+IMPORTANT: The patient should only see a simple confirmation that their appointment is scheduled. Do NOT include any internal details about doctors, tickets, or the assignment process.
 """
     
     messages = state.get("messages", [])

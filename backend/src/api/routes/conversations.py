@@ -366,20 +366,27 @@ async def send_message(
             "all_messages": formatted_messages  # Include all messages in response
         }
         
-        # Add doctor recommendation data if present
-        if is_doctor_recommendation and message_metadata:
+        # Check if booking has been confirmed (next_action is "end" and tickets were created)
+        # If confirmed, don't show doctor recommendation details to the patient
+        next_action = final_state.get("next_action", "")
+        booking_confirmed = (next_action == "end" and doctor_tickets_created)
+        
+        # Only add doctor recommendation data if booking is NOT yet confirmed
+        # After confirmation, patients should only see a simple confirmation message
+        if is_doctor_recommendation and message_metadata and not booking_confirmed:
             response_data["type"] = "doctor_recommendation"
             response_data["doctors"] = message_metadata["doctors"]
             response_data["service_type"] = message_metadata["service_type"]
             response_data["tickets_created"] = message_metadata["tickets_created"]
         
-        # Add tickets to response if they exist (even if not doctor recommendation)
-        ticket_creation_dict = final_state.get("ticket_creation", {})
-        doctor_tickets_list = ticket_creation_dict.get('doctor_tickets', [])
-        if doctor_tickets_list:
-            response_data["tickets"] = doctor_tickets_list
-            response_data["tickets_count"] = len(doctor_tickets_list)
-            response_data["tickets_created_success"] = ticket_creation_dict.get('tickets_creation_success', False)
+        # Don't add tickets to response after booking confirmation - keep it simple for patients
+        if not booking_confirmed:
+            ticket_creation_dict = final_state.get("ticket_creation", {})
+            doctor_tickets_list = ticket_creation_dict.get('doctor_tickets', [])
+            if doctor_tickets_list:
+                response_data["tickets"] = doctor_tickets_list
+                response_data["tickets_count"] = len(doctor_tickets_list)
+                response_data["tickets_created_success"] = ticket_creation_dict.get('tickets_creation_success', False)
         
         # Add case summary (AI-generated summary of the case) to response
         case_summary = ticket_creation_dict.get('case_summary')
