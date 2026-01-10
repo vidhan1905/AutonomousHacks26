@@ -29,6 +29,11 @@ class Settings(BaseSettings):
     # Doctor Recommendation
     top_doctors_count: int = 5  # Number of top doctors to rank and create tickets for
     
+    # LangSmith (for observability and tracing)
+    langsmith_api_key: Optional[str] = None
+    langsmith_tracing: bool = False  # Enable/disable LangSmith tracing
+    langsmith_project: Optional[str] = "hospital-ai-assistant"  # Project name in LangSmith
+    
     class Config:
         env_file = ".env"
         case_sensitive = False

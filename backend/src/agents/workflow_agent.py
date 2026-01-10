@@ -248,14 +248,18 @@ def ask_for_missing_info_node(state: AgentState) -> AgentState:
     if patient_info.date_of_birth:
         collected_info.append(f"Date of birth: {patient_info.date_of_birth}")
     
+    newline = "\n"
+    collected_info_text = newline.join(f"- {info}" for info in collected_info) if collected_info else "- No information collected yet"
+    pending_questions_text = newline.join(f"{i}. {q}" for i, q in enumerate(pending_questions, 1))
+    
+    
     # Build system prompt for LLM
     system_prompt = f"""You are a helpful AI assistant for a hospital call center.
 
 CURRENT STATE:
-{"".join(f"- {info}\\n" for info in collected_info) if collected_info else "- No information collected yet"}
-
+{collected_info_text} 
 REMAINING INFORMATION NEEDED:
-{"".join(f"{i}. {q}\\n" for i, q in enumerate(pending_questions, 1))}
+{pending_questions_text}
 
 INSTRUCTIONS:
 1. If information is already collected, acknowledge it warmly
@@ -676,17 +680,24 @@ def ask_for_request_info_node(state: AgentState) -> AgentState:
     if service_type_collected:
         service_type_instruction = f"\n**CRITICAL**: Service type '{appointment_prefs.service_type}' is already collected. You MUST acknowledge this service type and use it. DO NOT suggest alternative service types (like endocrinology, lab test, etc.). The system has already determined the correct service type."
     
+    
+    newline = "\n"
+    collected_info_text = newline.join(f"- {info}" for info in collected_info) if collected_info else "- No information collected yet"
+    pending_questions_text = newline.join(f"{i}. {q}" for i, q in enumerate(pending_questions, 1))
+ 
+ 
     system_prompt = f"""You are a helpful AI assistant for a hospital.
 
 CURRENT STATE (ALREADY COLLECTED - FINAL VALUES):
-{"".join(f"- {info}\\n" for info in collected_info) if collected_info else "- No information collected yet"}
+{collected_info_text}
+
 {service_type_instruction}
 
 AVAILABLE SERVICE TYPES: {available_types_text}
 (Only mention these if asking for service type - which you should NOT do if service type is already collected above)
 
 REMAINING INFORMATION NEEDED:
-{"".join(f"{i}. {q}\\n" for i, q in enumerate(pending_questions, 1))}
+{pending_questions_text}
 
 CRITICAL INSTRUCTIONS:
 1. **RESPECT ALREADY COLLECTED VALUES**: If information is in "CURRENT STATE", it is FINAL. Acknowledge it and use it. DO NOT suggest alternatives or question it.
