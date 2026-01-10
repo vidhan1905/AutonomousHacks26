@@ -60,6 +60,8 @@ export interface Ticket {
   created_at: string
   assigned_at: string | null
   completed_at: string | null
+  is_sequential_review?: boolean
+  sequential_review_chain_id?: string | null
 }
 
 export interface Appointment {

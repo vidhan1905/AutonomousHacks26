@@ -28,6 +28,7 @@ export default function TicketDetailPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [actionLoading, setActionLoading] = useState(false)
+  const [reviewNotes, setReviewNotes] = useState('')
 
   const loadTicket = useCallback(async () => {
     if (!ticketId) return
@@ -38,7 +39,12 @@ export default function TicketDetailPage() {
       setTicket(ticketData)
     } catch (err: any) {
       console.error('Failed to load ticket:', err)
-      setError(err.response?.data?.detail || 'Failed to load ticket details')
+      console.error('Error details:', {
+        message: err.message,
+        response: err.response,
+        stack: err.stack
+      })
+      setError(err.response?.data?.detail || err.message || 'Failed to load ticket details')
     } finally {
       setLoading(false)
     }
@@ -64,10 +70,7 @@ export default function TicketDetailPage() {
       // Reload ticket to get updated status
       await loadTicket()
       
-      // Navigate back to dashboard after a short delay
-      setTimeout(() => {
-        navigate('/dashboard/service-person')
-      }, 1500)
+      // Stay on ticket detail page - user can manually navigate back if needed
     } catch (err: any) {
       console.error('Failed to accept/reject ticket:', err)
       alert(err.response?.data?.detail || 'Failed to accept/reject ticket')
@@ -79,9 +82,16 @@ export default function TicketDetailPage() {
   const handleUpdateStatus = async (status: string) => {
     if (!ticketId) return
 
+    // For sequential review tickets, require review notes when completing
+    if (ticket?.is_sequential_review && status === 'completed' && !reviewNotes.trim()) {
+      alert('Please provide review notes before completing this sequential review ticket.')
+      return
+    }
+
     try {
       setActionLoading(true)
-      await ticketApi.updateStatus(ticketId, status)
+      await ticketApi.updateStatus(ticketId, status, ticket?.is_sequential_review ? reviewNotes : undefined)
+      setReviewNotes('') // Clear review notes after submission
       await loadTicket()
     } catch (err: any) {
       console.error('Failed to update status:', err)
@@ -107,6 +117,11 @@ export default function TicketDetailPage() {
       <div className="min-h-screen bg-teal-50 dark:bg-gray-900 flex items-center justify-center">
         <div className="text-center">
           <p className="text-red-600 dark:text-red-400 mb-4">{error || 'Ticket not found'}</p>
+          {error && (
+            <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+              Please check the browser console for more details.
+            </p>
+          )}
           <button
             onClick={() => navigate('/dashboard/service-person')}
             className="px-4 py-2 bg-teal-500 text-white rounded-md hover:bg-teal-600"
@@ -118,7 +133,54 @@ export default function TicketDetailPage() {
     )
   }
 
-  const patientDetails = ticket.patient_details as any
+  // Safely parse patient_details - it might be a string (JSON) or object
+  let patientDetails: any = null
+  try {
+    if (ticket.patient_details) {
+      if (typeof ticket.patient_details === 'string') {
+        patientDetails = JSON.parse(ticket.patient_details)
+      } else {
+        patientDetails = ticket.patient_details
+      }
+    }
+  } catch (e) {
+    console.error('Error parsing patient_details:', e)
+    patientDetails = null
+  }
+
+  // Parse previous reviews from description for sequential reviews
+  let previousReviews: string | null = null
+  let currentCaseDescription: string = ticket.description || ''
+  if (ticket.is_sequential_review && ticket.description) {
+    const desc = typeof ticket.description === 'string' ? ticket.description : JSON.stringify(ticket.description)
+    const previousReviewsMatch = desc.match(/PREVIOUS DOCTORS' REVIEWS:\n([\s\S]*?)\n\nCURRENT CASE:/)
+    if (previousReviewsMatch) {
+      previousReviews = previousReviewsMatch[1].trim()
+      // Extract current case description
+      const currentCaseMatch = desc.match(/CURRENT CASE:\n([\s\S]*?)\n\n\nSequential Review - Step/)
+      if (currentCaseMatch) {
+        currentCaseDescription = currentCaseMatch[1].trim()
+      }
+    } else {
+      // If no previous reviews section, try to extract just the current case
+      const currentCaseMatch = desc.match(/CURRENT CASE:\n([\s\S]*?)(?:\n\n\nSequential Review - Step|$)/)
+      if (currentCaseMatch) {
+        currentCaseDescription = currentCaseMatch[1].trim()
+      }
+    }
+  }
+
+  // Parse step information from llm_summary
+  let currentStep: number | null = null
+  let totalSteps: number | null = null
+  if (ticket.is_sequential_review && ticket.llm_summary) {
+    const summary = typeof ticket.llm_summary === 'string' ? ticket.llm_summary : JSON.stringify(ticket.llm_summary)
+    const stepMatch = summary.match(/Step (\d+) of (\d+)/)
+    if (stepMatch) {
+      currentStep = parseInt(stepMatch[1])
+      totalSteps = parseInt(stepMatch[2])
+    }
+  }
 
   return (
     <div className="min-h-screen bg-teal-50 dark:bg-gray-900">
@@ -163,31 +225,69 @@ export default function TicketDetailPage() {
               <div className="flex items-start justify-between mb-4">
                 <div>
                   <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-                    {ticket.service_type?.replace('_', ' ').toUpperCase() || ticket.service_type || 'Unknown Service'}
+                    {ticket.service_type 
+                      ? (typeof ticket.service_type === 'string' 
+                          ? ticket.service_type.replace('_', ' ').toUpperCase() 
+                          : String(ticket.service_type))
+                      : 'Unknown Service'}
                   </h2>
                   <p className="text-sm text-gray-600 dark:text-gray-400">
                     Created: {ticket.created_at ? new Date(ticket.created_at).toLocaleString() : 'Unknown'}
                   </p>
                 </div>
-                <div className="flex space-x-2">
+                <div className="flex flex-wrap gap-2">
+                  {ticket.is_sequential_review && (
+                    <span className="px-3 py-1 rounded-full text-sm font-medium bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200">
+                      Sequential Review
+                    </span>
+                  )}
                   <span className={`px-3 py-1 rounded-full text-sm font-medium ${priorityColors[ticket.priority as keyof typeof priorityColors] || 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200'}`}>
-                    Priority {ticket.priority}
+                    Priority {ticket.priority || 'N/A'}
                   </span>
                   <span className={`px-3 py-1 rounded-full text-sm font-medium ${statusColors[ticket.status as keyof typeof statusColors] || 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200'}`}>
-                    {ticket.status?.replace('_', ' ') || ticket.status}
+                    {ticket.status 
+                      ? (typeof ticket.status === 'string' 
+                          ? ticket.status.replace('_', ' ') 
+                          : String(ticket.status))
+                      : 'Unknown'}
                   </span>
                 </div>
               </div>
 
+              {/* Previous Doctors' Reviews Section */}
+              {ticket.is_sequential_review && previousReviews && (
+                <div className="border-t border-gray-200 dark:border-gray-700 pt-4 mb-4">
+                  <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Previous Doctors' Reviews
+                  </h3>
+                  <div className="bg-blue-50 dark:bg-blue-900/30 rounded-lg p-4 border border-blue-200 dark:border-blue-800">
+                    <p className="text-gray-900 dark:text-gray-100 whitespace-pre-wrap text-sm">
+                      {previousReviews}
+                    </p>
+                  </div>
+                </div>
+              )}
+
               <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
-                <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Description</h3>
-                <p className="text-gray-900 dark:text-gray-100 whitespace-pre-wrap">{ticket.description || 'No description provided'}</p>
+                <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Current Case</h3>
+                <p className="text-gray-900 dark:text-gray-100 whitespace-pre-wrap">
+                  {currentCaseDescription || 'No description provided'}
+                </p>
+                {ticket.is_sequential_review && currentStep && totalSteps && (
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
+                    Sequential Review - Step {currentStep} of {totalSteps}
+                  </p>
+                )}
               </div>
 
               {ticket.current_symptoms && (
                 <div className="border-t border-gray-200 dark:border-gray-700 pt-4 mt-4">
                   <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Current Symptoms</h3>
-                  <p className="text-gray-900 dark:text-gray-100 whitespace-pre-wrap">{ticket.current_symptoms}</p>
+                  <p className="text-gray-900 dark:text-gray-100 whitespace-pre-wrap">
+                    {typeof ticket.current_symptoms === 'string' 
+                      ? ticket.current_symptoms 
+                      : JSON.stringify(ticket.current_symptoms)}
+                  </p>
                 </div>
               )}
             </div>
@@ -237,8 +337,25 @@ export default function TicketDetailPage() {
               </div>
             )}
 
-            {/* LLM Summary Card */}
-            {ticket.llm_summary && (
+            {/* Sequential Review Progress Card */}
+            {ticket.is_sequential_review && ticket.llm_summary && (
+              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+                <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+                  Sequential Review Progress
+                </h2>
+                <div className="bg-blue-50 dark:bg-blue-900/30 rounded-lg p-4 border border-blue-200 dark:border-blue-800">
+                  <p className="text-gray-900 dark:text-gray-100 whitespace-pre-wrap text-sm">
+                    {ticket.llm_summary}
+                  </p>
+                </div>
+                <p className="text-sm text-gray-600 dark:text-gray-400 mt-3">
+                  This is a multi-doctor sequential review. Your review will be shared with the next doctor in the chain.
+                </p>
+              </div>
+            )}
+
+            {/* LLM Summary Card (for non-sequential reviews) */}
+            {!ticket.is_sequential_review && ticket.llm_summary && (
               <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
                 <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">AI Summary</h2>
                 <div className="bg-teal-50 dark:bg-teal-900/30 rounded-lg p-4 border border-teal-200 dark:border-teal-800">
@@ -290,13 +407,32 @@ export default function TicketDetailPage() {
               )}
 
               {ticket.status === 'in_progress' && (
-                <button
-                  onClick={() => handleUpdateStatus('completed')}
-                  disabled={actionLoading}
-                  className="w-full px-4 py-3 bg-green-600 text-white rounded-md hover:bg-green-700 font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                >
-                  {actionLoading ? 'Processing...' : 'Mark as Completed'}
-                </button>
+                <div className="space-y-3">
+                  {ticket.is_sequential_review && (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Review Notes <span className="text-red-500">*</span>
+                      </label>
+                      <textarea
+                        value={reviewNotes}
+                        onChange={(e) => setReviewNotes(e.target.value)}
+                        placeholder="Enter your review notes, findings, and recommendations. This will be shared with the next doctor in the sequential review chain."
+                        rows={6}
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                      />
+                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                        Required for sequential review tickets
+                      </p>
+                    </div>
+                  )}
+                  <button
+                    onClick={() => handleUpdateStatus('completed')}
+                    disabled={actionLoading || (ticket.is_sequential_review && !reviewNotes.trim())}
+                    className="w-full px-4 py-3 bg-green-600 text-white rounded-md hover:bg-green-700 font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  >
+                    {actionLoading ? 'Processing...' : 'Mark as Completed'}
+                  </button>
+                </div>
               )}
 
               {/* Ticket Info */}

@@ -42,6 +42,19 @@ from backend.src.agents.tools.doctor_tools import (
     rank_doctors_with_llm,
     create_multiple_tickets,
 )
+from backend.src.agents.tools.complex_case_tools import (
+    detect_complex_case,
+    create_sequential_review_chain,
+    get_next_doctor_in_chain,
+    submit_doctor_review,
+    get_accumulated_context,
+    run_async_safely,
+)
+from backend.src.agents.state_models import SequentialReviewState
+from backend.src.database.models import SequentialReviewStep, Ticket
+from sqlalchemy import select
+import uuid
+from datetime import datetime
 
 # Initialize LLM
 llm = ChatOpenAI(
@@ -189,8 +202,13 @@ def show_history_node(state: AgentState) -> AgentState:
     
     # For new conversations with authenticated patients, skip history and ask for health updates/concerns
     if is_first_message:
-        # This is the initial greeting - ask for health updates/concerns directly
-        system_prompt = """You are a helpful AI assistant for a hospital.
+        # Check if user's message contains a health concern/request (not just greeting)
+        first_user_message = user_messages[0].content if user_messages else ""
+        is_greeting_only = first_user_message.lower().strip() in ["hi", "hello", "hey", "good morning", "good afternoon", "good evening"]
+        
+        if is_greeting_only:
+            # Just a greeting - ask for health updates/concerns
+            system_prompt = """You are a helpful AI assistant for a hospital.
 
 The patient has been verified and authenticated.
 
@@ -201,16 +219,22 @@ INSTRUCTIONS:
 4. Keep it brief and clear
 
 Do NOT show medical history unless the patient specifically asks for it."""
-        
-        # Add system prompt and call LLM
-        messages_with_system = [AIMessage(content=system_prompt)] + messages
-        response = llm.invoke(messages_with_system)
-        
-        # Add LLM response
-        messages.append(response)
-        state["messages"] = messages
-        state["history_shown"] = True  # Mark as shown to skip showing history later
-        state["next_action"] = "wait_for_request"  # Wait for user to provide their request
+            
+            # Add system prompt and call LLM
+            messages_with_system = [AIMessage(content=system_prompt)] + messages
+            response = llm.invoke(messages_with_system)
+            
+            # Add LLM response
+            messages.append(response)
+            state["messages"] = messages
+            state["history_shown"] = True  # Mark as shown to skip showing history later
+            state["next_action"] = "wait_for_request"  # Wait for user to provide their request
+        else:
+            # User already provided a health concern/request in first message
+            # Mark history as shown and route to understand_request to process it
+            state["history_shown"] = True
+            state["next_action"] = "understand_request"  # Process the user's request immediately
+            print(f"[WORKFLOW] First message contains health concern, routing to understand_request")
         
         return state
     
@@ -254,6 +278,514 @@ Patient's Medical History:
     state["messages"] = messages
     state["history_shown"] = True
     state["next_action"] = "wait_for_request"  # Wait for user to provide their request
+    
+    return state
+
+
+def detect_complex_case_node(state: AgentState) -> AgentState:
+    """Node: Detect if case requires sequential multi-doctor review.
+    
+    Uses LLM to analyze if case needs multiple service types (complex) or single service type (normal).
+    """
+    print("[WORKFLOW] Executing detect_complex_case_node")
+    
+    messages = state.get("messages", [])
+    patient_history = state.get("patient_history")
+    
+    # Get last user message
+    last_user_message = None
+    for msg in reversed(messages):
+        if isinstance(msg, HumanMessage):
+            last_user_message = msg.content
+            break
+    
+    if not last_user_message:
+        # No user message, treat as normal case
+        state["case_type"] = "normal"
+        state["next_action"] = "find_doctors"
+        return state
+    
+    # Get current symptoms if available
+    current_symptoms = []
+    if patient_history and isinstance(patient_history, dict):
+        # Extract symptoms from history or query
+        pass  # Can be enhanced later
+    
+    # Call detect_complex_case tool
+    result = detect_complex_case.invoke({
+        "patient_history": patient_history,
+        "user_query": last_user_message,
+        "current_symptoms": current_symptoms if current_symptoms else None
+    })
+    
+    if result.get("status") == "success":
+        is_complex = result.get("is_complex", False)
+        complexity_score = result.get("complexity_score", 0)
+        complexity_reason = result.get("complexity_reason", "")
+        suggested_doctors_count = result.get("suggested_doctors_count", 1)
+        suggested_service_types = result.get("suggested_service_types", [])
+        
+        # Update sequential review state
+        sequential_review = SequentialReviewState(
+            is_complex_case=is_complex,
+            complexity_score=complexity_score,
+            complexity_reason=complexity_reason,
+            required_doctors=[{"service_type": st, "step_index": idx} for idx, st in enumerate(suggested_service_types)] if is_complex else None
+        )
+        state["sequential_review"] = sequential_review.model_dump()
+        state["case_type"] = "complex" if is_complex else "normal"
+        
+        if is_complex:
+            print(f"[WORKFLOW] Complex case detected: {complexity_reason}")
+            print(f"[WORKFLOW] Required service types: {suggested_service_types}")
+            state["next_action"] = "create_sequential_chain"
+        else:
+            print(f"[WORKFLOW] Normal case detected, routing to find_doctors")
+            state["next_action"] = "find_doctors"
+    else:
+        # Error in detection, default to normal case
+        print(f"[WORKFLOW] Error detecting complex case: {result.get('error')}, defaulting to normal")
+        state["case_type"] = "normal"
+        state["next_action"] = "find_doctors"
+    
+    return state
+
+
+def create_sequential_chain_node(state: AgentState) -> AgentState:
+    """Node: Create sequential review chain with steps for each doctor.
+    
+    Creates SequentialReviewChain and SequentialReviewStep records.
+    """
+    print("[WORKFLOW] Executing create_sequential_chain_node")
+    
+    patient_id = state.get("patient_id")
+    conversation_id = state.get("conversation_id")
+    sequential_review = SequentialReviewState(**state.get("sequential_review", {}))
+    patient_history = state.get("patient_history")
+    
+    if not patient_id or not conversation_id:
+        print(f"[WORKFLOW] Missing patient_id or conversation_id")
+        state["next_action"] = "end"
+        return state
+    
+    # Get last user message
+    messages = state.get("messages", [])
+    last_user_message = None
+    for msg in reversed(messages):
+        if isinstance(msg, HumanMessage):
+            last_user_message = msg.content
+            break
+    
+    if not last_user_message:
+        print(f"[WORKFLOW] No user message found")
+        state["next_action"] = "end"
+        return state
+    
+    # Get suggested service types from sequential_review state
+    required_doctors = sequential_review.required_doctors or []
+    suggested_service_types = [doc.get("service_type") for doc in required_doctors if doc.get("service_type")]
+    
+    if not suggested_service_types:
+        print(f"[WORKFLOW] No suggested service types found")
+        state["next_action"] = "end"
+        return state
+    
+    # Call create_sequential_review_chain tool
+    result = create_sequential_review_chain.invoke({
+        "patient_id": patient_id,
+        "conversation_id": conversation_id,
+        "required_doctors_count": len(suggested_service_types),
+        "complexity_reason": sequential_review.complexity_reason or "",
+        "user_query": last_user_message,
+        "patient_history": patient_history,
+        "suggested_service_types": suggested_service_types
+    })
+    
+    if result.get("status") == "success":
+        chain_id = result.get("chain_id")
+        review_steps = result.get("review_steps", [])
+        
+        # Update sequential review state
+        sequential_review.chain_id = chain_id
+        sequential_review.review_steps = review_steps
+        sequential_review.current_step_index = 0
+        state["sequential_review"] = sequential_review.model_dump()
+        
+        print(f"[WORKFLOW] Created sequential review chain: {chain_id}")
+        print(f"[WORKFLOW] Review steps: {len(review_steps)}")
+        print(f"[WORKFLOW] 📋 Sequential Review Chain Assignment:")
+        for idx, step in enumerate(review_steps, 1):
+            print(f"  Step {idx}/{len(review_steps)}: {step.get('doctor_name', 'Unknown')} ({step.get('service_type', 'Unknown')}) - Doctor ID: {step.get('doctor_id', 'Unknown')}")
+        state["next_action"] = "route_to_next_doctor"
+    else:
+        print(f"[WORKFLOW] Error creating sequential chain: {result.get('error')}")
+        state["next_action"] = "end"
+    
+    return state
+
+
+def route_to_next_doctor_node(state: AgentState) -> AgentState:
+    """Node: Route to next doctor in chain and create ticket.
+    
+    Gets next doctor, creates ticket with accumulated context, links to SequentialReviewStep.
+    """
+    print("[WORKFLOW] Executing route_to_next_doctor_node")
+    
+    sequential_review = SequentialReviewState(**state.get("sequential_review", {}))
+    chain_id = sequential_review.chain_id
+    
+    if not chain_id:
+        print(f"[WORKFLOW] No chain_id found")
+        state["next_action"] = "end"
+        return state
+    
+    # Get next doctor in chain
+    result = get_next_doctor_in_chain.invoke({"chain_id": chain_id})
+    
+    if result.get("status") != "success":
+        print(f"[WORKFLOW] Error getting next doctor: {result.get('error')}")
+        state["next_action"] = "end"
+        return state
+    
+    step_id = result.get("step_id")
+    doctor_id = result.get("doctor_id")
+    doctor_info = result.get("doctor_info", {})
+    accumulated_context = result.get("accumulated_context", "")
+    step_index = result.get("step_index", 0)
+    total_steps = result.get("total_steps", 0)
+    
+    # Log which doctor we're routing to
+    doctor_name = doctor_info.get("name", "Unknown")
+    service_type = doctor_info.get("service_type", "Unknown")
+    print(f"[WORKFLOW] 🔄 Routing to Step {step_index + 1}/{total_steps}: {doctor_name} ({service_type})")
+    print(f"[WORKFLOW]    Doctor ID: {doctor_id}")
+    print(f"[WORKFLOW]    Step ID: {step_id}")
+    if accumulated_context and accumulated_context != "No previous reviews.":
+        print(f"[WORKFLOW]    Accumulated context from previous reviews: {len(accumulated_context)} characters")
+    
+    # Get patient and conversation info
+    patient_id = state.get("patient_id")
+    conversation_id = state.get("conversation_id")
+    patient_info = get_patient_info(state)
+    patient_history = state.get("patient_history")
+    
+    # Build ticket description with accumulated context
+    description_parts = []
+    if accumulated_context and accumulated_context != "No previous reviews.":
+        description_parts.append("PREVIOUS DOCTORS' REVIEWS:\n" + accumulated_context + "\n\n")
+    
+    # Add original case description
+    messages = state.get("messages", [])
+    last_user_message = None
+    for msg in reversed(messages):
+        if isinstance(msg, HumanMessage):
+            last_user_message = msg.content
+            break
+    
+    if last_user_message:
+        description_parts.append(f"CURRENT CASE:\n{last_user_message}\n\n")
+    
+    description_parts.append(f"Sequential Review - Step {step_index + 1} of {total_steps}")
+    description = "\n".join(description_parts)
+    
+    # Build patient details
+    patient_details = {
+        "name": patient_info.name if patient_info.name else "Unknown",
+        "phone": patient_info.phone if patient_info.phone else "",
+        "date_of_birth": patient_info.date_of_birth if patient_info.date_of_birth else "",
+    }
+    
+    # Build LLM summary
+    llm_summary = f"Sequential Review Chain - Step {step_index + 1} of {total_steps}\n"
+    llm_summary += f"Doctor: {doctor_info.get('name', 'Unknown')} ({doctor_info.get('service_type', 'Unknown')})\n"
+    if accumulated_context and accumulated_context != "No previous reviews.":
+        llm_summary += f"\nPrevious Reviews:\n{accumulated_context}\n"
+    
+    # Check if ticket already exists for this chain, or create new one
+    from backend.src.agents.tools.complex_case_tools import run_async_safely
+    from backend.src.database.models import Ticket
+    
+    # Get past history summary
+    past_history_summary = ""
+    if patient_history and isinstance(patient_history, dict):
+        if patient_history.get("summary"):
+            past_history_summary = patient_history["summary"]
+        elif patient_history.get("history_records"):
+            past_history_summary = f"Patient has {len(patient_history['history_records'])} previous medical records."
+    
+    async def get_or_create_ticket_async(session_maker=None):
+        """Get existing ticket for chain or create new one."""
+        if session_maker is None:
+            from backend.src.database.connection import create_async_session_maker
+            session_maker = create_async_session_maker()
+        
+        async with session_maker() as session:
+            # Find existing ticket for this chain
+            existing_ticket_result = await session.execute(
+                select(Ticket).where(
+                    Ticket.sequential_review_chain_id == uuid.UUID(chain_id),
+                    Ticket.status != "cancelled"
+                ).order_by(Ticket.created_at.desc())
+            )
+            existing_ticket = existing_ticket_result.scalar_one_or_none()
+            
+            if existing_ticket:
+                # Update existing ticket
+                print(f"[WORKFLOW] Updating existing ticket {existing_ticket.ticket_id} for next doctor")
+                print(f"[WORKFLOW]    Step: {step_index + 1}/{total_steps}")
+                print(f"[WORKFLOW]    Doctor: {doctor_name} ({service_type})")
+                print(f"[WORKFLOW]    Description length: {len(description)} chars")
+                print(f"[WORKFLOW]    Has accumulated context: {accumulated_context and accumulated_context != 'No previous reviews.'}")
+                existing_ticket.assigned_to = uuid.UUID(doctor_id)
+                existing_ticket.description = description
+                existing_ticket.llm_summary = llm_summary
+                existing_ticket.service_type = doctor_info.get("service_type", "general consultation")
+                existing_ticket.status = "open"
+                existing_ticket.assigned_at = None  # Reset assignment time
+                existing_ticket.completed_at = None
+                existing_ticket.accepted_by = None
+                existing_ticket.accepted_at = None
+                await session.commit()
+                await session.refresh(existing_ticket)
+                print(f"[WORKFLOW] ✅ Ticket updated successfully - Status: {existing_ticket.status}, Step info in description: Step {step_index + 1} of {total_steps}")
+                return {"status": "updated", "ticket_id": str(existing_ticket.ticket_id)}
+            else:
+                # Create new ticket (first doctor)
+                from backend.src.agents.tools.ticket_tools import create_ticket
+                ticket_result = create_ticket.invoke({
+                    "patient_id": patient_id,
+                    "conversation_id": conversation_id,
+                    "service_type": doctor_info.get("service_type", "general consultation"),
+                    "description": description,
+                    "patient_details": patient_details,
+                    "past_history_summary": past_history_summary,
+                    "llm_summary": llm_summary,
+                    "priority": 3,
+                    "assigned_to": doctor_id,
+                    "sequential_review_chain_id": chain_id,
+                    "is_sequential_review": True
+                })
+                return ticket_result
+    
+    # Execute get_or_create_ticket
+    ticket_result = run_async_safely(get_or_create_ticket_async, session_maker_param=True)
+    
+    print(f"[WORKFLOW] Ticket result: {ticket_result}")
+    
+    if not ticket_result:
+        print(f"[WORKFLOW] ERROR: Ticket operation returned None or empty result")
+        state["next_action"] = "end"
+        return state
+    
+    ticket_status = ticket_result.get("status")
+    if ticket_status in ["success", "created", "updated"]:
+        ticket_id = ticket_result.get("ticket_id")
+        
+        if not ticket_id:
+            print(f"[WORKFLOW] ERROR: Ticket operation succeeded but ticket_id is missing from result")
+            state["next_action"] = "end"
+            return state
+        
+        # Link ticket to SequentialReviewStep
+        # Use run_async_safely from complex_case_tools to handle async in sync context
+        from backend.src.agents.tools.complex_case_tools import run_async_safely
+        from backend.src.database.models import SequentialReviewStep
+        
+        async def link_ticket_to_step_async(session_maker=None):
+            """Async function to link ticket to step."""
+            if session_maker is None:
+                from backend.src.database.connection import create_async_session_maker
+                session_maker = create_async_session_maker()
+            
+            async with session_maker() as session:
+                step_result = await session.execute(
+                    select(SequentialReviewStep).where(SequentialReviewStep.step_id == uuid.UUID(step_id))
+                )
+                step = step_result.scalar_one_or_none()
+                if step:
+                    step.ticket_id = uuid.UUID(ticket_id)
+                    step.status = "pending"  # Set to pending so doctor can accept it
+                    step.started_at = None  # Don't set started_at until doctor accepts
+                    await session.commit()
+                    print(f"[WORKFLOW] ✅ Linked ticket {ticket_id} to step {step_id} (status: pending)")
+                else:
+                    print(f"[WORKFLOW] ⚠️  WARNING: Step {step_id} not found for linking ticket")
+        
+        try:
+            # Use run_async_safely with session_maker_param=True to create fresh session maker in new event loop
+            run_async_safely(link_ticket_to_step_async, session_maker_param=True)
+        except Exception as e:
+            print(f"[WORKFLOW] Error linking ticket to step: {e}")
+            import traceback
+            traceback.print_exc()
+            # Continue anyway - ticket is created, linking can be done later if needed
+        
+        # Update chain status to in_progress
+        sequential_review.current_step_index = step_index
+        state["sequential_review"] = sequential_review.model_dump()
+        
+        print(f"[WORKFLOW] ✅ Created ticket {ticket_id} for doctor {doctor_name} ({service_type}) - Step {step_index + 1}/{total_steps}")
+        state["next_action"] = "end"  # Wait for doctor to review
+    else:
+        error_msg = ticket_result.get("error", "Unknown error")
+        print(f"[WORKFLOW] ERROR: Ticket creation failed with status '{ticket_status}': {error_msg}")
+        state["next_action"] = "end"
+    
+    return state
+
+
+def collect_doctor_review_node(state: AgentState) -> AgentState:
+    """Node: Collect doctor review and advance chain.
+    
+    Triggered when doctor updates ticket status. Extracts review notes and advances chain.
+    """
+    print("[WORKFLOW] Executing collect_doctor_review_node")
+    
+    # This node is typically called from API endpoint with specific step_id and review_notes
+    # For now, we'll handle it via state if those fields are set
+    step_id = state.get("current_step_id")
+    review_notes = state.get("current_review_notes")
+    doctor_id = state.get("current_doctor_id")
+    
+    if not step_id or not review_notes or not doctor_id:
+        print(f"[WORKFLOW] Missing step_id, review_notes, or doctor_id")
+        state["next_action"] = "end"
+        return state
+    
+    # Submit doctor review
+    result = submit_doctor_review.invoke({
+        "step_id": step_id,
+        "review_notes": review_notes,
+        "doctor_id": doctor_id
+    })
+    
+    if result.get("status") == "success":
+        next_step_id = result.get("next_step_id")
+        chain_status = result.get("chain_status")
+        current_doctor_name = result.get("current_doctor_name", "Unknown")
+        current_service_type = result.get("current_service_type", "Unknown")
+        next_doctor_name = result.get("next_doctor_name", "Unknown")
+        next_service_type = result.get("next_service_type", "Unknown")
+        current_step_index = result.get("current_step_index", 0)
+        total_steps = result.get("total_steps", 0)
+        
+        print(f"[WORKFLOW] ✅ Doctor review submitted by {current_doctor_name} ({current_service_type}) - Step {current_step_index + 1}/{total_steps}")
+        
+        if next_step_id:
+            # More steps remaining, route to next doctor
+            print(f"[WORKFLOW] 🔄 Advancing to next doctor: {next_doctor_name} ({next_service_type}) - Step {current_step_index + 2}/{total_steps}")
+            print(f"[WORKFLOW]    Next step ID: {next_step_id}")
+            state["next_action"] = "route_to_next_doctor"
+        elif chain_status == "completed":
+            # All steps completed, generate final summary
+            print(f"[WORKFLOW] ✅ All doctor reviews completed ({total_steps} steps), generating final summary")
+            state["next_action"] = "generate_final_summary"
+        else:
+            state["next_action"] = "end"
+    else:
+        print(f"[WORKFLOW] Error submitting doctor review: {result.get('error')}")
+        state["next_action"] = "end"
+    
+    return state
+
+
+def generate_final_summary_node(state: AgentState) -> AgentState:
+    """Node: Generate final summary combining all doctors' reviews.
+    
+    Combines all reviews and generates comprehensive case summary.
+    """
+    print("[WORKFLOW] Executing generate_final_summary_node")
+    
+    sequential_review = SequentialReviewState(**state.get("sequential_review", {}))
+    chain_id = sequential_review.chain_id
+    
+    if not chain_id:
+        print(f"[WORKFLOW] No chain_id found")
+        state["next_action"] = "end"
+        return state
+    
+    # Get all completed steps
+    from backend.src.database.connection import async_session_maker
+    from backend.src.database.models import SequentialReviewStep, ServicePerson
+    
+    async def get_all_reviews():
+        async with async_session_maker() as session:
+            steps_result = await session.execute(
+                select(SequentialReviewStep).where(
+                    SequentialReviewStep.chain_id == uuid.UUID(chain_id),
+                    SequentialReviewStep.status == "completed"
+                ).order_by(SequentialReviewStep.step_index)
+            )
+            steps = steps_result.scalars().all()
+            
+            reviews = []
+            for step in steps:
+                doctor_result = await session.execute(
+                    select(ServicePerson).where(ServicePerson.service_person_id == step.doctor_id)
+                )
+                doctor = doctor_result.scalar_one_or_none()
+                doctor_name = doctor.name if doctor else "Unknown Doctor"
+                
+                reviews.append({
+                    "step_index": step.step_index,
+                    "doctor_name": doctor_name,
+                    "specialization": doctor.specialization if doctor else "",
+                    "review_summary": step.review_summary or "",
+                    "review_notes": step.review_notes or ""
+                })
+            
+            return reviews
+    
+    try:
+        all_reviews = run_async_safely(get_all_reviews)
+        
+        # Generate final summary using LLM
+        reviews_text = "\n\n".join([
+            f"Doctor {r['step_index'] + 1}: {r['doctor_name']} ({r['specialization']})\n"
+            f"Summary: {r['review_summary']}\n"
+            f"Notes: {r['review_notes']}"
+            for r in all_reviews
+        ])
+        
+        summary_prompt = f"""You are a medical AI assistant. Generate a comprehensive final summary combining all doctors' reviews from a sequential multi-doctor case review.
+
+All Doctors' Reviews:
+{reviews_text}
+
+Generate a comprehensive final summary that:
+1. Synthesizes all doctors' findings
+2. Highlights key insights from each specialist
+3. Provides a unified assessment
+4. Includes recommendations based on all reviews
+
+Keep it clear, professional, and comprehensive."""
+        
+        summary_response = llm.invoke([AIMessage(content=summary_prompt)])
+        final_summary = summary_response.content.strip()
+        
+        # Update state
+        state["summary"] = final_summary
+        
+        # Generate confirmation message
+        messages = state.get("messages", [])
+        confirmation_prompt = f"""You are a helpful AI assistant. Inform the patient that their complex case has been reviewed by multiple specialists and provide a summary.
+
+Final Summary:
+{final_summary}
+
+Generate a warm, reassuring message informing the patient that their case has been reviewed by multiple specialists and that they will be contacted with the comprehensive assessment."""
+        
+        confirmation_response = llm.invoke([AIMessage(content=confirmation_prompt)])
+        messages.append(confirmation_response)
+        state["messages"] = messages
+        
+        print(f"[WORKFLOW] Generated final summary: {len(final_summary)} characters")
+        state["next_action"] = "end"
+        
+    except Exception as e:
+        import traceback
+        print(f"[WORKFLOW] Error generating final summary: {e}\n{traceback.format_exc()}")
+        state["next_action"] = "end"
     
     return state
 
@@ -917,7 +1449,7 @@ IMPORTANT: The appointment is ALREADY scheduled. Your response should be a CONFI
 # ============================================================================
 
 
-def route_entry(state: AgentState) -> Literal["fetch_history", "show_history", "understand_request", "end"]:
+def route_entry(state: AgentState) -> Literal["fetch_history", "show_history", "understand_request", "detect_complex_case", "end"]:
     """Route entry point based on state. For authenticated patients only."""
     next_action = state.get("next_action", "")
     
@@ -927,6 +1459,8 @@ def route_entry(state: AgentState) -> Literal["fetch_history", "show_history", "
         return "show_history"
     elif next_action == "understand_request":
         return "understand_request"
+    elif next_action == "detect_complex_case":
+        return "detect_complex_case"
     else:
         return "end"
 
@@ -943,14 +1477,50 @@ def route_after_history(state: AgentState) -> Literal["show_history", "end"]:
 
 def route_after_show(state: AgentState) -> Literal["understand_request", "end"]:
     """Route after showing history."""
-    # After showing history, always end (wait for user request)
+    # Check if next_action is set to understand_request (user provided request in first message)
+    next_action = state.get("next_action", "")
+    if next_action == "understand_request":
+        return "understand_request"
+    # Otherwise, end (wait for user request)
     # Next user message will trigger understand_request through route_entry
     return "end"
 
 
-def route_after_understand(state: AgentState) -> Literal["validate_request", "end"]:
-    """Route after understanding request."""
-    return "validate_request"
+def route_after_understand(state: AgentState) -> Literal["detect_complex_case", "end"]:
+    """Route after understanding request - detect if complex case."""
+    return "detect_complex_case"
+
+
+def route_after_detect(state: AgentState) -> Literal["create_sequential_chain", "validate_request", "end"]:
+    """Route after detecting complex case."""
+    case_type = state.get("case_type")
+    next_action = state.get("next_action")
+    
+    if case_type == "complex" and next_action == "create_sequential_chain":
+        return "create_sequential_chain"
+    elif case_type == "normal":
+        # For normal cases, route to validate_request (which will then route to find_doctors)
+        return "validate_request"
+    else:
+        return "end"
+
+
+def route_after_create_chain(state: AgentState) -> Literal["route_to_next_doctor", "end"]:
+    """Route after creating sequential chain."""
+    if state.get("next_action") == "route_to_next_doctor":
+        return "route_to_next_doctor"
+    return "end"
+
+
+def route_after_doctor_review(state: AgentState) -> Literal["route_to_next_doctor", "generate_final_summary", "end"]:
+    """Route after doctor review submission."""
+    next_action = state.get("next_action")
+    
+    if next_action == "route_to_next_doctor":
+        return "route_to_next_doctor"
+    elif next_action == "generate_final_summary":
+        return "generate_final_summary"
+    return "end"
 
 
 def route_after_request_validate(state: AgentState) -> Literal["ask_for_request_info", "find_doctors", "end"]:
@@ -1005,6 +1575,11 @@ def create_graph(checkpointer: Optional[AsyncPostgresSaver] = None):
     workflow.add_node("fetch_history", fetch_history_node)
     workflow.add_node("show_history", show_history_node)
     workflow.add_node("understand_request", understand_request_node)
+    workflow.add_node("detect_complex_case", detect_complex_case_node)
+    workflow.add_node("create_sequential_chain", create_sequential_chain_node)
+    workflow.add_node("route_to_next_doctor", route_to_next_doctor_node)
+    workflow.add_node("collect_doctor_review", collect_doctor_review_node)
+    workflow.add_node("generate_final_summary", generate_final_summary_node)
     workflow.add_node("validate_request", validate_request_node)
     workflow.add_node("ask_for_request_info", ask_for_request_info_node)
     workflow.add_node("find_doctors", find_doctors_node)
@@ -1024,6 +1599,7 @@ def create_graph(checkpointer: Optional[AsyncPostgresSaver] = None):
             "fetch_history": "fetch_history",
             "show_history": "show_history",
             "understand_request": "understand_request",
+            "detect_complex_case": "detect_complex_case",
             "end": END
         }
     )
@@ -1035,14 +1611,42 @@ def create_graph(checkpointer: Optional[AsyncPostgresSaver] = None):
         {"show_history": "show_history", "end": END}
     )
     
-    workflow.add_edge("show_history", END)  # Always end after showing history (wait for user)
+    workflow.add_conditional_edges(
+        "show_history",
+        route_after_show,
+        {"understand_request": "understand_request", "end": END}
+    )
     
     workflow.add_conditional_edges(
         "understand_request",
         route_after_understand,
-        {"validate_request": "validate_request", "end": END}
+        {"detect_complex_case": "detect_complex_case", "end": END}
     )
     
+    # Sequential review flow
+    workflow.add_conditional_edges(
+        "detect_complex_case",
+        route_after_detect,
+        {"create_sequential_chain": "create_sequential_chain", "validate_request": "validate_request", "end": END}
+    )
+    
+    workflow.add_conditional_edges(
+        "create_sequential_chain",
+        route_after_create_chain,
+        {"route_to_next_doctor": "route_to_next_doctor", "end": END}
+    )
+    
+    workflow.add_edge("route_to_next_doctor", END)  # Wait for doctor to review
+    
+    workflow.add_conditional_edges(
+        "collect_doctor_review",
+        route_after_doctor_review,
+        {"route_to_next_doctor": "route_to_next_doctor", "generate_final_summary": "generate_final_summary", "end": END}
+    )
+    
+    workflow.add_edge("generate_final_summary", END)  # Done
+    
+    # Normal flow continues
     workflow.add_conditional_edges(
         "validate_request",
         route_after_request_validate,
