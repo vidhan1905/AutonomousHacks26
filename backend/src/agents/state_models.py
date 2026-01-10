@@ -83,6 +83,18 @@ class HITLState(BaseModel):
         self.is_waiting_for_input = False
 
 
+class SequentialReviewState(BaseModel):
+    """Sequential multi-doctor case review state."""
+    is_complex_case: Optional[bool] = Field(None, description="Whether case is complex and requires sequential review")
+    complexity_score: Optional[float] = Field(None, description="AI-generated complexity score (0-100)")
+    complexity_reason: Optional[str] = Field(None, description="Reason why case is complex")
+    chain_id: Optional[str] = Field(None, description="SequentialReviewChain UUID")
+    current_step_index: Optional[int] = Field(None, description="Current step index in the chain (0-based)")
+    required_doctors: Optional[List[Dict[str, Any]]] = Field(None, description="List of required doctors with their service types and order")
+    review_steps: Optional[List[Dict[str, Any]]] = Field(None, description="List of review steps with doctor info")
+    accumulated_context: Optional[str] = Field(None, description="Accumulated context from all previous doctors' reviews")
+
+
 # For LangGraph compatibility, we need to use TypedDict with Annotated for messages
 # But we can still use Pydantic models for validation within the state
 from typing import TypedDict, Annotated
@@ -124,6 +136,10 @@ class AgentStateDict(TypedDict):
     
     # HITL state (serialized to dict)
     hitl: dict  # HITLState as dict
+    
+    # Sequential review state (serialized to dict)
+    sequential_review: dict  # SequentialReviewState as dict
+    case_type: Optional[str]  # "normal" or "complex"
     
     # Summary
     summary: Optional[str]
@@ -210,5 +226,7 @@ def create_initial_state(
         ticket_created=False,
         doctor_tickets_created=False,
         hitl=HITLState().model_dump(),
+        sequential_review=SequentialReviewState().model_dump(),
+        case_type=None,
         summary=None
     )

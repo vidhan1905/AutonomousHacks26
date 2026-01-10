@@ -116,9 +116,10 @@ export const ticketApi = {
     return response.data
   },
   
-  updateStatus: async (ticketId: string, status: string) => {
+  updateStatus: async (ticketId: string, status: string, comment?: string) => {
     const response = await api.put(`/api/tickets/${ticketId}/status`, {
       status,
+      comment,
     })
     return response.data
   },

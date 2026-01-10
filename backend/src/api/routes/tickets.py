@@ -8,7 +8,7 @@ import uuid
 from datetime import datetime
 
 from backend.src.database.connection import get_db
-from backend.src.database.models import Ticket, TicketUpdate
+from backend.src.database.models import Ticket, TicketUpdate, SequentialReviewStep, SequentialReviewChain
 from backend.src.api.dependencies import (
     get_current_user,
     get_current_service_person,
@@ -29,6 +29,11 @@ class UpdateTicketStatusRequest(BaseModel):
 
 class AddCommentRequest(BaseModel):
     comment: str
+
+
+class UpdateTicketStatusRequest(BaseModel):
+    status: str  # "open", "assigned", "in_progress", "completed", "cancelled", "offered"
+    comment: Optional[str] = None  # Review notes for sequential review tickets
 
 
 class AcceptRejectTicketRequest(BaseModel):
@@ -55,10 +60,25 @@ async def list_tickets(
             query = query.where(Ticket.patient_id == user.patient_id)
         elif user_type == "service_person":
             # Service persons see tickets assigned to them OR offered to them (via assignment_status)
+            # OR tickets that are part of sequential review chains where they are a reviewer
             # Check both assigned_to and accepted_by for service person
+            # Also check if ticket is part of sequential review and user is in the chain
+            from sqlalchemy import or_, and_
+            
+            # Get chain IDs where user is a reviewer
+            chain_ids_subquery = select(SequentialReviewStep.chain_id).where(
+                SequentialReviewStep.doctor_id == user.service_person_id
+            ).distinct()
+            
             query = query.where(
-                (Ticket.assigned_to == user.service_person_id) | 
-                (Ticket.accepted_by == user.service_person_id),
+                or_(
+                    Ticket.assigned_to == user.service_person_id,
+                    Ticket.accepted_by == user.service_person_id,
+                    and_(
+                        Ticket.sequential_review_chain_id.isnot(None),
+                        Ticket.sequential_review_chain_id.in_(chain_ids_subquery)
+                    )
+                ),
                 Ticket.status != "cancelled"
             )
         # Admins see all tickets
@@ -85,6 +105,56 @@ async def list_tickets(
         print(f"[ERROR] {error_msg}")
         raise HTTPException(status_code=500, detail=f"Database error: {error_msg}")
     
+    # Filter sequential review tickets to only show when it's the doctor's turn
+    filtered_tickets = []
+    for ticket in tickets:
+        if ticket.is_sequential_review and ticket.sequential_review_chain_id:
+            # Get step for this ticket
+            step_result = await db.execute(
+                select(SequentialReviewStep).where(
+                    SequentialReviewStep.ticket_id == ticket.ticket_id
+                )
+            )
+            step = step_result.scalar_one_or_none()
+            
+            if step:
+                # Get chain
+                chain_result = await db.execute(
+                    select(SequentialReviewChain).where(
+                        SequentialReviewChain.chain_id == step.chain_id
+                    )
+                )
+                chain = chain_result.scalar_one_or_none()
+                
+                if chain:
+                    # Check if it's their turn
+                    if step.step_index == chain.current_step_index:
+                        # It's their turn, include ticket
+                        filtered_tickets.append(ticket)
+                    else:
+                        # Not their turn yet - check if all previous steps are completed
+                        previous_steps_result = await db.execute(
+                            select(SequentialReviewStep).where(
+                                SequentialReviewStep.chain_id == step.chain_id,
+                                SequentialReviewStep.step_index < step.step_index,
+                                SequentialReviewStep.status != "completed"
+                            )
+                        )
+                        incomplete = previous_steps_result.scalars().all()
+                        if not incomplete:
+                            # All previous steps completed, show ticket
+                            filtered_tickets.append(ticket)
+                        # Otherwise, don't add to filtered_tickets (it's not their turn yet)
+                else:
+                    # Chain not found, include ticket (shouldn't happen but be safe)
+                    filtered_tickets.append(ticket)
+            else:
+                # No step linked yet, include ticket (first step, step will be created)
+                filtered_tickets.append(ticket)
+        else:
+            # Not sequential review, include ticket
+            filtered_tickets.append(ticket)
+    
     return [
         {
             "ticket_id": str(ticket.ticket_id),
@@ -99,9 +169,11 @@ async def list_tickets(
             "accepted_by": str(ticket.accepted_by) if ticket.accepted_by else None,
             "accepted_at": ticket.accepted_at.isoformat() if ticket.accepted_at else None,
             "offered_to_count": ticket.offered_to_count,
-            "created_at": ticket.created_at.isoformat()
+            "created_at": ticket.created_at.isoformat(),
+            "is_sequential_review": ticket.is_sequential_review if hasattr(ticket, 'is_sequential_review') else False,
+            "sequential_review_chain_id": str(ticket.sequential_review_chain_id) if hasattr(ticket, 'sequential_review_chain_id') and ticket.sequential_review_chain_id else None
         }
-        for ticket in tickets
+        for ticket in filtered_tickets
     ]
 
 
@@ -157,7 +229,9 @@ async def get_ticket(
         "offered_to_count": ticket.offered_to_count,
         "created_at": ticket.created_at.isoformat(),
         "assigned_at": ticket.assigned_at.isoformat() if ticket.assigned_at else None,
-        "completed_at": ticket.completed_at.isoformat() if ticket.completed_at else None
+        "completed_at": ticket.completed_at.isoformat() if ticket.completed_at else None,
+        "is_sequential_review": ticket.is_sequential_review if hasattr(ticket, 'is_sequential_review') else False,
+        "sequential_review_chain_id": str(ticket.sequential_review_chain_id) if hasattr(ticket, 'sequential_review_chain_id') and ticket.sequential_review_chain_id else None
     }
 
 
@@ -217,6 +291,11 @@ async def assign_ticket(
     }
 
 
+class UpdateTicketStatusRequest(BaseModel):
+    status: str  # "open", "assigned", "in_progress", "completed", "cancelled"
+    comment: Optional[str] = None  # Review notes for sequential review tickets
+
+
 @router.put("/{ticket_id}/status")
 async def update_ticket_status(
     ticket_id: str,
@@ -224,7 +303,7 @@ async def update_ticket_status(
     current_user: dict = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
-    """Update ticket status."""
+    """Update ticket status. For sequential review tickets, extracts review notes and advances chain."""
     user_type = current_user["type"]
     if user_type not in ["service_person", "admin"]:
         raise HTTPException(status_code=403, detail="Only service persons and admins can update ticket status")
@@ -242,6 +321,132 @@ async def update_ticket_status(
     if not ticket:
         raise HTTPException(status_code=404, detail="Ticket not found")
     
+    # Check if ticket is part of sequential review
+    is_sequential_review = ticket.is_sequential_review and ticket.sequential_review_chain_id
+    
+    # Add validation for sequential review steps
+    if is_sequential_review and user_type == "service_person" and request.status == "in_progress":
+        # Get the SequentialReviewStep for this ticket
+        step_result = await db.execute(
+            select(SequentialReviewStep).where(SequentialReviewStep.ticket_id == uuid.UUID(ticket_id))
+        )
+        step = step_result.scalar_one_or_none()
+        
+        if step:
+            # Check if all previous steps are completed
+            previous_steps_result = await db.execute(
+                select(SequentialReviewStep).where(
+                    SequentialReviewStep.chain_id == step.chain_id,
+                    SequentialReviewStep.step_index < step.step_index,
+                    SequentialReviewStep.status != "completed"
+                )
+            )
+            incomplete_steps = previous_steps_result.scalars().all()
+            if incomplete_steps:
+                incomplete_step_indices = [s.step_index + 1 for s in incomplete_steps]
+                raise HTTPException(
+                    status_code=400,
+                    detail=f"Cannot start Step {step.step_index + 1}. Previous steps {incomplete_step_indices} must be completed first."
+                )
+            
+            # Update step status to in_review when starting work
+            if step.status == "pending":
+                step.status = "in_review"
+                step.started_at = datetime.utcnow()
+    
+    if is_sequential_review and user_type == "service_person":
+        # Get the SequentialReviewStep for this ticket
+        step_result = await db.execute(
+            select(SequentialReviewStep).where(SequentialReviewStep.ticket_id == uuid.UUID(ticket_id))
+        )
+        step = step_result.scalar_one_or_none()
+        
+        if step:
+            # Verify current doctor is assigned to current step
+            chain_result = await db.execute(
+                select(SequentialReviewChain).where(
+                    SequentialReviewChain.chain_id == step.chain_id
+                )
+            )
+            chain = chain_result.scalar_one_or_none()
+            
+            if chain and chain.current_step_index == step.step_index:
+                # Current doctor is reviewing - extract review notes and trigger workflow
+                review_notes = request.comment or ""
+                
+                if request.status == "completed" and review_notes:
+                    # Trigger collect_doctor_review workflow node
+                    from backend.src.agents.workflow_agent import get_graph
+                    from backend.src.agents.state_models import create_initial_state, SequentialReviewState
+                    
+                    graph = await get_graph()
+                    conversation_id = str(ticket.conversation_id)
+                    patient_id = str(ticket.patient_id)
+                    
+                    # Create state for workflow
+                    state = create_initial_state(conversation_id, patient_id)
+                    state["current_step_id"] = str(step.step_id)
+                    state["current_review_notes"] = review_notes
+                    state["current_doctor_id"] = str(current_user["user"].service_person_id)
+                    state["next_action"] = "collect_doctor_review"
+                    
+                    # Load sequential review state from database
+                    chain_result = await db.execute(
+                        select(SequentialReviewChain).where(
+                            SequentialReviewChain.chain_id == ticket.sequential_review_chain_id
+                        )
+                    )
+                    chain = chain_result.scalar_one_or_none()
+                    if chain:
+                        sequential_review_state = SequentialReviewState(
+                            chain_id=str(chain.chain_id),
+                            current_step_index=chain.current_step_index,
+                            is_complex_case=True,
+                            complexity_score=chain.case_complexity_score,
+                            complexity_reason=chain.complexity_reason,
+                            required_doctors_count=chain.required_doctors_count
+                        )
+                        state["sequential_review"] = sequential_review_state.model_dump()
+                    
+                    # Invoke workflow and continue until completion
+                    try:
+                        config = {"configurable": {"thread_id": conversation_id}}
+                        final_state = state
+                        max_iterations = 5  # Prevent infinite loops
+                        iteration = 0
+                        
+                        # First invoke to start from collect_doctor_review
+                        final_state = await graph.ainvoke(final_state, config)
+                        
+                        # Continue workflow if needed
+                        while final_state.get("next_action") in ["route_to_next_doctor", "collect_doctor_review"] and iteration < max_iterations:
+                            iteration += 1
+                            print(f"[API] Continuing workflow iteration {iteration}, next_action: {final_state.get('next_action')}")
+                            final_state = await graph.ainvoke(final_state, config)
+                            if final_state.get("next_action") == "end":
+                                break
+                    except Exception as e:
+                        print(f"[API] Error invoking collect_doctor_review workflow: {e}")
+                        import traceback
+                        traceback.print_exc()
+                        # Continue with status update even if workflow fails
+                
+                # Update ticket assigned_to to next doctor if chain advanced
+                if request.status == "completed":
+                    # Check if chain advanced
+                    await db.refresh(chain)
+                    if chain.current_step_index < chain.required_doctors_count:
+                        # Get next step
+                        next_step_result = await db.execute(
+                            select(SequentialReviewStep).where(
+                                SequentialReviewStep.chain_id == chain.chain_id,
+                                SequentialReviewStep.step_index == chain.current_step_index
+                            )
+                        )
+                        next_step = next_step_result.scalar_one_or_none()
+                        if next_step:
+                            ticket.assigned_to = next_step.doctor_id
+    
     old_status = ticket.status
     ticket.status = request.status
     
@@ -254,7 +459,8 @@ async def update_ticket_status(
         updated_by=uuid.UUID(str(current_user["user"].service_person_id if user_type == "service_person" else current_user["user"].admin_id)),
         update_type="status_change",
         old_value=old_status,
-        new_value=request.status
+        new_value=request.status,
+        comment=request.comment
     )
     db.add(update)
     
@@ -264,7 +470,8 @@ async def update_ticket_status(
     return {
         "ticket_id": str(ticket.ticket_id),
         "status": ticket.status,
-        "completed_at": ticket.completed_at.isoformat() if ticket.completed_at else None
+        "completed_at": ticket.completed_at.isoformat() if ticket.completed_at else None,
+        "is_sequential_review": is_sequential_review
     }
 
 
@@ -348,6 +555,33 @@ async def accept_reject_ticket(
     
     service_person_id = current_user["user"].service_person_id
     
+    # Check if ticket is part of sequential review
+    is_sequential_review = ticket.is_sequential_review and ticket.sequential_review_chain_id
+    
+    if is_sequential_review and request.action == "accept":
+        # Validate that all previous steps are completed
+        step_result = await db.execute(
+            select(SequentialReviewStep).where(SequentialReviewStep.ticket_id == uuid.UUID(ticket_id))
+        )
+        step = step_result.scalar_one_or_none()
+        
+        if step:
+            # Check if all previous steps are completed
+            previous_steps_result = await db.execute(
+                select(SequentialReviewStep).where(
+                    SequentialReviewStep.chain_id == step.chain_id,
+                    SequentialReviewStep.step_index < step.step_index,
+                    SequentialReviewStep.status != "completed"
+                )
+            )
+            incomplete_steps = previous_steps_result.scalars().all()
+            if incomplete_steps:
+                incomplete_step_indices = [s.step_index + 1 for s in incomplete_steps]
+                raise HTTPException(
+                    status_code=400,
+                    detail=f"Cannot start Step {step.step_index + 1}. Previous steps {incomplete_step_indices} must be completed first."
+                )
+    
     if request.action == "accept":
         # Accept ticket: change status to "assigned" and cancel other related tickets
         ticket.status = "assigned"
@@ -356,6 +590,16 @@ async def accept_reject_ticket(
         ticket.assignment_status = "accepted"
         ticket.accepted_by = service_person_id
         ticket.accepted_at = datetime.utcnow()
+        
+        # Update SequentialReviewStep status if this is a sequential review
+        if is_sequential_review:
+            step_result = await db.execute(
+                select(SequentialReviewStep).where(SequentialReviewStep.ticket_id == uuid.UUID(ticket_id))
+            )
+            step = step_result.scalar_one_or_none()
+            if step and step.status == "pending":
+                step.status = "in_review"
+                step.started_at = datetime.utcnow()
         
         # Find and cancel other tickets from the same conversation with same service_type
         # These are the other 4 doctors' tickets
