@@ -41,6 +41,7 @@ export interface Conversation {
   status: string
   started_at: string
   ended_at: string | null
+  summary?: string | null
 }
 
 export interface Ticket {
