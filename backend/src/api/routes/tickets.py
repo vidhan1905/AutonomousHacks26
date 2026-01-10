@@ -31,6 +31,10 @@ class AddCommentRequest(BaseModel):
     comment: str
 
 
+class AcceptRejectTicketRequest(BaseModel):
+    action: str  # "accept" or "reject"
+
+
 @router.get("")
 async def list_tickets(
     status: Optional[str] = Query(None),
@@ -49,12 +53,10 @@ async def list_tickets(
     if user_type == "patient":
         query = query.where(Ticket.patient_id == user.patient_id)
     elif user_type == "service_person":
-        # Service persons see assigned tickets and available tickets
+        # Service persons ONLY see tickets assigned to them (excluding cancelled)
         query = query.where(
-            or_(
-                Ticket.assigned_to == user.service_person_id,
-                Ticket.status == "open"
-            )
+            Ticket.assigned_to == user.service_person_id,
+            Ticket.status != "cancelled"
         )
     # Admins see all tickets
     
@@ -270,3 +272,115 @@ async def add_comment(
         "comment": request.comment,
         "created_at": update.created_at.isoformat()
     }
+
+
+@router.post("/{ticket_id}/accept-reject")
+async def accept_reject_ticket(
+    ticket_id: str,
+    request: AcceptRejectTicketRequest,
+    current_user: dict = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    """Accept or reject a ticket. When accepted, cancels other related tickets."""
+    user_type = current_user["type"]
+    if user_type != "service_person":
+        raise HTTPException(status_code=403, detail="Only service persons can accept/reject tickets")
+    
+    if request.action not in ["accept", "reject"]:
+        raise HTTPException(status_code=400, detail="Action must be 'accept' or 'reject'")
+    
+    # Get ticket
+    result = await db.execute(
+        select(Ticket).where(Ticket.ticket_id == uuid.UUID(ticket_id))
+    )
+    ticket = result.scalar_one_or_none()
+    
+    if not ticket:
+        raise HTTPException(status_code=404, detail="Ticket not found")
+    
+    # Verify ticket is assigned to this service person
+    if ticket.assigned_to != current_user["user"].service_person_id:
+        raise HTTPException(status_code=403, detail="You can only accept/reject tickets assigned to you")
+    
+    # Verify ticket is in open status
+    if ticket.status != "open":
+        raise HTTPException(status_code=400, detail=f"Ticket is already {ticket.status}. Cannot accept/reject.")
+    
+    service_person_id = current_user["user"].service_person_id
+    
+    if request.action == "accept":
+        # Accept ticket: change status to "assigned" and cancel other related tickets
+        ticket.status = "assigned"
+        ticket.assigned_at = datetime.utcnow()
+        
+        # Find and cancel other tickets from the same conversation with same service_type
+        # These are the other 4 doctors' tickets
+        other_tickets_result = await db.execute(
+            select(Ticket).where(
+                Ticket.conversation_id == ticket.conversation_id,
+                Ticket.service_type == ticket.service_type,
+                Ticket.ticket_id != uuid.UUID(ticket_id),
+                Ticket.status == "open"
+            )
+        )
+        other_tickets = other_tickets_result.scalars().all()
+        
+        # Cancel all other tickets
+        for other_ticket in other_tickets:
+            other_ticket.status = "cancelled"
+            # Create update record for cancellation
+            cancel_update = TicketUpdate(
+                ticket_id=other_ticket.ticket_id,
+                updated_by=service_person_id,
+                update_type="status_change",
+                old_value="open",
+                new_value="cancelled",
+                comment=f"Ticket cancelled because another doctor accepted the case"
+            )
+            db.add(cancel_update)
+        
+        # Create update record for acceptance
+        accept_update = TicketUpdate(
+            ticket_id=uuid.UUID(ticket_id),
+            updated_by=service_person_id,
+            update_type="status_change",
+            old_value="open",
+            new_value="assigned",
+            comment="Ticket accepted by doctor"
+        )
+        db.add(accept_update)
+        
+        await db.commit()
+        await db.refresh(ticket)
+        
+        return {
+            "ticket_id": str(ticket.ticket_id),
+            "status": "assigned",
+            "action": "accepted",
+            "cancelled_tickets": len(other_tickets),
+            "assigned_at": ticket.assigned_at.isoformat()
+        }
+    
+    else:  # reject
+        # Reject ticket: cancel this ticket
+        ticket.status = "cancelled"
+        
+        # Create update record
+        reject_update = TicketUpdate(
+            ticket_id=uuid.UUID(ticket_id),
+            updated_by=service_person_id,
+            update_type="status_change",
+            old_value="open",
+            new_value="cancelled",
+            comment="Ticket rejected by doctor"
+        )
+        db.add(reject_update)
+        
+        await db.commit()
+        await db.refresh(ticket)
+        
+        return {
+            "ticket_id": str(ticket.ticket_id),
+            "status": "cancelled",
+            "action": "rejected"
+        }
