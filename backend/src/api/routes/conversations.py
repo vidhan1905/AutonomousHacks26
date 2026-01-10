@@ -366,20 +366,32 @@ async def send_message(
             "all_messages": formatted_messages  # Include all messages in response
         }
         
-        # Add doctor recommendation data if present
-        if is_doctor_recommendation and message_metadata:
+        # Check if booking has been confirmed (next_action is "end" and tickets were created)
+        # If confirmed, don't show doctor recommendation details to the patient
+        next_action = final_state.get("next_action", "")
+        booking_confirmed = (next_action == "end" and doctor_tickets_created)
+        
+        # Only add doctor recommendation data if booking is NOT yet confirmed
+        # After confirmation, patients should only see a simple confirmation message
+        if is_doctor_recommendation and message_metadata and not booking_confirmed:
             response_data["type"] = "doctor_recommendation"
             response_data["doctors"] = message_metadata["doctors"]
             response_data["service_type"] = message_metadata["service_type"]
             response_data["tickets_created"] = message_metadata["tickets_created"]
         
-        # Add tickets to response if they exist (even if not doctor recommendation)
-        ticket_creation_dict = final_state.get("ticket_creation", {})
-        doctor_tickets_list = ticket_creation_dict.get('doctor_tickets', [])
-        if doctor_tickets_list:
-            response_data["tickets"] = doctor_tickets_list
-            response_data["tickets_count"] = len(doctor_tickets_list)
-            response_data["tickets_created_success"] = ticket_creation_dict.get('tickets_creation_success', False)
+        # Don't add tickets to response after booking confirmation - keep it simple for patients
+        if not booking_confirmed:
+            ticket_creation_dict = final_state.get("ticket_creation", {})
+            doctor_tickets_list = ticket_creation_dict.get('doctor_tickets', [])
+            if doctor_tickets_list:
+                response_data["tickets"] = doctor_tickets_list
+                response_data["tickets_count"] = len(doctor_tickets_list)
+                response_data["tickets_created_success"] = ticket_creation_dict.get('tickets_creation_success', False)
+        
+        # Add case summary (AI-generated summary of the case) to response
+        case_summary = ticket_creation_dict.get('case_summary')
+        if case_summary:
+            response_data["case_summary"] = case_summary
         
         # Log complete workflow state after conversation for debugging
         print(f"\n{'#'*80}")
@@ -490,18 +502,72 @@ async def get_messages(
     conversation_id: str,
     db: AsyncSession = Depends(get_db)
 ):
-    """Get all messages in a conversation from PostgresSaver checkpointer.
-    
-    ROOT CAUSE FIX: Messages are returned in send_message response via all_messages field.
-    This endpoint is kept for backward compatibility but returns empty if no state exists.
-    """
+    """Get all messages in a conversation from PostgresSaver checkpointer."""
     # Import here to avoid scoping issues
-    from langchain_core.messages import ToolMessage
+    from langchain_core.messages import HumanMessage, AIMessage, ToolMessage
     
-    # ROOT CAUSE FIX: Don't manually access checkpointer - messages are in send_message response
-    # The graph handles state loading automatically - messages are returned in send_message
-    # This endpoint returns empty - frontend should use all_messages from send_message response
-    return []
+    try:
+        # Get checkpointer
+        checkpointer = await get_checkpointer()
+        
+        # Configure for checkpointer: use conversation_id as thread_id
+        config = {"configurable": {"thread_id": conversation_id}}
+        
+        # Try to load existing state from checkpointer
+        try:
+            checkpoint = await checkpointer.aget(config)
+            if checkpoint and checkpoint.get("channel_values"):
+                existing_state = checkpoint["channel_values"]
+                all_messages = existing_state.get("messages", [])
+                
+                # Convert LangChain messages to API format
+                messages = []
+                for msg in all_messages:
+                    if isinstance(msg, HumanMessage):
+                        messages.append({
+                            "message_id": str(getattr(msg, "id", f"human-{len(messages)}")),
+                            "sender_type": "patient",
+                            "content": getattr(msg, "content", ""),
+                            "created_at": getattr(msg, "additional_kwargs", {}).get("timestamp", datetime.now().isoformat())
+                        })
+                    elif isinstance(msg, AIMessage):
+                        # Check for metadata (doctor recommendations, etc.)
+                        metadata = {}
+                        content = getattr(msg, "content", "")
+                        
+                        # Check if this is a doctor recommendation message
+                        if hasattr(msg, "additional_kwargs"):
+                            additional_kwargs = msg.additional_kwargs
+                            if additional_kwargs.get("doctors"):
+                                metadata["doctors"] = additional_kwargs["doctors"]
+                                metadata["type"] = "doctor_recommendation"
+                                metadata["service_type"] = additional_kwargs.get("service_type")
+                                metadata["tickets_created"] = additional_kwargs.get("tickets_created")
+                        
+                        messages.append({
+                            "message_id": str(getattr(msg, "id", f"ai-{len(messages)}")),
+                            "sender_type": "llm",
+                            "content": content,
+                            "created_at": getattr(msg, "additional_kwargs", {}).get("timestamp", datetime.now().isoformat()),
+                            "type": metadata.get("type", "text") if metadata else "text",
+                            **({"metadata": metadata} if metadata else {}),
+                            **({"doctors": metadata.get("doctors")} if metadata and metadata.get("doctors") else {}),
+                            **({"service_type": metadata.get("service_type")} if metadata and metadata.get("service_type") else {})
+                        })
+                
+                return messages
+            else:
+                # No checkpoint found - return empty
+                return []
+        except Exception as e:
+            # No checkpoint found - this is normal for new conversations
+            print(f"[GET MESSAGES] No checkpoint found for conversation {conversation_id}: {e}")
+            return []
+    except Exception as e:
+        print(f"[GET MESSAGES] Error fetching messages: {e}")
+        import traceback
+        traceback.print_exc()
+        return []
 
 
 @router.websocket("/{conversation_id}/ws")
@@ -557,7 +623,9 @@ async def list_conversations(
             "conversation_id": str(conv.conversation_id),
             "patient_id": str(conv.patient_id) if conv.patient_id else None,
             "status": conv.status,
-            "started_at": conv.started_at.isoformat()
+            "started_at": conv.started_at.isoformat(),
+            "ended_at": conv.ended_at.isoformat() if conv.ended_at else None,
+            "summary": conv.summary
         }
         for conv in conversations
     ]

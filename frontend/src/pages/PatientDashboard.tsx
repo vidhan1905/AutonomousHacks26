@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuthStore } from '../hooks/useAuth'
-import TicketDashboard from '../components/Dashboard/TicketDashboard'
 import { conversationApi } from '../services/api'
 import type { Conversation } from '../types'
 
@@ -22,10 +21,13 @@ export default function PatientDashboard() {
   const loadConversations = async () => {
     if (!user?.id) return
     try {
+      console.log('Loading conversations for patient:', user.id)
       const data = await conversationApi.list(user.id)
+      console.log('Loaded conversations:', data)
       setConversations(data)
     } catch (error) {
       console.error('Failed to load conversations:', error)
+      setConversations([])
     }
   }
 
@@ -69,28 +71,63 @@ export default function PatientDashboard() {
       </header>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-8">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">My Tickets</h2>
-          <TicketDashboard userType="patient" />
-        </div>
-
-        <div className="mt-8">
+        <div>
           <h2 className="text-xl font-semibold text-gray-900 mb-4">Recent Conversations</h2>
           <div className="bg-white rounded-lg shadow-md p-6">
             {conversations.length === 0 ? (
-              <p className="text-gray-500">No conversations yet. Start a new chat to begin!</p>
+              <div className="text-center py-12">
+                <p className="text-gray-500 text-lg mb-4">No conversations yet.</p>
+                <p className="text-gray-400 text-sm">Start a new chat to begin!</p>
+              </div>
             ) : (
-              <div className="space-y-4">
-                {conversations.slice(0, 5).map((conv) => (
+              <div className="space-y-3">
+                {conversations.map((conv) => (
                   <div
                     key={conv.conversation_id}
-                    className="border-b border-gray-200 pb-4 last:border-0 cursor-pointer hover:bg-gray-50 p-2 rounded"
+                    className="border border-gray-200 rounded-lg p-4 cursor-pointer hover:bg-gray-50 hover:border-indigo-300 transition-colors"
                     onClick={() => navigate(`/chat?conversation_id=${conv.conversation_id}`)}
                   >
-                    <p className="text-sm text-gray-600">
-                      {new Date(conv.started_at).toLocaleDateString()}
-                    </p>
-                    <p className="text-sm font-medium text-gray-900">Status: {conv.status}</p>
+                    <div className="flex items-center justify-between">
+                      <div className="flex-1">
+                        <div className="flex items-center space-x-3 mb-2">
+                          <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                            conv.status === 'active' 
+                              ? 'bg-green-100 text-green-800' 
+                              : conv.status === 'completed'
+                              ? 'bg-gray-100 text-gray-800'
+                              : 'bg-yellow-100 text-yellow-800'
+                          }`}>
+                            {conv.status}
+                          </span>
+                          <span className="text-sm text-gray-500">
+                            {new Date(conv.started_at).toLocaleDateString('en-US', { 
+                              year: 'numeric', 
+                              month: 'short', 
+                              day: 'numeric',
+                              hour: '2-digit',
+                              minute: '2-digit'
+                            })}
+                          </span>
+                        </div>
+                        {conv.summary ? (
+                          <p className="text-sm text-gray-700 line-clamp-2 mt-2">
+                            {conv.summary}
+                          </p>
+                        ) : (
+                          <p className="text-sm text-gray-500 italic mt-2">
+                            Click to view conversation
+                          </p>
+                        )}
+                      </div>
+                      <svg 
+                        className="w-5 h-5 text-gray-400 ml-4" 
+                        fill="none" 
+                        stroke="currentColor" 
+                        viewBox="0 0 24 24"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </div>
                   </div>
                 ))}
               </div>

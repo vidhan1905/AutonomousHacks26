@@ -26,6 +26,9 @@ See `.env.example` for a sample configuration file. Copy it to `.env` and fill i
 - `DATABASE_URL`: PostgreSQL connection string
 - `OPENAI_API_KEY`: Your OpenAI API key
 - `JWT_SECRET_KEY`: A secure random string (use `openssl rand -hex 32` to generate)
+- `LANGSMITH_API_KEY`: Your LangSmith API key (optional, for tracing and observability)
+- `LANGSMITH_TRACING`: Set to `true` to enable LangSmith tracing (optional)
+- `LANGSMITH_PROJECT`: Project name in LangSmith (optional, defaults to "hospital-ai-assistant")
 
 ## Quick Testing Guide
 
@@ -84,3 +87,45 @@ The visualization shows:
 - **Edges**: Flow between nodes
 - **Conditional Edges**: Decision points that route based on state
 - **Workflow**: Complete conversation flow from user input to response
+
+## LangSmith Integration (Observability & Tracing)
+
+This project includes LangSmith integration for monitoring, debugging, and analyzing LLM interactions.
+
+### Setup LangSmith
+
+1. **Create a LangSmith account**: Go to [https://smith.langchain.com/](https://smith.langchain.com/) and sign up
+2. **Get your API key**: Navigate to Settings → API Keys and create a new API key
+3. **Configure environment variables**: Add the following to your `.env` file:
+   ```bash
+   LANGSMITH_API_KEY=your_langsmith_api_key_here
+   LANGSMITH_TRACING=true
+   LANGSMITH_PROJECT=hospital-ai-assistant
+   ```
+
+### Viewing Traces
+
+Once enabled, all LangChain operations (LLM calls, tool invocations, graph executions) are automatically traced to LangSmith. You can:
+
+- **View traces in real-time**: Open [https://smith.langchain.com/](https://smith.langchain.com/) to see traces as they happen
+- **Filter by project**: Use the `LANGSMITH_PROJECT` to organize traces
+- **Debug issues**: Inspect individual LLM calls, tool executions, and graph node transitions
+- **Monitor performance**: Track latency, token usage, and costs
+- **Analyze conversations**: View complete conversation flows with state changes
+
+### What Gets Traced
+
+- **LLM Invocations**: All ChatOpenAI calls with prompts, responses, and metadata
+- **Tool Executions**: Database queries, patient verification, doctor ranking, ticket creation
+- **Graph Execution**: Complete LangGraph workflow with node transitions and state changes
+- **Message Flow**: All messages (human, AI, tool) in conversations
+- **Errors**: Exceptions and error messages for debugging
+
+### Disabling Tracing
+
+To disable tracing without removing the configuration, set:
+```bash
+LANGSMITH_TRACING=false
+```
+
+Or simply remove/comment out the `LANGSMITH_API_KEY` environment variable.

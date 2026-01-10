@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import ChatInterface from '../components/Chat/ChatInterface'
 import { useAuthStore } from '../hooks/useAuth'
 import { conversationApi } from '../services/api'
@@ -7,6 +7,7 @@ import { conversationApi } from '../services/api'
 export default function ChatPage() {
   const { user } = useAuthStore()
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
   const [conversationId, setConversationId] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
 
@@ -16,20 +17,45 @@ export default function ChatPage() {
       return
     }
 
-    const createConversation = async () => {
+    const initializeConversation = async () => {
       try {
-        const patientId = user.type === 'patient' ? user.id : undefined
-        const conversation = await conversationApi.create(patientId, user.type !== 'patient')
-        setConversationId(conversation.conversation_id)
+        // Check if conversation_id is provided in URL query params
+        const existingConversationId = searchParams.get('conversation_id')
+        
+        if (existingConversationId) {
+          // Use existing conversation
+          console.log('Loading existing conversation:', existingConversationId)
+          // Verify conversation exists by fetching it
+          try {
+            await conversationApi.get(existingConversationId)
+            setConversationId(existingConversationId)
+          } catch (error) {
+            console.error('Failed to load conversation:', error)
+            // If conversation doesn't exist, create a new one
+            const patientId = user.type === 'patient' ? user.id : undefined
+            const conversation = await conversationApi.create(patientId, user.type !== 'patient')
+            setConversationId(conversation.conversation_id)
+            // Update URL to reflect new conversation
+            navigate(`/chat?conversation_id=${conversation.conversation_id}`, { replace: true })
+          }
+        } else {
+          // Create new conversation
+          console.log('Creating new conversation')
+          const patientId = user.type === 'patient' ? user.id : undefined
+          const conversation = await conversationApi.create(patientId, user.type !== 'patient')
+          setConversationId(conversation.conversation_id)
+          // Update URL to include new conversation ID
+          navigate(`/chat?conversation_id=${conversation.conversation_id}`, { replace: true })
+        }
       } catch (error) {
-        console.error('Failed to create conversation:', error)
+        console.error('Failed to initialize conversation:', error)
       } finally {
         setLoading(false)
       }
     }
 
-    createConversation()
-  }, [user, navigate])
+    initializeConversation()
+  }, [user, navigate, searchParams])
 
   if (loading) {
     return (

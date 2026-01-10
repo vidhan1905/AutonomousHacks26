@@ -109,6 +109,16 @@ async def get_ticket(
     if user_type == "patient" and ticket.patient_id != user.patient_id:
         raise HTTPException(status_code=403, detail="Access denied")
     
+    case_summary = None
+    if ticket.llm_summary and ticket.llm_summary.startswith("CASE SUMMARY:"):
+        try:
+            # Extract case summary (between "CASE SUMMARY:\n" and "\n\n")
+            parts = ticket.llm_summary.split("\n\n", 1)
+            if len(parts) > 1:
+                case_summary = parts[0].replace("CASE SUMMARY:\n", "").strip()
+        except Exception:
+            pass  # If extraction fails, case_summary remains None
+    
     return {
         "ticket_id": str(ticket.ticket_id),
         "conversation_id": str(ticket.conversation_id),
@@ -117,10 +127,11 @@ async def get_ticket(
         "status": ticket.status,
         "priority": ticket.priority,
         "assigned_to": str(ticket.assigned_to) if ticket.assigned_to else None,
-        "description": ticket.description,
-        "patient_details": ticket.patient_details,
+        "description": ticket.description,  # Contains issue description (e.g., "Patient has cold")
+        "patient_details": ticket.patient_details,  # Contains: name, phone, DOB, gender, blood_group, emergency_contact, medical_history
         "past_history_summary": ticket.past_history_summary,
         "llm_summary": ticket.llm_summary,
+        "case_summary": case_summary,  # ROOT FIX: Extracted case summary for UI display
         "current_symptoms": ticket.current_symptoms,
         "created_at": ticket.created_at.isoformat(),
         "assigned_at": ticket.assigned_at.isoformat() if ticket.assigned_at else None,

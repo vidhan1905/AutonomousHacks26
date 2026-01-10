@@ -310,12 +310,16 @@ async def _get_patient_history_async(patient_id: str, session_maker=None) -> dic
             )
             history_records = history_result.scalars().all()
             
+            # ROOT FIX: Return ALL patient fields needed for tickets (single source of truth)
             return {
                 "patient_id": str(patient.patient_id),
                 "name": patient.name,
-                "age": (datetime.now().date() - patient.date_of_birth).days // 365,
+                "phone": patient.phone_number,  # ROOT FIX: Include phone
+                "date_of_birth": str(patient.date_of_birth) if patient.date_of_birth else None,  # ROOT FIX: Include DOB
+                "age": (datetime.now().date() - patient.date_of_birth).days // 365 if patient.date_of_birth else None,
                 "gender": patient.gender,
                 "blood_group": patient.blood_group,
+                "emergency_contact": patient.emergency_contact,  # ROOT FIX: Include emergency_contact
                 "medical_history": patient.medical_history or {},
                 "history_records": [
                     {

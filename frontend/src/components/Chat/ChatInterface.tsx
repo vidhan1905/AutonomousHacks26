@@ -37,7 +37,7 @@ export default function ChatInterface({ conversationId }: ChatInterfaceProps) {
   const handleSendMessage = async (content: string) => {
     if (!content.trim()) return
 
-    // Add user message immediately
+    // Add user message optimistically for immediate UI feedback
     const userMessage: Message = {
       message_id: `temp-${Date.now()}`,
       sender_type: 'patient',
@@ -48,10 +48,16 @@ export default function ChatInterface({ conversationId }: ChatInterfaceProps) {
     setLoading(true)
 
     try {
-      const response = await conversationApi.sendMessage(conversationId, content)
-      setMessages((prev) => [...prev, response])
+      // Send message - this will process it through the workflow
+      await conversationApi.sendMessage(conversationId, content)
+      
+      // After sending, reload all messages from the checkpointer to get the complete, correct list
+      // This ensures we have all messages in the correct order without duplicates
+      await loadMessages()
     } catch (error) {
       console.error('Failed to send message:', error)
+      // Remove optimistic user message on error
+      setMessages((prev) => prev.filter(msg => msg.message_id !== userMessage.message_id))
       const errorMessage: Message = {
         message_id: `error-${Date.now()}`,
         sender_type: 'llm',
