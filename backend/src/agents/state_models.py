@@ -32,6 +32,7 @@ class AppointmentPreferences(BaseModel):
     """Appointment date/time preferences."""
     preferred_date_time: Optional[str] = Field(None, description="ISO format datetime (YYYY-MM-DDTHH:MM:SS)")
     service_type: Optional[str] = Field(None, description="Service type (e.g., 'orthopedics', 'cardiology')")
+    issue_description: Optional[str] = Field(None, description="Patient's medical issue/concern in third person (e.g., 'Patient has cold')")
     
     def is_complete(self) -> bool:
         """Check if appointment preferences are complete."""
@@ -60,6 +61,7 @@ class TicketCreation(BaseModel):
     tickets_created: int = Field(0, description="Number of tickets created")
     tickets_creation_success: Optional[bool] = Field(None, description="Whether ticket creation was successful")
     tickets_creation_error: Optional[str] = Field(None, description="Error message if creation failed")
+    case_summary: Optional[str] = Field(None, description="AI-generated summary of the case/issue")
 
 
 class HITLState(BaseModel):

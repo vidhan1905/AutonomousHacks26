@@ -95,12 +95,20 @@ def route_entry_node(state: AgentState) -> AgentState:
                                   "validate_request", "find_doctors", "rank_doctors", "create_tickets", 
                                   "confirm_booking", "inform_no_doctors"]
     
+    # Valid waiting states (these are valid, but we should still route based on new messages)
+    valid_waiting_states = ["wait_for_request", "ask_for_request_info", "ask_for_missing"]
+    
     if next_action in valid_continuation_actions:
         # Keep the next_action as is (workflow is continuing automatically)
         print(f"[ROUTE ENTRY] Continuing workflow with next_action: {next_action}")
         return state
-    elif next_action and next_action not in ["end", "wait_for_request"]:
-        # Invalid action (like "collect_info") - reset and route based on state
+    elif next_action in valid_waiting_states and has_new_user_message:
+        # We were waiting for user input, and now we have it - route to understand_request to process it
+        print(f"[ROUTE ENTRY] User responded to {next_action}, routing to understand_request")
+        state["next_action"] = "understand_request"
+        return state
+    elif next_action and next_action not in valid_waiting_states + ["end"]:
+        # Invalid action - reset and route based on state
         print(f"[ROUTE ENTRY] Invalid next_action: {next_action}, resetting based on state")
     
     # Route based on state
@@ -452,6 +460,7 @@ def understand_request_node(state: AgentState) -> AgentState:
         """Extracted request information."""
         service_type: Optional[str] = Field(None, description="Medical service type (e.g., orthopedics, cardiology, lab test, blood test)")
         preferred_date_time: Optional[str] = Field(None, description="Preferred date/time in ISO format (YYYY-MM-DDTHH:MM:SS)")
+        issue_description: Optional[str] = Field(None, description="Patient's medical issue/concern in third person format (e.g., 'Patient has cold', 'Patient is experiencing fever'). Extract from user's message and convert first person to third person.")
         explanation: Optional[str] = Field(None, description="Brief explanation of extraction")
     
     # Create structured LLM
@@ -494,13 +503,19 @@ Extract from the user's message:
    - Convert to ISO format: YYYY-MM-DDTHH:MM:SS
    - Use current date context (today is 2026-01-10)
    - If not specified, leave as null
+3. **Issue Description**: What is the patient's medical issue/concern?
+   - Extract the medical problem/concern from the user's message
+   - Convert first person to third person (e.g., "I have cold" → "Patient has cold", "I'm feeling fever" → "Patient is experiencing fever")
+   - If the message only contains date/time or service type without describing an issue, leave as null
+   - Be concise (1-2 sentences max)
+   - Examples: "I have cold" → "Patient has cold", "I'm feeling pain in my leg" → "Patient is experiencing leg pain"
 
 Examples (these are JSON format examples):
-- "I broke my leg, need to see a doctor next Tuesday at 2 PM" → service_type: "orthopedics", preferred_date_time: "2026-01-14T14:00:00"
-- "I need a blood test" → service_type: "lab test", preferred_date_time: null
-- "Cardiology appointment tomorrow morning" → service_type: "cardiology", preferred_date_time: "2026-01-11T09:00:00"
-- "viral fever" → service_type: "general consultation", preferred_date_time: null
-- "tomorrow at 1 pm" (no service type mentioned) → service_type: null, preferred_date_time: "2026-01-11T13:00:00"
+- "I broke my leg, need to see a doctor next Tuesday at 2 PM" → service_type: "orthopedics", preferred_date_time: "2026-01-14T14:00:00", issue_description: "Patient broke their leg"
+- "I need a blood test" → service_type: "lab test", preferred_date_time: null, issue_description: null
+- "I have cold and fever" → service_type: "general consultation", preferred_date_time: null, issue_description: "Patient has cold and fever"
+- "Cardiology appointment tomorrow morning" → service_type: "cardiology", preferred_date_time: "2026-01-11T09:00:00", issue_description: null
+- "tomorrow at 1 pm" (no service type or issue mentioned) → service_type: null, preferred_date_time: "2026-01-11T13:00:00", issue_description: null
 """
     
     # Format the context into the template
@@ -563,10 +578,14 @@ Examples (these are JSON format examples):
         if extracted.preferred_date_time:
             appointment_prefs.preferred_date_time = extracted.preferred_date_time
         
+        # ROOT FIX: Store issue_description when extracted (single source of truth)
+        if extracted.issue_description:
+            appointment_prefs.issue_description = extracted.issue_description.strip().strip('"').strip("'")
+        
         set_appointment_preferences(state, appointment_prefs)
         state["next_action"] = "validate_request"
-        print(f"[WORKFLOW] Extracted request: service_type={extracted.service_type}, date_time={extracted.preferred_date_time}")
-        print(f"[WORKFLOW] Current appointment_prefs: service_type={appointment_prefs.service_type}, date_time={appointment_prefs.preferred_date_time}")
+        print(f"[WORKFLOW] Extracted request: service_type={extracted.service_type}, date_time={extracted.preferred_date_time}, issue={extracted.issue_description}")
+        print(f"[WORKFLOW] Current appointment_prefs: service_type={appointment_prefs.service_type}, date_time={appointment_prefs.preferred_date_time}, issue={appointment_prefs.issue_description}")
         
         # ROOT FIX: Clear pending_questions if extraction succeeded and all info is now collected
         missing = appointment_prefs.missing_fields()
@@ -640,10 +659,12 @@ def ask_for_request_info_node(state: AgentState) -> AgentState:
     # Get already collected info
     appointment_prefs = get_appointment_preferences(state)
     collected_info = []
+    service_type_collected = False
     if appointment_prefs.service_type:
-        collected_info.append(f"Service type: {appointment_prefs.service_type}")
+        collected_info.append(f"Service type: {appointment_prefs.service_type} (ALREADY COLLECTED - DO NOT CHANGE)")
+        service_type_collected = True
     if appointment_prefs.preferred_date_time:
-        collected_info.append(f"Preferred date/time: {appointment_prefs.preferred_date_time}")
+        collected_info.append(f"Preferred date/time: {appointment_prefs.preferred_date_time} (ALREADY COLLECTED - DO NOT CHANGE)")
     
     # ROOT FIX: Get available service types dynamically from database
     from backend.src.agents.tools.doctor_tools import get_available_service_types
@@ -651,22 +672,29 @@ def ask_for_request_info_node(state: AgentState) -> AgentState:
     available_types_text = ", ".join(available_service_types) if available_service_types else "none available"
     
     # Build system prompt
+    service_type_instruction = ""
+    if service_type_collected:
+        service_type_instruction = f"\n**CRITICAL**: Service type '{appointment_prefs.service_type}' is already collected. You MUST acknowledge this service type and use it. DO NOT suggest alternative service types (like endocrinology, lab test, etc.). The system has already determined the correct service type."
+    
     system_prompt = f"""You are a helpful AI assistant for a hospital.
 
-CURRENT STATE:
+CURRENT STATE (ALREADY COLLECTED - FINAL VALUES):
 {"".join(f"- {info}\\n" for info in collected_info) if collected_info else "- No information collected yet"}
+{service_type_instruction}
 
 AVAILABLE SERVICE TYPES: {available_types_text}
+(Only mention these if asking for service type - which you should NOT do if service type is already collected above)
 
 REMAINING INFORMATION NEEDED:
 {"".join(f"{i}. {q}\\n" for i, q in enumerate(pending_questions, 1))}
 
-INSTRUCTIONS:
-1. If information is already collected, acknowledge it
-2. Ask ONLY for the remaining information
-3. When asking for service type, mention the available service types
-4. Be conversational and friendly
-5. Do NOT repeat information you already have
+CRITICAL INSTRUCTIONS:
+1. **RESPECT ALREADY COLLECTED VALUES**: If information is in "CURRENT STATE", it is FINAL. Acknowledge it and use it. DO NOT suggest alternatives or question it.
+2. **DO NOT OVERRIDE COLLECTED VALUES**: If "Service type" is already in CURRENT STATE, acknowledge that exact service type. Do NOT suggest other service types - the system has already determined the correct one.
+3. **ASK ONLY FOR MISSING INFORMATION**: Only ask for the information listed in "REMAINING INFORMATION NEEDED". Do NOT ask for or suggest changes to information in CURRENT STATE.
+4. **When asking for service type** (ONLY if NOT already in CURRENT STATE), mention the available service types
+5. Be conversational and friendly
+6. Do NOT repeat, question, or suggest alternatives for information you already have
 """
     
     # Call LLM
@@ -796,6 +824,7 @@ def create_tickets_node(state: AgentState) -> AgentState:
     
     Creates tickets in database for selected doctors.
     ROOT FIX: Provide all required parameters to create_multiple_tickets tool.
+    Includes full patient details, improved description, and AI case summary.
     """
     doctor_ranking = get_doctor_ranking(state)
     ranked_doctors = doctor_ranking.ranked_doctors or []
@@ -809,7 +838,7 @@ def create_tickets_node(state: AgentState) -> AgentState:
     appointment_prefs = get_appointment_preferences(state)
     patient_info = get_patient_info(state)
     
-    # Get last user message for description
+    # Get last user message for context (used in llm_summary)
     messages = state.get("messages", [])
     last_user_message = None
     for msg in reversed(messages):
@@ -817,21 +846,41 @@ def create_tickets_node(state: AgentState) -> AgentState:
             last_user_message = msg.content
             break
     
-    # Build description from user request and service type
-    description = f"Patient requested: {appointment_prefs.service_type}"
-    if appointment_prefs.preferred_date_time:
-        description += f" on {appointment_prefs.preferred_date_time}"
-    if last_user_message:
-        description += f"\n\nPatient's request: {last_user_message}"
+    # ROOT FIX: Use stored issue_description from appointment_prefs (extracted in understand_request_node)
+    # No keyword-based extraction - single source of truth
+    issue_description = appointment_prefs.issue_description or "Patient needs medical consultation"
     
-    # Build patient_details dictionary
-    patient_details = {
-        "name": patient_info.name,
-        "phone": patient_info.phone,
-        "date_of_birth": patient_info.date_of_birth,
-        "patient_id": str(patient_id) if patient_id else None,
-        "blood_group": None,  # Can be added if available in patient_info
-    }
+    # Build description showing the actual issue/reason
+    description = issue_description
+    if appointment_prefs.service_type:
+        description += f"\n\nService Type: {appointment_prefs.service_type}"
+    if appointment_prefs.preferred_date_time:
+        description += f"\nPreferred Date/Time: {appointment_prefs.preferred_date_time}"
+    
+    if patient_history and not patient_history.get("error"):
+        # Use patient_history as primary source (has all fields from database)
+        patient_details = {
+            "name": patient_history.get("name") or patient_info.name,
+            "phone": patient_history.get("phone") or patient_info.phone,
+            "date_of_birth": patient_history.get("date_of_birth") or patient_info.date_of_birth,
+            "patient_id": str(patient_id) if patient_id else None,
+            "gender": patient_history.get("gender"),
+            "blood_group": patient_history.get("blood_group"),
+            "emergency_contact": patient_history.get("emergency_contact"),
+            "medical_history": patient_history.get("medical_history", {}),
+        }
+    else:
+        # Fallback to patient_info if history not available (shouldn't happen in normal flow)
+        patient_details = {
+            "name": patient_info.name,
+            "phone": patient_info.phone,
+            "date_of_birth": patient_info.date_of_birth,
+            "patient_id": str(patient_id) if patient_id else None,
+            "gender": None,
+            "blood_group": None,
+            "emergency_contact": None,
+            "medical_history": {},
+        }
     
     # Build past_history_summary from patient_history
     # ROOT FIX: Uses 'history_records' field (not 'history') from get_patient_history tool
@@ -848,8 +897,35 @@ def create_tickets_node(state: AgentState) -> AgentState:
             if history_lines:
                 past_history_summary = "\n".join(history_lines)
     
-    # Build LLM summary from context
-    llm_summary = f"Patient {patient_info.name} requested {appointment_prefs.service_type}"
+    # Generate AI case summary
+    case_summary_prompt = f"""You are a medical assistant. Create a concise, professional summary of this patient case for doctors.
+
+Patient: {patient_info.name}
+Issue: {issue_description}
+Service Type: {appointment_prefs.service_type or 'Not specified'}
+Preferred Date/Time: {appointment_prefs.preferred_date_time or 'Not specified'}
+
+Medical History:
+{past_history_summary}
+
+Create a brief summary (2-3 sentences) that:
+1. Describes the patient's current issue/concern
+2. Mentions relevant medical history if applicable
+3. Is clear and professional for medical staff
+
+Summary:"""
+    
+    try:
+        case_summary_response = llm.invoke([AIMessage(content=case_summary_prompt)])
+        case_summary = case_summary_response.content if hasattr(case_summary_response, 'content') else str(case_summary_response)
+    except Exception as e:
+        print(f"[WORKFLOW] Error generating case summary: {e}")
+        case_summary = f"Patient {patient_info.name} requested {appointment_prefs.service_type}. {issue_description}"
+    
+    # Build LLM summary from context (includes case_summary for ticket storage)
+    # Case summary will be prepended to llm_summary so it's available when fetching tickets
+    llm_summary = f"CASE SUMMARY:\n{case_summary}\n\n"
+    llm_summary += f"Patient {patient_info.name} requested {appointment_prefs.service_type}"
     if appointment_prefs.preferred_date_time:
         llm_summary += f" for {appointment_prefs.preferred_date_time}"
     if last_user_message:
@@ -874,11 +950,12 @@ def create_tickets_node(state: AgentState) -> AgentState:
         ticket_creation.doctor_tickets = tickets
         ticket_creation.tickets_created = result.get("tickets_created", len(tickets))
         ticket_creation.tickets_creation_success = True
+        ticket_creation.case_summary = case_summary  # Store AI case summary in state
         set_ticket_creation(state, ticket_creation)
         state["doctor_tickets_created"] = True
         state["ticket_created"] = True
         state["next_action"] = "confirm_booking"
-        print(f"[WORKFLOW] Created {len(tickets)} tickets")
+        print(f"[WORKFLOW] Created {len(tickets)} tickets with case summary")
     
     return state
 

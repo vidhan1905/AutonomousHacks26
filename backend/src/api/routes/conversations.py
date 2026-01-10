@@ -381,6 +381,11 @@ async def send_message(
             response_data["tickets_count"] = len(doctor_tickets_list)
             response_data["tickets_created_success"] = ticket_creation_dict.get('tickets_creation_success', False)
         
+        # Add case summary (AI-generated summary of the case) to response
+        case_summary = ticket_creation_dict.get('case_summary')
+        if case_summary:
+            response_data["case_summary"] = case_summary
+        
         # Log complete workflow state after conversation for debugging
         print(f"\n{'#'*80}")
         print(f"[WORKFLOW STATE] Conversation: {conversation_id}")
