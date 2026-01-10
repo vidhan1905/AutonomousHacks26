@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospital AI Assistant - System Architecture</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+        .mermaid {
+            text-align: center;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .description {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            line-height: 1.8;
+        }
+        .description h2 {
+            color: #667eea;
+            margin-top: 0;
+        }
+        .description ul {
+            margin: 10px 0;
+            padding-left: 25px;
+        }
+        .description li {
+            margin: 8px 0;
+        }
+        .tech-stack {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .tech-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .tech-card h3 {
+            margin: 0 0 10px 0;
+            color: #333;
+            font-size: 1.1em;
+        }
+        .tech-card p {
+            margin: 0;
+            color: #666;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏥 Hospital AI Assistant</h1>
+        <p class="subtitle">System Architecture Diagram</p>
+        
+        <div class="mermaid">
+graph TB
+    subgraph "Frontend Layer"
+        UI[React + Tailwind UI]
+        Chat[Chat Interface]
+        Dashboard[Patient/Service Dashboard]
+        Auth[Authentication]
+    end
+
+    subgraph "Backend API Layer"
+        API[FastAPI Server]
+        Routes[API Routes]
+        AuthAPI[Auth Endpoints]
+        ConvAPI[Conversation Endpoints]
+        TicketAPI[Ticket Endpoints]
+    end
+
+    subgraph "AI Agent Layer"
+        LangGraph[LangGraph StateGraph]
+        Agent[Conversation Agent]
+        Tools[Agent Tools]
+        ExtractTool[extract_patient_info]
+        VerifyTool[verify_patient]
+        CreateTool[create_patient]
+        HistoryTool[get_patient_history]
+        TicketTool[create_ticket]
+        ApptTool[schedule_appointment]
+    end
+
+    subgraph "LLM Service"
+        OpenAI[OpenAI GPT-4o Mini]
+        LLM[ChatOpenAI]
+    end
+
+    subgraph "Database Layer"
+        PostgreSQL[(PostgreSQL Database)]
+        Patients[Patients Table]
+        Conversations[Conversations Table]
+        Messages[Messages Table]
+        Tickets[Tickets Table]
+        History[Patient History Table]
+        Appointments[Appointments Table]
+    end
+
+    subgraph "Data Models"
+        PatientModel[Patient Model]
+        ConvModel[Conversation Model]
+        MessageModel[Message Model]
+        TicketModel[Ticket Model]
+        HistoryModel[History Model]
+    end
+
+    %% Frontend connections
+    UI --> Chat
+    UI --> Dashboard
+    UI --> Auth
+
+    %% Frontend to Backend
+    Chat -->|WebSocket/HTTP| ConvAPI
+    Dashboard -->|HTTP| TicketAPI
+    Auth -->|HTTP| AuthAPI
+
+    %% Backend API connections
+    Routes --> AuthAPI
+    Routes --> ConvAPI
+    Routes --> TicketAPI
+    API --> Routes
+
+    %% Backend to Agent
+    ConvAPI -->|Invokes| LangGraph
+    LangGraph --> Agent
+    Agent --> Tools
+
+    %% Tools breakdown
+    Tools --> ExtractTool
+    Tools --> VerifyTool
+    Tools --> CreateTool
+    Tools --> HistoryTool
+    Tools --> TicketTool
+    Tools --> ApptTool
+
+    %% Agent to LLM
+    Agent -->|Calls| LLM
+    LLM -->|Uses| OpenAI
+
+    %% Tools to Database
+    ExtractTool -->|Uses LLM| OpenAI
+    VerifyTool -->|Queries| PostgreSQL
+    CreateTool -->|Inserts| PostgreSQL
+    HistoryTool -->|Queries| PostgreSQL
+    TicketTool -->|Inserts| PostgreSQL
+    ApptTool -->|Inserts| PostgreSQL
+
+    %% Database structure
+    PostgreSQL --> Patients
+    PostgreSQL --> Conversations
+    PostgreSQL --> Messages
+    PostgreSQL --> Tickets
+    PostgreSQL --> History
+    PostgreSQL --> Appointments
+
+    %% Models to Database
+    PatientModel --> Patients
+    ConvModel --> Conversations
+    MessageModel --> Messages
+    TicketModel --> Tickets
+    HistoryModel --> History
+
+    %% Backend to Database
+    AuthAPI -->|ORM| PatientModel
+    ConvAPI -->|ORM| ConvModel
+    ConvAPI -->|ORM| MessageModel
+    TicketAPI -->|ORM| TicketModel
+
+    %% Styling
+    classDef frontend fill:#e1f5ff,stroke:#01579b,stroke-width:2px
+    classDef backend fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+    classDef agent fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    classDef llm fill:#e8f5e9,stroke:#1b5e20,stroke-width:2px
+    classDef database fill:#fce4ec,stroke:#880e4f,stroke-width:2px
+    classDef model fill:#f1f8e9,stroke:#33691e,stroke-width:2px
+
+    class UI,Chat,Dashboard,Auth frontend
+    class API,Routes,AuthAPI,ConvAPI,TicketAPI backend
+    class LangGraph,Agent,Tools,ExtractTool,VerifyTool,CreateTool,HistoryTool,TicketTool,ApptTool agent
+    class OpenAI,LLM llm
+    class PostgreSQL,Patients,Conversations,Messages,Tickets,History,Appointments database
+    class PatientModel,ConvModel,MessageModel,TicketModel,HistoryModel model
+        </div>
+
+        <div class="description">
+            <h2>📋 System Architecture Overview</h2>
+            
+            <h3>🔄 Data Flow</h3>
+            <ol>
+                <li><strong>User Interaction:</strong> Patients interact with the React frontend through a chat interface or dashboard</li>
+                <li><strong>Authentication:</strong> Users authenticate via JWT tokens through FastAPI auth endpoints</li>
+                <li><strong>Conversation Flow:</strong>
+                    <ul>
+                        <li>User sends a message → FastAPI receives it</li>
+                        <li>FastAPI invokes LangGraph agent with conversation state</li>
+                        <li>Agent uses LLM (GPT-4o mini) to understand intent</li>
+                        <li>Agent calls appropriate tools (extract, verify, create ticket, etc.)</li>
+                        <li>Tools interact with PostgreSQL database</li>
+                        <li>Agent generates response and returns to user</li>
+                    </ul>
+                </li>
+                <li><strong>State Management:</strong> LangGraph maintains conversation state, patient verification status, and collected information</li>
+                <li><strong>Persistence:</strong> All conversations, messages, tickets, and patient data are stored in PostgreSQL</li>
+            </ol>
+
+            <h3>🔧 Key Components</h3>
+            
+            <div class="tech-stack">
+                <div class="tech-card">
+                    <h3>Frontend</h3>
+                    <p>React + TypeScript + Tailwind CSS for responsive UI with real-time chat interface</p>
+                </div>
+                <div class="tech-card">
+                    <h3>Backend</h3>
+                    <p>FastAPI with async/await for high-performance API endpoints and WebSocket support</p>
+                </div>
+                <div class="tech-card">
+                    <h3>AI Agent</h3>
+                    <p>LangGraph StateGraph orchestrates multi-step conversations with tool calling</p>
+                </div>
+                <div class="tech-card">
+                    <h3>LLM</h3>
+                    <p>OpenAI GPT-4o mini for natural language understanding and generation</p>
+                </div>
+                <div class="tech-card">
+                    <h3>Database</h3>
+                    <p>PostgreSQL with SQLAlchemy ORM for data persistence and relationships</p>
+                </div>
+                <div class="tech-card">
+                    <h3>Tools</h3>
+                    <p>Specialized LangChain tools for patient verification, ticket creation, and appointment scheduling</p>
+                </div>
+            </div>
+
+            <h3>🛠️ Agent Tools</h3>
+            <ul>
+                <li><strong>extract_patient_info:</strong> Uses LLM to extract name, phone, and DOB from natural language</li>
+                <li><strong>verify_patient:</strong> Queries database to verify patient identity</li>
+                <li><strong>create_patient:</strong> Creates new patient record if not found</li>
+                <li><strong>get_patient_history:</strong> Retrieves patient's medical history</li>
+                <li><strong>create_ticket:</strong> Creates service tickets (blood tests, consultations, etc.)</li>
+                <li><strong>schedule_appointment:</strong> Schedules appointments with doctors</li>
+            </ul>
+
+            <h3>📊 Database Schema</h3>
+            <ul>
+                <li><strong>patients:</strong> Patient information, medical history, blood group</li>
+                <li><strong>conversations:</strong> Conversation sessions with status tracking</li>
+                <li><strong>messages:</strong> Individual messages in conversations</li>
+                <li><strong>tickets:</strong> Service requests with priority and assignment</li>
+                <li><strong>patient_history:</strong> Historical medical records</li>
+                <li><strong>appointments:</strong> Scheduled appointments with service persons</li>
+            </ul>
+
+            <h3>🔐 Security & Authentication</h3>
+            <ul>
+                <li>JWT-based authentication for patients, service persons, and admins</li>
+                <li>Password hashing using passlib with bcrypt</li>
+                <li>CORS configuration for frontend-backend communication</li>
+                <li>Patient verification through multi-factor matching (phone, name, DOB)</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        mermaid.initialize({ 
+            startOnLoad: true,
+            theme: 'default',
+            themeVariables: {
+                primaryColor: '#667eea',
+                primaryTextColor: '#fff',
+                primaryBorderColor: '#4a5568',
+                lineColor: '#667eea',
+                secondaryColor: '#f3e5f5',
+                tertiaryColor: '#fff3e0'
+            },
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis'
+            }
+        });
+    </script>
+</body>
+</html>
