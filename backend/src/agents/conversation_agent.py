@@ -533,6 +533,83 @@ def verify_patient_node(state: AgentState) -> AgentState:
         }
 
 
+def extract_datetime_from_message(message: str) -> Optional[str]:
+    """Extract date and time from user message using LLM, based on current IST time."""
+    from langchain_openai import ChatOpenAI
+    from langchain_core.prompts import ChatPromptTemplate
+    from pydantic import BaseModel, Field
+    from datetime import datetime
+    import pytz
+    
+    # Get current time in IST (Indian Standard Time)
+    ist = pytz.timezone('Asia/Kolkata')
+    now_ist = datetime.now(ist)
+    current_time_str = now_ist.strftime("%Y-%m-%d %H:%M:%S %Z")
+    current_date_str = now_ist.strftime("%A, %B %d, %Y")  # e.g., "Friday, January 10, 2026"
+    current_weekday = now_ist.strftime("%A")  # e.g., "Friday"
+    
+    # Create LLM with structured output
+    class DateTimeExtraction(BaseModel):
+        """Model for datetime extraction."""
+        datetime_iso: Optional[str] = Field(None, description="Extracted datetime in ISO format (YYYY-MM-DDTHH:MM:SS) or None if cannot extract")
+        confidence: str = Field(description="Confidence level: high, medium, or low")
+        reasoning: str = Field(description="Brief reasoning for the extraction")
+    
+    llm = ChatOpenAI(
+        model=settings.openai_model,
+        temperature=0.1,
+    ).with_structured_output(DateTimeExtraction)
+    
+    # Create prompt
+    prompt = ChatPromptTemplate.from_messages([
+        ("system", """You are a datetime extraction assistant. Your task is to extract a specific date and time from the user's message and convert it to ISO format (YYYY-MM-DDTHH:MM:SS) based on the current IST time.
+
+Current IST Time: {current_time}
+Current Date: {current_date}
+Today is: {current_weekday}
+
+Rules:
+1. Extract the date and time from the user's message
+2. Convert relative dates (e.g., "tomorrow", "next week", "next Tuesday", "next week on Tuesday") to absolute dates based on current IST time
+3. If time is not specified, default to 10:00:00 (10 AM IST)
+4. Return datetime in ISO format: YYYY-MM-DDTHH:MM:SS (e.g., "2025-01-15T10:00:00")
+5. All times should be interpreted in IST (Indian Standard Time) context
+6. If you cannot extract a valid datetime, return None for datetime_iso
+
+Examples:
+- "tomorrow at 10 AM" → Calculate tomorrow's date + 10:00:00
+- "next week on Tuesday at 11:00 AM" → Calculate next Tuesday's date + 11:00:00
+- "2025-01-15 at 2:00 PM" → "2025-01-15T14:00:00"
+- "next Monday at 3:00 PM" → Calculate next Monday's date + 15:00:00
+- "tommorow 10 AM" (typo) → Calculate tomorrow's date + 10:00:00
+
+IMPORTANT: Calculate dates relative to the current IST time provided above."""),
+        ("human", "User message: {user_message}\n\nExtract the datetime and return it in ISO format based on the current IST time provided above.")
+    ])
+    
+    try:
+        chain = prompt | llm
+        result = chain.invoke({
+            "current_time": current_time_str,
+            "current_date": current_date_str,
+            "current_weekday": current_weekday,
+            "user_message": message
+        })
+        
+        if result.datetime_iso:
+            print(f"DEBUG: LLM extracted datetime: {result.datetime_iso} (confidence: {result.confidence}, reasoning: {result.reasoning})")
+            return result.datetime_iso
+        else:
+            print(f"DEBUG: LLM could not extract datetime (reasoning: {result.reasoning})")
+            return None
+            
+    except Exception as e:
+        print(f"DEBUG: Error in LLM-based datetime extraction: {e}")
+        import traceback
+        traceback.print_exc()
+        return None
+
+
 def call_model(state: AgentState) -> AgentState:
     """Call the LLM with current state."""
     messages = state["messages"]
