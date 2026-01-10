@@ -1,12 +1,10 @@
 """Database connection and session management."""
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
 from sqlalchemy.orm import declarative_base
-import os
-from dotenv import load_dotenv
+from backend.src.config import settings
 
-load_dotenv()
-
-DATABASE_URL = os.getenv("DATABASE_URL", "postgresql+asyncpg://user:password@localhost:5432/hospital_ai_assistant")
+# Use database URL from settings (which reads from environment)
+DATABASE_URL = settings.database_url
 
 engine = create_async_engine(DATABASE_URL, echo=True)
 async_session_maker = async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
@@ -16,7 +14,9 @@ Base = declarative_base()
 
 def create_async_session_maker():
     """Create a fresh async session maker for a new event loop."""
-    fresh_engine = create_async_engine(DATABASE_URL, echo=True)
+    # Re-import settings to get latest database_url
+    from backend.src.config import settings
+    fresh_engine = create_async_engine(settings.database_url, echo=True)
     return async_sessionmaker(fresh_engine, class_=AsyncSession, expire_on_commit=False)
 
 

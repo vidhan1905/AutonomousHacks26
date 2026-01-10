@@ -37,7 +37,7 @@ export default function Login() {
         navigate('/dashboard/patient')
       } else if (!isSignUp && userType === 'patient') {
         // Patient login
-        await patientLogin(phoneNumber, password)
+        await patientLogin(phoneNumber)
         navigate('/dashboard/patient')
       } else {
         // Service person login
@@ -161,9 +161,9 @@ export default function Login() {
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  required
+                  required={isSignUp}
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500 dark:bg-gray-700 dark:text-white"
-                  placeholder={isSignUp ? "Choose a password" : "Enter your password"}
+                  placeholder={isSignUp ? "Choose a password" : "Enter your password (optional for login)"}
                 />
               </div>
             </>
