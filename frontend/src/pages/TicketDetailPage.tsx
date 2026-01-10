@@ -38,7 +38,12 @@ export default function TicketDetailPage() {
       setTicket(ticketData)
     } catch (err: any) {
       console.error('Failed to load ticket:', err)
-      setError(err.response?.data?.detail || 'Failed to load ticket details')
+      console.error('Error details:', {
+        message: err.message,
+        response: err.response,
+        stack: err.stack
+      })
+      setError(err.response?.data?.detail || err.message || 'Failed to load ticket details')
     } finally {
       setLoading(false)
     }
@@ -107,6 +112,11 @@ export default function TicketDetailPage() {
       <div className="min-h-screen bg-teal-50 dark:bg-gray-900 flex items-center justify-center">
         <div className="text-center">
           <p className="text-red-600 dark:text-red-400 mb-4">{error || 'Ticket not found'}</p>
+          {error && (
+            <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+              Please check the browser console for more details.
+            </p>
+          )}
           <button
             onClick={() => navigate('/dashboard/service-person')}
             className="px-4 py-2 bg-teal-500 text-white rounded-md hover:bg-teal-600"
@@ -118,7 +128,20 @@ export default function TicketDetailPage() {
     )
   }
 
-  const patientDetails = ticket.patient_details as any
+  // Safely parse patient_details - it might be a string (JSON) or object
+  let patientDetails: any = null
+  try {
+    if (ticket.patient_details) {
+      if (typeof ticket.patient_details === 'string') {
+        patientDetails = JSON.parse(ticket.patient_details)
+      } else {
+        patientDetails = ticket.patient_details
+      }
+    }
+  } catch (e) {
+    console.error('Error parsing patient_details:', e)
+    patientDetails = null
+  }
 
   return (
     <div className="min-h-screen bg-teal-50 dark:bg-gray-900">
@@ -163,7 +186,11 @@ export default function TicketDetailPage() {
               <div className="flex items-start justify-between mb-4">
                 <div>
                   <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-                    {ticket.service_type?.replace('_', ' ').toUpperCase() || ticket.service_type || 'Unknown Service'}
+                    {ticket.service_type 
+                      ? (typeof ticket.service_type === 'string' 
+                          ? ticket.service_type.replace('_', ' ').toUpperCase() 
+                          : String(ticket.service_type))
+                      : 'Unknown Service'}
                   </h2>
                   <p className="text-sm text-gray-600 dark:text-gray-400">
                     Created: {ticket.created_at ? new Date(ticket.created_at).toLocaleString() : 'Unknown'}
@@ -171,23 +198,37 @@ export default function TicketDetailPage() {
                 </div>
                 <div className="flex space-x-2">
                   <span className={`px-3 py-1 rounded-full text-sm font-medium ${priorityColors[ticket.priority as keyof typeof priorityColors] || 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200'}`}>
-                    Priority {ticket.priority}
+                    Priority {ticket.priority || 'N/A'}
                   </span>
                   <span className={`px-3 py-1 rounded-full text-sm font-medium ${statusColors[ticket.status as keyof typeof statusColors] || 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200'}`}>
-                    {ticket.status?.replace('_', ' ') || ticket.status}
+                    {ticket.status 
+                      ? (typeof ticket.status === 'string' 
+                          ? ticket.status.replace('_', ' ') 
+                          : String(ticket.status))
+                      : 'Unknown'}
                   </span>
                 </div>
               </div>
 
               <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
                 <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Description</h3>
-                <p className="text-gray-900 dark:text-gray-100 whitespace-pre-wrap">{ticket.description || 'No description provided'}</p>
+                <p className="text-gray-900 dark:text-gray-100 whitespace-pre-wrap">
+                  {ticket.description 
+                    ? (typeof ticket.description === 'string' 
+                        ? ticket.description 
+                        : JSON.stringify(ticket.description))
+                    : 'No description provided'}
+                </p>
               </div>
 
               {ticket.current_symptoms && (
                 <div className="border-t border-gray-200 dark:border-gray-700 pt-4 mt-4">
                   <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Current Symptoms</h3>
-                  <p className="text-gray-900 dark:text-gray-100 whitespace-pre-wrap">{ticket.current_symptoms}</p>
+                  <p className="text-gray-900 dark:text-gray-100 whitespace-pre-wrap">
+                    {typeof ticket.current_symptoms === 'string' 
+                      ? ticket.current_symptoms 
+                      : JSON.stringify(ticket.current_symptoms)}
+                  </p>
                 </div>
               )}
             </div>
