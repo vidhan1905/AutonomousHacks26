@@ -327,6 +327,9 @@ async def _create_multiple_tickets_async(
             
             for doctor in doctors_to_process:
                 try:
+                    print(f"DEBUG: Creating ticket for doctor: {doctor.get('name')} (ID: {doctor.get('doctor_id')})")
+                    print(f"DEBUG: conversation_id={conversation_id}, patient_id={patient_id}, service_type={service_type}")
+                    
                     ticket = Ticket(
                         conversation_id=uuid.UUID(conversation_id),
                         patient_id=uuid.UUID(patient_id),
@@ -336,11 +339,13 @@ async def _create_multiple_tickets_async(
                         assigned_to=uuid.UUID(doctor["doctor_id"]),
                         patient_details=patient_details,
                         past_history_summary=past_history_summary,
-                        llm_summary=f"{llm_summary}\n\nDoctor Ranking: Rank #{doctor['rank']} - {doctor['reason']}",
+                        llm_summary=llm_summary,  # Use the patient case summary directly, no doctor ranking info
                         status="open"  # Start as open, doctor must accept to proceed
                     )
                     session.add(ticket)
                     await session.flush()  # Flush to get ticket_id
+                    
+                    print(f"DEBUG: Successfully created ticket {ticket.ticket_id} for doctor {doctor.get('name')}")
                     
                     created_tickets.append({
                         "ticket_id": str(ticket.ticket_id),
@@ -350,19 +355,26 @@ async def _create_multiple_tickets_async(
                         "status": "created"
                     })
                 except Exception as e:
+                    import traceback
+                    error_traceback = traceback.format_exc()
+                    error_msg = f"{str(e)}\n{traceback.format_exc()}"
+                    print(f"ERROR: Failed to create ticket for doctor {doctor.get('name')}: {error_msg}")
                     errors.append({
                         "doctor_id": doctor.get("doctor_id", "unknown"),
                         "doctor_name": doctor.get("name", "unknown"),
-                        "error": str(e)
+                        "error": str(e),
+                        "traceback": error_traceback
                     })
             
             await session.commit()
             
             # Validation: Check if any tickets were created
             if len(created_tickets) == 0:
+                error_summary = "\n".join([f"- {e.get('doctor_name', 'Unknown')}: {e.get('error', 'Unknown error')}" for e in errors])
+                print(f"ERROR: Failed to create any tickets. Errors:\n{error_summary}")
                 return {
                     "status": "error",
-                    "error": "Failed to create any tickets. All attempts resulted in errors.",
+                    "error": f"Failed to create any tickets. All attempts resulted in errors.\n\nErrors:\n{error_summary}",
                     "tickets_created": 0,
                     "tickets": [],
                     "errors": errors
@@ -405,7 +417,7 @@ def create_multiple_tickets(
     Args:
         patient_id: Patient UUID
         conversation_id: Conversation UUID
-        ranked_doctors: List of ranked doctor dictionaries (from rank_doctors_with_llm)
+        ranked_doctors: List of ranked doctor dictionaries (from rank_doctors_with_llm result - MUST be the ranked_doctors list from the tool result)
         service_type: Service type string
         description: Description of the patient's request
         patient_details: Full patient details dictionary
@@ -415,7 +427,80 @@ def create_multiple_tickets(
     
     Returns:
         Dictionary with status, tickets_created count, and tickets list
+    
+    IMPORTANT: ranked_doctors MUST be the list from rank_doctors_with_llm result. Each doctor dict must have:
+    - doctor_id (string UUID)
+    - name (string)
+    - rank (integer)
+    - reason (string)
     """
+    print(f"DEBUG: create_multiple_tickets called with:")
+    print(f"  - patient_id: {patient_id}")
+    print(f"  - conversation_id: {conversation_id}")
+    print(f"  - ranked_doctors type: {type(ranked_doctors)}, length: {len(ranked_doctors) if ranked_doctors else 0}")
+    print(f"  - ranked_doctors value: {ranked_doctors}")
+    print(f"  - service_type: {service_type}")
+    print(f"  - description received: '{description}'")
+    print(f"  - llm_summary received: '{llm_summary[:100] if llm_summary else 'None'}...'")
+    
+    # Clean up description if it contains time references (in case LLM didn't follow instructions)
+    import re
+    time_patterns = [
+        r'\b(?:tomorrow|next\s+(?:monday|tuesday|wednesday|thursday|friday|saturday|sunday|week))\b',
+        r'\b(?:monday|tuesday|wednesday|thursday|friday|saturday|sunday)\s+at\s+\d+:\d+\s*(?:AM|PM|am|pm)\b',
+        r'\bat\s+\d+:\d+\s*(?:AM|PM|am|pm)\b',
+        r'\(Preferred appointment time:.*?\)',
+        r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}'
+    ]
+    original_description = description
+    for pattern in time_patterns:
+        description = re.sub(pattern, '', description, flags=re.IGNORECASE)
+    description = description.strip().replace('  ', ' ').replace(', ,', ',').strip()
+    if not description or len(description) < 3:
+        description = "Patient request"
+    if original_description != description:
+        print(f"DEBUG: Cleaned description from '{original_description}' to '{description}'")
+    
+    # Validate ranked_doctors
+    if not ranked_doctors:
+        print(f"ERROR: ranked_doctors is empty or None!")
+        return {
+            "status": "error",
+            "error": "No ranked doctors provided. ranked_doctors parameter is empty. Make sure you pass the ranked_doctors list from the rank_doctors_with_llm tool result.",
+            "tickets_created": 0,
+            "tickets": []
+        }
+    
+    if not isinstance(ranked_doctors, list):
+        print(f"ERROR: ranked_doctors is not a list! Type: {type(ranked_doctors)}")
+        return {
+            "status": "error",
+            "error": f"ranked_doctors must be a list, but got {type(ranked_doctors)}. Make sure you pass the ranked_doctors list from the rank_doctors_with_llm tool result.",
+            "tickets_created": 0,
+            "tickets": []
+        }
+    
+    # Validate each doctor has required fields
+    for i, doctor in enumerate(ranked_doctors):
+        if not isinstance(doctor, dict):
+            print(f"ERROR: Doctor at index {i} is not a dict: {doctor}")
+            return {
+                "status": "error",
+                "error": f"Doctor at index {i} is not a dictionary. Each doctor must be a dict with doctor_id, name, rank, and reason.",
+                "tickets_created": 0,
+                "tickets": []
+            }
+        required_fields = ["doctor_id", "name", "rank"]
+        missing_fields = [field for field in required_fields if field not in doctor]
+        if missing_fields:
+            print(f"ERROR: Doctor at index {i} missing fields: {missing_fields}")
+            return {
+                "status": "error",
+                "error": f"Doctor at index {i} is missing required fields: {missing_fields}. Each doctor must have doctor_id, name, and rank.",
+                "tickets_created": 0,
+                "tickets": []
+            }
+    
     try:
         return run_async_safely(
             _create_multiple_tickets_async,
@@ -432,4 +517,6 @@ def create_multiple_tickets(
         )
     except Exception as e:
         import traceback
-        return {"status": "error", "error": f"Exception in create_multiple_tickets: {str(e)}\n{traceback.format_exc()}"}
+        error_msg = f"Exception in create_multiple_tickets: {str(e)}\n{traceback.format_exc()}"
+        print(f"ERROR: {error_msg}")
+        return {"status": "error", "error": error_msg}

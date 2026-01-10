@@ -1,5 +1,6 @@
 """FastAPI dependencies."""
 from typing import Optional
+import uuid
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -27,6 +28,10 @@ async def get_current_user(
     
     user_id = payload.get("sub")
     user_type = payload.get("type")  # "patient", "service_person", "admin"
+    
+    # Convert user_id to UUID if it's a string
+    if isinstance(user_id, str):
+        user_id = uuid.UUID(user_id)
     
     if user_type == "patient":
         result = await db.execute(select(Patient).where(Patient.patient_id == user_id))
