@@ -54,8 +54,15 @@ async def list_tickets(
         query = query.where(Ticket.patient_id == user.patient_id)
     elif user_type == "service_person":
         # Service persons ONLY see tickets assigned to them (excluding cancelled)
+        # Ensure both are UUID objects for proper comparison
+        service_person_uuid = user.service_person_id
+        if isinstance(service_person_uuid, str):
+            service_person_uuid = uuid.UUID(service_person_uuid)
+        
+        print(f"DEBUG list_tickets: Filtering tickets for service_person_id: {service_person_uuid} (type: {type(service_person_uuid)})")
+        
         query = query.where(
-            Ticket.assigned_to == user.service_person_id,
+            Ticket.assigned_to == service_person_uuid,
             Ticket.status != "cancelled"
         )
     # Admins see all tickets
@@ -70,6 +77,23 @@ async def list_tickets(
     
     result = await db.execute(query.order_by(Ticket.created_at.desc()))
     tickets = result.scalars().all()
+    
+    # Debug logging and verification for service persons
+    if user_type == "service_person":
+        print(f"DEBUG list_tickets: Found {len(tickets)} tickets")
+        verified_tickets = []
+        for ticket in tickets:
+            ticket_assigned_uuid = ticket.assigned_to
+            if isinstance(ticket_assigned_uuid, str):
+                ticket_assigned_uuid = uuid.UUID(ticket_assigned_uuid)
+            
+            # Verify the ticket is actually assigned to this user (safety check)
+            if ticket_assigned_uuid == service_person_uuid:
+                verified_tickets.append(ticket)
+                print(f"  - Ticket {ticket.ticket_id}: assigned_to={ticket.assigned_to} (type: {type(ticket.assigned_to)}), status={ticket.status} ✓")
+            else:
+                print(f"  - WARNING: Ticket {ticket.ticket_id} assigned_to={ticket.assigned_to} does NOT match service_person_id={service_person_uuid} - FILTERING OUT")
+        tickets = verified_tickets
     
     return [
         {
@@ -299,8 +323,45 @@ async def accept_reject_ticket(
         raise HTTPException(status_code=404, detail="Ticket not found")
     
     # Verify ticket is assigned to this service person
-    if ticket.assigned_to != current_user["user"].service_person_id:
-        raise HTTPException(status_code=403, detail="You can only accept/reject tickets assigned to you")
+    # Compare UUIDs properly - convert both to UUID if needed
+    current_service_person_id = current_user["user"].service_person_id
+    ticket_assigned_to = ticket.assigned_to
+    
+    # Debug logging
+    print(f"DEBUG accept_reject_ticket:")
+    print(f"  - current_service_person_id: {current_service_person_id} (type: {type(current_service_person_id)})")
+    print(f"  - ticket_assigned_to: {ticket_assigned_to} (type: {type(ticket_assigned_to)})")
+    print(f"  - ticket_id: {ticket_id}")
+    print(f"  - ticket status: {ticket.status}")
+    
+    # Check if ticket is assigned
+    if ticket_assigned_to is None:
+        raise HTTPException(status_code=400, detail="Ticket is not assigned to anyone. Cannot accept/reject unassigned ticket.")
+    
+    # Ensure both are UUID objects for comparison
+    if isinstance(current_service_person_id, str):
+        current_service_person_id = uuid.UUID(current_service_person_id)
+    if isinstance(ticket_assigned_to, str):
+        ticket_assigned_to = uuid.UUID(ticket_assigned_to)
+    
+    # Normalize both to UUID strings for comparison (most reliable)
+    current_id_str = str(current_service_person_id) if current_service_person_id else None
+    ticket_id_str = str(ticket_assigned_to) if ticket_assigned_to else None
+    
+    print(f"  - After UUID conversion:")
+    print(f"    - current_service_person_id: {current_service_person_id} (type: {type(current_service_person_id)})")
+    print(f"    - ticket_assigned_to: {ticket_assigned_to} (type: {type(ticket_assigned_to)})")
+    print(f"    - current_id_str: {current_id_str}")
+    print(f"    - ticket_id_str: {ticket_id_str}")
+    print(f"    - UUID comparison: {ticket_assigned_to == current_service_person_id}")
+    print(f"    - String comparison: {current_id_str == ticket_id_str}")
+    
+    # Compare as UUIDs first, then fallback to strings
+    if ticket_assigned_to != current_service_person_id:
+        raise HTTPException(
+            status_code=403, 
+            detail=f"You can only accept/reject tickets assigned to you. Ticket is assigned to {ticket_id_str}, but you are {current_id_str}"
+        )
     
     # Verify ticket is in open status
     if ticket.status != "open":
