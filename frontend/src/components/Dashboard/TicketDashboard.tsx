@@ -9,7 +9,7 @@ interface TicketDashboardProps {
   onTicketClick?: (ticket: Ticket) => void
 }
 
-export default function TicketDashboard({ userType, onTicketClick }: TicketDashboardProps) {
+export default function TicketDashboard({ userType: _userType, onTicketClick }: TicketDashboardProps) {
   const [tickets, setTickets] = useState<Ticket[]>([])
   const [loading, setLoading] = useState(true)
   const [statusFilter, setStatusFilter] = useState('all')
