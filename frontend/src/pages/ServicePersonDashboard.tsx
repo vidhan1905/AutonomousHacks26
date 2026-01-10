@@ -1,63 +1,15 @@
-import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuthStore } from '../hooks/useAuth'
 import TicketDashboard from '../components/Dashboard/TicketDashboard'
 import type { Ticket } from '../types'
-import { ticketApi } from '../services/api'
 
 export default function ServicePersonDashboard() {
   const { user, logout } = useAuthStore()
   const navigate = useNavigate()
-  const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null)
 
-  const handleViewTicket = async (ticketId: string) => {
-    try {
-      const ticket = await ticketApi.get(ticketId)
-      setSelectedTicket(ticket)
-    } catch (error) {
-      console.error('Failed to load ticket:', error)
-    }
-  }
-
-  const handleAssignToMe = async (ticketId: string) => {
-    if (!user?.id) return
-    try {
-      await ticketApi.assign(ticketId, user.id)
-      // Reload tickets
-      window.location.reload()
-    } catch (error) {
-      console.error('Failed to assign ticket:', error)
-    }
-  }
-
-  const handleUpdateStatus = async (ticketId: string, status: string) => {
-    try {
-      await ticketApi.updateStatus(ticketId, status)
-      if (selectedTicket?.ticket_id === ticketId) {
-        setSelectedTicket({ ...selectedTicket, status })
-      }
-      // Reload tickets
-      window.location.reload()
-    } catch (error) {
-      console.error('Failed to update status:', error)
-    }
-  }
-
-  const handleAcceptReject = async (ticketId: string, action: 'accept' | 'reject') => {
-    try {
-      const result = await ticketApi.acceptReject(ticketId, action)
-      if (action === 'accept' && result.cancelled_tickets) {
-        alert(`Ticket accepted! ${result.cancelled_tickets} other ticket(s) have been cancelled.`)
-      }
-      if (selectedTicket?.ticket_id === ticketId) {
-        setSelectedTicket({ ...selectedTicket, status: result.status })
-      }
-      // Reload tickets
-      window.location.reload()
-    } catch (error: any) {
-      console.error('Failed to accept/reject ticket:', error)
-      alert(error.response?.data?.detail || 'Failed to accept/reject ticket')
-    }
+  const handleTicketClick = (ticket: Ticket) => {
+    // Navigate to ticket detail page
+    navigate(`/tickets/${ticket.ticket_id}`)
   }
 
   return (
@@ -85,89 +37,12 @@ export default function ServicePersonDashboard() {
       </header>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">Tickets</h2>
-            <TicketDashboard 
-              userType="service_person" 
-              onTicketClick={handleViewTicket}
-            />
-          </div>
-
-          {selectedTicket && (
-            <div className="lg:col-span-1">
-              <div className="bg-white rounded-lg shadow-md p-6 sticky top-4">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Ticket Details</h3>
-                <div className="space-y-4">
-                  <div>
-                    <p className="text-sm font-medium text-gray-700">Service Type</p>
-                    <p className="text-sm text-gray-900">{selectedTicket.service_type}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-gray-700">Status</p>
-                    <p className="text-sm text-gray-900">{selectedTicket.status}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-gray-700">Priority</p>
-                    <p className="text-sm text-gray-900">{selectedTicket.priority}</p>
-                  </div>
-                  {selectedTicket.llm_summary && (
-                    <div>
-                      <p className="text-sm font-medium text-gray-700">LLM Summary</p>
-                      <p className="text-sm text-gray-900 whitespace-pre-wrap">{selectedTicket.llm_summary}</p>
-                    </div>
-                  )}
-                  {selectedTicket.patient_details && (
-                    <div>
-                      <p className="text-sm font-medium text-gray-700">Patient Details</p>
-                      <pre className="text-xs text-gray-900 bg-gray-50 p-2 rounded overflow-auto">
-                        {JSON.stringify(selectedTicket.patient_details, null, 2)}
-                      </pre>
-                    </div>
-                  )}
-                  <div className="flex flex-col space-y-2">
-                    {selectedTicket.status === 'open' && (
-                      <>
-                        <div className="flex space-x-2">
-                          <button
-                            onClick={() => handleAcceptReject(selectedTicket.ticket_id, 'accept')}
-                            className="flex-1 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 text-sm font-medium"
-                          >
-                            Accept Ticket
-                          </button>
-                          <button
-                            onClick={() => handleAcceptReject(selectedTicket.ticket_id, 'reject')}
-                            className="flex-1 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 text-sm font-medium"
-                          >
-                            Reject Ticket
-                          </button>
-                        </div>
-                        <p className="text-xs text-gray-500 text-center">
-                          Accepting will cancel tickets for other doctors
-                        </p>
-                      </>
-                    )}
-                    {selectedTicket.status === 'assigned' && (
-                      <button
-                        onClick={() => handleUpdateStatus(selectedTicket.ticket_id, 'in_progress')}
-                        className="w-full px-4 py-2 bg-yellow-600 text-white rounded-md hover:bg-yellow-700 text-sm"
-                      >
-                        Start Work
-                      </button>
-                    )}
-                    {selectedTicket.status === 'in_progress' && (
-                      <button
-                        onClick={() => handleUpdateStatus(selectedTicket.ticket_id, 'completed')}
-                        className="w-full px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 text-sm"
-                      >
-                        Complete
-                      </button>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
+        <div>
+          <h2 className="text-xl font-semibold text-gray-900 mb-4">Your Tickets</h2>
+          <TicketDashboard 
+            userType="service_person" 
+            onTicketClick={handleTicketClick}
+          />
         </div>
       </main>
     </div>

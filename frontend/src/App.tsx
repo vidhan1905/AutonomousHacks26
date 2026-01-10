@@ -1,13 +1,34 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
+import { useEffect } from 'react'
 import Login from './pages/Login'
 import ChatPage from './pages/ChatPage'
 import PatientDashboard from './pages/PatientDashboard'
 import ServicePersonDashboard from './pages/ServicePersonDashboard'
+import TicketDetailPage from './pages/TicketDetailPage'
 import ProtectedRoute from './components/Auth/ProtectedRoute'
 import { useAuthStore } from './hooks/useAuth'
 
 function App() {
-  const { user } = useAuthStore()
+  const { user, initialize, isInitialized } = useAuthStore()
+
+  // Initialize auth state on app mount
+  useEffect(() => {
+    if (!isInitialized) {
+      initialize()
+    }
+  }, [initialize, isInitialized])
+
+  // Show loading state while initializing
+  if (!isInitialized) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading...</p>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <Router>
@@ -37,7 +58,15 @@ function App() {
             </ProtectedRoute>
           }
         />
-        <Route path="/" element={<Navigate to={user ? "/dashboard/patient" : "/login"} replace />} />
+        <Route
+          path="/tickets/:ticketId"
+          element={
+            <ProtectedRoute requiredType="service_person">
+              <TicketDetailPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="/" element={<Navigate to={user ? (user.type === 'patient' ? "/dashboard/patient" : "/dashboard/service-person") : "/login"} replace />} />
       </Routes>
     </Router>
   )
