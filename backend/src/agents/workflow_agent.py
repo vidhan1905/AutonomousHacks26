@@ -34,10 +34,7 @@ from backend.src.agents.state_helpers import (
     get_ticket_creation,
     set_ticket_creation,
 )
-from backend.src.agents.tools.extraction_tools import extract_patient_info
 from backend.src.agents.tools.patient_tools import (
-    verify_patient,
-    create_patient,
     get_patient_history,
 )
 from backend.src.agents.tools.doctor_tools import (
@@ -62,12 +59,12 @@ llm = ChatOpenAI(
 def route_entry_node(state: AgentState) -> AgentState:
     """Entry node: Route to appropriate workflow based on current state.
     
-    ROOT FIX: Always extract info from new user messages BEFORE continuing workflow.
+    For authenticated patients only (patient_verified is always True).
     
     Determines where to start:
-    - If patient not verified and has new user message → extract_patient_info FIRST
-    - If patient verified but history not shown → fetch_history (will continue to show_history automatically)
-    - If patient verified and history shown → understand_request (if new user message)
+    - If history not shown → fetch_history (will continue to show_history automatically)
+    - If history shown and has new user message → understand_request
+    - Otherwise → end (wait for user)
     """
     patient_verified = state.get("patient_verified", False)
     history_shown = state.get("history_shown", False)
@@ -81,22 +78,14 @@ def route_entry_node(state: AgentState) -> AgentState:
         if isinstance(last_message, HumanMessage):
             has_new_user_message = True
     
-    # ROOT FIX: If patient not verified and there's a new user message,
-    # ALWAYS route to extract_patient_info first to extract any new info
-    # This ensures we don't skip extraction when user provides info after "ask_for_missing"
-    if not patient_verified and has_new_user_message:
-        state["next_action"] = "extract_patient_info"
-        print(f"[ROUTE ENTRY] New user message - routing to extract_patient_info first")
-        return state
+    # Valid continuation actions for authenticated patients
+    valid_continuation_actions = [
+        "fetch_history", "show_history", "validate_request", "find_doctors", 
+        "rank_doctors", "create_tickets", "confirm_booking", "inform_no_doctors"
+    ]
     
-    # ROOT FIX: For continuing workflow actions (like "fetch_history" from verify_patient),
-    # respect them - but only if they're valid actions and we're not waiting for user input
-    valid_continuation_actions = ["fetch_history", "show_history", "verify_patient", "create_patient",
-                                  "validate_request", "find_doctors", "rank_doctors", "create_tickets", 
-                                  "confirm_booking", "inform_no_doctors"]
-    
-    # Valid waiting states (these are valid, but we should still route based on new messages)
-    valid_waiting_states = ["wait_for_request", "ask_for_request_info", "ask_for_missing"]
+    # Valid waiting states
+    valid_waiting_states = ["wait_for_request", "ask_for_request_info"]
     
     if next_action in valid_continuation_actions:
         # Keep the next_action as is (workflow is continuing automatically)
@@ -110,244 +99,32 @@ def route_entry_node(state: AgentState) -> AgentState:
     elif next_action and next_action not in valid_waiting_states + ["end"]:
         # Invalid action - reset and route based on state
         print(f"[ROUTE ENTRY] Invalid next_action: {next_action}, resetting based on state")
+        state["next_action"] = ""  # Reset to force state-based routing
     
-    # Route based on state
+    # Route based on state - authenticated patients only
     if not patient_verified:
-        # Patient not verified - if no new message, we're waiting (shouldn't happen, but handle it)
-        if has_new_user_message:
-            state["next_action"] = "extract_patient_info"
+        # This shouldn't happen for authenticated users, but handle gracefully
+        print(f"[ROUTE ENTRY] WARNING: Patient not verified (shouldn't happen for authenticated users)")
+        state["next_action"] = "end"
+    elif not history_shown:
+        # History not shown yet - fetch it first
+        # Check if this is a new conversation (no user messages yet)
+        if not has_new_user_message and len([m for m in messages if isinstance(m, HumanMessage)]) == 0:
+            # New conversation - fetch history first
+            state["next_action"] = "fetch_history"
+            print(f"[ROUTE ENTRY] New conversation - routing to fetch_history")
         else:
-            state["next_action"] = "end"
-    elif patient_verified and not history_shown:
-        # Patient verified but history not shown - fetch and show history
-        state["next_action"] = "fetch_history"
-    elif patient_verified and history_shown and has_new_user_message:
-        # Patient verified, history shown, and new user message - understand request
+            # There are user messages, so fetch history if not already done
+            state["next_action"] = "fetch_history"
+            print(f"[ROUTE ENTRY] Authenticated patient with user message - routing to fetch_history")
+    elif history_shown and has_new_user_message:
+        # History shown and new user message - understand request
         state["next_action"] = "understand_request"
+        print(f"[ROUTE ENTRY] History shown, new message - routing to understand_request")
     else:
         # Default - end (wait for user)
         state["next_action"] = "end"
-    
-    return state
-
-
-def extract_patient_info_node(state: AgentState) -> AgentState:
-    """Node 1: Extract patient info from user message using LLM.
-    
-    Extracts name, phone, DOB from the last user message.
-    Updates state with extracted information.
-    """
-    # Skip if already verified
-    if state.get("patient_verified", False):
-        state["next_action"] = "validate_info"
-        return state
-    
-    messages = state.get("messages", [])
-    
-    # Get last user message
-    last_user_message = None
-    for msg in reversed(messages):
-        if isinstance(msg, HumanMessage):
-            last_user_message = msg.content
-            break
-    
-    if not last_user_message:
-        return state
-    
-    # Extract patient info using tool
-    result = extract_patient_info.invoke({"message": last_user_message})
-    
-    if result.get("success") and result.get("extracted"):
-        extracted = result.get("extracted", {})
-        patient_info = get_patient_info(state)
-        
-        # Update only non-None fields
-        if extracted.get("name"):
-            patient_info.name = extracted["name"]
-        if extracted.get("phone"):
-            patient_info.phone = extracted["phone"]
-        if extracted.get("date_of_birth"):
-            patient_info.date_of_birth = extracted["date_of_birth"]
-        
-        set_patient_info(state, patient_info)
-        print(f"[WORKFLOW] Extracted patient info: {extracted}")
-        
-        # ROOT FIX: Clear pending_questions if extraction succeeded and all info is now collected
-        missing = patient_info.missing_fields()
-        if not missing:
-            # All info collected - clear questions immediately
-            hitl = get_hitl(state)
-            hitl.clear_questions()
-            hitl.validation_complete = True
-            hitl.is_waiting_for_input = False
-            set_hitl(state, hitl)
-    
-    state["next_action"] = "validate_info"
-    return state
-
-
-def validate_patient_info_node(state: AgentState) -> AgentState:
-    """Node 2: Validate if all required patient info is collected.
-    
-    Checks if name, phone, and DOB are present.
-    Routes to ask_for_missing if info is missing.
-    """
-    patient_info = get_patient_info(state)
-    missing = patient_info.missing_fields()
-    
-    if missing:
-        # Set validation status
-        hitl = get_hitl(state)
-        hitl.is_waiting_for_input = True
-        hitl.validation_complete = False
-        hitl.clear_questions()
-        
-        # Add questions for missing fields
-        questions_map = {
-            "name": "What is your full name?",
-            "phone": "What is your phone number?",
-            "date_of_birth": "What is your date of birth? (Please provide in YYYY-MM-DD format, e.g., 1990-01-15)"
-        }
-        
-        for field in missing:
-            if field in questions_map:
-                hitl.add_question(questions_map[field])
-        
-        set_hitl(state, hitl)
-        state["next_action"] = "ask_for_missing"
-    else:
-        # All info collected
-        hitl = get_hitl(state)
-        hitl.is_waiting_for_input = False
-        hitl.validation_complete = True
-        hitl.clear_questions()
-        set_hitl(state, hitl)
-        state["next_action"] = "verify_patient"
-    
-    return state
-
-
-def ask_for_missing_info_node(state: AgentState) -> AgentState:
-    """Node 3: Ask user for missing patient information using LLM.
-    
-    Generates a conversational message asking for missing fields.
-    """
-    hitl = get_hitl(state)
-    pending_questions = hitl.pending_questions
-    
-    if not pending_questions:
-        return state
-    
-    # Get already collected info
-    patient_info = get_patient_info(state)
-    collected_info = []
-    if patient_info.name:
-        collected_info.append(f"Name: {patient_info.name}")
-    if patient_info.phone:
-        collected_info.append(f"Phone: {patient_info.phone}")
-    if patient_info.date_of_birth:
-        collected_info.append(f"Date of birth: {patient_info.date_of_birth}")
-    
-    newline = "\n"
-    collected_info_text = newline.join(f"- {info}" for info in collected_info) if collected_info else "- No information collected yet"
-    pending_questions_text = newline.join(f"{i}. {q}" for i, q in enumerate(pending_questions, 1))
-    
-    
-    # Build system prompt for LLM
-    system_prompt = f"""You are a helpful AI assistant for a hospital call center.
-
-CURRENT STATE:
-{collected_info_text} 
-REMAINING INFORMATION NEEDED:
-{pending_questions_text}
-
-INSTRUCTIONS:
-1. If information is already collected, acknowledge it warmly
-2. Ask ONLY for the remaining information
-3. Be conversational and friendly
-4. Do NOT repeat information you already have
-
-EXAMPLE (if name is collected):
-"Thank you! I have your name as [name]. I still need:
-1. Your phone number
-2. Your date of birth (YYYY-MM-DD format)
-
-Could you please provide these?"
-
-EXAMPLE (if nothing collected):
-"Hello! I'm your AI assistant here to help you. To verify your identity and access your medical records, I'll need a few details:
-1. Full name
-2. Phone number  
-3. Date of birth (YYYY-MM-DD format, e.g., 1990-01-15)
-
-Once you provide these details, I'll be able to assist you with scheduling appointments, creating service tickets, or answering any questions you may have."
-"""
-    
-    # Add system prompt and call LLM
-    messages = state.get("messages", [])
-    messages_with_system = [AIMessage(content=system_prompt)] + messages
-    
-    response = llm.invoke(messages_with_system)
-    
-    # Add LLM response to messages
-    messages.append(response)
-    state["messages"] = messages
-    
-    return state
-
-
-def verify_patient_node(state: AgentState) -> AgentState:
-    """Node 4: Verify patient exists in database.
-    
-    Checks database for existing patient.
-    Routes to create_patient if not found.
-    """
-    patient_info = get_patient_info(state)
-    
-    # Verify patient
-    result = verify_patient.invoke({
-        "name": patient_info.name,
-        "phone": patient_info.phone,
-        "date_of_birth": patient_info.date_of_birth,
-    })
-    
-    if result.get("found"):
-        # Patient found - update state
-        state["patient_id"] = result["patient_id"]
-        state["patient_verified"] = True
-        patient_info.patient_id = result["patient_id"]
-        set_patient_info(state, patient_info)
-        state["next_action"] = "fetch_history"
-        print(f"[WORKFLOW] Patient verified: {result['patient_id']}")
-    else:
-        # Patient not found - create new
-        state["next_action"] = "create_patient"
-        print(f"[WORKFLOW] Patient not found, will create new")
-    
-    return state
-
-
-def create_patient_node(state: AgentState) -> AgentState:
-    """Node 5: Create new patient in database if not exists.
-    
-    Creates patient record and updates state.
-    """
-    patient_info = get_patient_info(state)
-    
-    # Create patient
-    result = create_patient.invoke({
-        "name": patient_info.name,
-        "phone": patient_info.phone,
-        "date_of_birth": patient_info.date_of_birth,
-    })
-    
-    if result.get("success"):
-        state["patient_id"] = result["patient_id"]
-        state["patient_verified"] = True
-        patient_info.patient_id = result["patient_id"]
-        set_patient_info(state, patient_info)
-        state["next_action"] = "fetch_history"
-        print(f"[WORKFLOW] Patient created: {result['patient_id']}")
+        print(f"[ROUTE ENTRY] Waiting for user input")
     
     return state
 
@@ -368,9 +145,19 @@ def fetch_history_node(state: AgentState) -> AgentState:
     # Fetch history
     result = get_patient_history.invoke({"patient_id": patient_id})
     
-    # ROOT FIX: Check for 'error' field instead of 'status' field
-    if result.get("error"):
-        # Error fetching history - still show history node (it will say "no history" or error message)
+    # Check result status - handle schema errors, regular errors, and success
+    result_status = result.get("status", "error" if result.get("error") else "success")
+    
+    if result_status == "schema_error":
+        # Schema error - log and store in state
+        error_msg = result.get("error", "Unknown schema error")
+        diagnostic = result.get("diagnostic", "Schema validation failed")
+        print(f"[SCHEMA ERROR] History fetch schema error: {error_msg}")
+        print(f"[SCHEMA ERROR] Diagnostic: {diagnostic}")
+        state["patient_history"] = result
+        state["next_action"] = "show_history"  # Still show history node to inform user
+    elif result.get("error"):
+        # Regular error fetching history - still show history node (it will say "no history" or error message)
         state["patient_history"] = result
         state["next_action"] = "show_history"
         print(f"[WORKFLOW] History fetch error: {result.get('error')}, proceeding to show_history")
@@ -389,11 +176,45 @@ def show_history_node(state: AgentState) -> AgentState:
     
     Generates a friendly, readable format for patient history.
     ROOT FIX: Uses 'history_records' field (not 'history') from get_patient_history tool.
+    UPDATED: For authenticated patients, skip history and ask directly for health updates/concerns.
     """
     patient_history = state.get("patient_history")
     messages = state.get("messages", [])
+    history_shown = state.get("history_shown", False)
     
-    # ROOT FIX: Check for 'history_records' field (not 'history') and 'error' field
+    # Check if this is a new conversation with first user message
+    # For authenticated patients, this is the first message - generate greeting
+    user_messages = [msg for msg in messages if isinstance(msg, HumanMessage)]
+    is_first_message = len(user_messages) == 1 and not history_shown
+    
+    # For new conversations with authenticated patients, skip history and ask for health updates/concerns
+    if is_first_message:
+        # This is the initial greeting - ask for health updates/concerns directly
+        system_prompt = """You are a helpful AI assistant for a hospital.
+
+The patient has been verified and authenticated.
+
+INSTRUCTIONS:
+1. Give a friendly greeting (use the patient's name if available)
+2. Ask: "What are your health updates and any health concerns today?"
+3. Be warm, conversational, and welcoming
+4. Keep it brief and clear
+
+Do NOT show medical history unless the patient specifically asks for it."""
+        
+        # Add system prompt and call LLM
+        messages_with_system = [AIMessage(content=system_prompt)] + messages
+        response = llm.invoke(messages_with_system)
+        
+        # Add LLM response
+        messages.append(response)
+        state["messages"] = messages
+        state["history_shown"] = True  # Mark as shown to skip showing history later
+        state["next_action"] = "wait_for_request"  # Wait for user to provide their request
+        
+        return state
+    
+    # If there are user messages, show history if requested or if it was already fetched
     history_text = "No previous medical history found."
     
     if patient_history:
@@ -408,9 +229,8 @@ def show_history_node(state: AgentState) -> AgentState:
                     f"- {record.get('visit_date', 'Unknown')}: {record.get('service_type', 'Unknown')} - {record.get('diagnosis', 'No diagnosis')}"
                     for record in history_records
                 ])
-            # else: history_text already set to "No previous medical history found."
     
-    # Build system prompt
+    # Build system prompt for showing history
     system_prompt = f"""You are a helpful AI assistant for a hospital.
 
 The patient has been verified and you've fetched their medical history.
@@ -736,18 +556,45 @@ def find_doctors_node(state: AgentState) -> AgentState:
         "preferred_date_time": appointment_prefs.preferred_date_time,
     })
     
-    if result.get("status") == "success":
+    # Handle different result statuses
+    result_status = result.get("status", "error")
+    
+    if result_status == "schema_error":
+        # Schema issue - log error and provide clear diagnostic
+        error_msg = result.get("error", "Unknown schema error")
+        diagnostic = result.get("diagnostic", "Schema validation failed")
+        print(f"[SCHEMA ERROR] {error_msg}")
+        print(f"[SCHEMA ERROR] Diagnostic: {diagnostic}")
+        state["doctors_found"] = False
+        state["doctors_error"] = f"SCHEMA ERROR: {diagnostic}. Details: {error_msg}"
+        state["next_action"] = "inform_no_doctors"  # Still inform user, but with schema error message
+    elif result_status == "success":
         doctors = result.get("doctors", [])
+        diagnostic = result.get("diagnostic")
         state["available_doctors"] = doctors
         
         if not doctors:
             state["doctors_found"] = False
-            state["doctors_error"] = f"No active doctors found for service_type: {appointment_prefs.service_type}"
+            # Use diagnostic information if available for better error messages
+            if diagnostic:
+                reason = diagnostic.get("reason", f"No active doctors found for service_type: {appointment_prefs.service_type}")
+                state["doctors_error"] = reason
+                print(f"[WORKFLOW] No doctors found: {reason}")
+                print(f"[WORKFLOW] Diagnostic: {diagnostic}")
+            else:
+                state["doctors_error"] = f"No active doctors found for service_type: {appointment_prefs.service_type}"
             state["next_action"] = "inform_no_doctors"
         else:
             state["doctors_found"] = True
             state["next_action"] = "rank_doctors"
             print(f"[WORKFLOW] Found {len(doctors)} active doctors for service_type '{appointment_prefs.service_type}' (will be ranked)")
+    else:
+        # Error status
+        error_msg = result.get("error", "Unknown error fetching doctors")
+        print(f"[ERROR] Error fetching doctors: {error_msg}")
+        state["doctors_found"] = False
+        state["doctors_error"] = f"Error fetching doctors: {error_msg}"
+        state["next_action"] = "inform_no_doctors"
     
     return state
 
@@ -756,16 +603,41 @@ def inform_no_doctors_node(state: AgentState) -> AgentState:
     """Node 12: Inform user no doctors are available using LLM.
     
     Generates a message informing user to contact helpline.
+    Handles both "no doctors available" and "schema error" cases.
     """
     appointment_prefs = get_appointment_preferences(state)
     service_type = appointment_prefs.service_type
+    doctors_error = state.get("doctors_error", "")
     
-    # ROOT FIX: Get available service types to suggest alternatives
-    from backend.src.agents.tools.doctor_tools import get_available_service_types
-    available_service_types = get_available_service_types()
+    # Check if this is a schema error vs legitimate "no doctors" case
+    is_schema_error = "SCHEMA ERROR" in doctors_error.upper() if doctors_error else False
+    
+    # ROOT FIX: Get available service types to suggest alternatives (only if not schema error)
+    available_service_types = []
+    if not is_schema_error:
+        try:
+            from backend.src.agents.tools.doctor_tools import get_available_service_types
+            available_service_types = get_available_service_types()
+        except Exception as e:
+            print(f"[WARNING] Could not fetch available service types: {e}")
+    
     available_types_text = ", ".join(available_service_types) if available_service_types else "none available"
     
-    system_prompt = f"""You are a helpful AI assistant for a hospital.
+    if is_schema_error:
+        # Schema error case - inform user about technical issue
+        system_prompt = f"""You are a helpful AI assistant for a hospital.
+
+A technical issue occurred while searching for doctors: {doctors_error}
+
+Please inform the patient that there's a temporary technical issue and ask them to:
+1. Contact the hospital helpline directly
+2. Try again later
+3. Provide their contact information for a callback
+
+Be apologetic and helpful."""
+    else:
+        # Normal "no doctors available" case
+        system_prompt = f"""You are a helpful AI assistant for a hospital.
 
 Unfortunately, no doctors are currently available for {service_type} at the requested time.
 
@@ -967,6 +839,9 @@ Summary:"""
         state["ticket_created"] = True
         state["next_action"] = "confirm_booking"
         print(f"[WORKFLOW] Created {len(tickets)} tickets with case summary")
+        print(f"[WORKFLOW] Routing to confirm_booking_node (next_action: confirm_booking)")
+    else:
+        print(f"[WORKFLOW] Ticket creation failed: {result.get('error', 'Unknown error')}")
     
     return state
 
@@ -976,8 +851,10 @@ def confirm_booking_node(state: AgentState) -> AgentState:
     
     Generates a simple confirmation message without revealing doctor details or ticket information.
     """
+    print("[WORKFLOW] Executing confirm_booking_node - generating confirmation message")
     appointment_prefs = get_appointment_preferences(state)
     patient_info = get_patient_info(state)
+    ticket_creation = get_ticket_creation(state)
     
     # Format date/time if available
     date_time_text = ""
@@ -985,39 +862,48 @@ def confirm_booking_node(state: AgentState) -> AgentState:
         try:
             from datetime import datetime
             dt = datetime.fromisoformat(appointment_prefs.preferred_date_time.replace('Z', '+00:00'))
+            # Format in a user-friendly way
             date_time_text = dt.strftime("%B %d, %Y at %I:%M %p")
-        except:
+        except Exception as e:
+            print(f"[WORKFLOW] Error formatting date: {e}")
             date_time_text = appointment_prefs.preferred_date_time
     
     # Format service type for display
     service_type_display = appointment_prefs.service_type.replace('_', ' ').title() if appointment_prefs.service_type else "appointment"
     
+    tickets_created = ticket_creation.tickets_created or 0
+    
     system_prompt = f"""You are a helpful AI assistant for a hospital.
 
-You have successfully scheduled an appointment for the patient.
+**IMPORTANT: The appointment has ALREADY been successfully scheduled. Your task is to CONFIRM this to the patient, not to try to schedule it again.**
 
-PATIENT INFORMATION:
-- Name: {patient_info.name if patient_info.name else 'Patient'}
+APPOINTMENT CONFIRMATION DETAILS:
+- Patient Name: {patient_info.name if patient_info.name else 'Patient'}
 - Service Type: {service_type_display}
 - Preferred Date/Time: {date_time_text if date_time_text else 'To be confirmed'}
+- Status: Successfully scheduled ({tickets_created} appointment request(s) created)
 
-INSTRUCTIONS:
-1. Congratulate the patient (use their name if available) on successful appointment booking
-2. Confirm the service type and date/time in a friendly way
-3. Let them know their appointment has been scheduled successfully
-4. Mention that they will be contacted with further details
-5. Do NOT mention doctors, tickets, or any technical details
-6. Do NOT reveal ticket IDs, doctor names, or assignment details
-7. Be warm, professional, and reassuring
-8. Keep the message concise and simple
-9. Offer to help with anything else they might need
+CRITICAL INSTRUCTIONS:
+1. **CONFIRM the appointment** - The appointment is already scheduled. Do NOT say you "can't schedule" or ask to choose a different date.
+2. Congratulate the patient (use their name) on successful appointment booking
+3. Confirm the service type: "{service_type_display}"
+4. Confirm the date/time: {date_time_text if date_time_text else 'to be confirmed'}
+5. Let them know their appointment request has been submitted successfully
+6. Mention that they will be contacted with further details and confirmation
+7. Do NOT mention doctors, tickets, ticket IDs, or any technical details
+8. Do NOT say the appointment cannot be scheduled - it already is!
+9. Be warm, professional, and reassuring
+10. Keep the message concise and positive
+11. Offer to help with anything else they might need
 
-IMPORTANT: The patient should only see a simple confirmation that their appointment is scheduled. Do NOT include any internal details about doctors, tickets, or the assignment process.
+IMPORTANT: The appointment is ALREADY scheduled. Your response should be a CONFIRMATION, not a scheduling attempt or refusal.
 """
     
     messages = state.get("messages", [])
     messages_with_system = [AIMessage(content=system_prompt)] + messages
     response = llm.invoke(messages_with_system)
+    
+    print(f"[WORKFLOW] Generated confirmation message: {response.content[:200]}...")
     
     messages.append(response)
     state["messages"] = messages
@@ -1031,57 +917,18 @@ IMPORTANT: The patient should only see a simple confirmation that their appointm
 # ============================================================================
 
 
-def route_entry(state: AgentState) -> Literal["extract_patient_info", "fetch_history", "understand_request", "end"]:
-    """Route entry point based on state."""
+def route_entry(state: AgentState) -> Literal["fetch_history", "show_history", "understand_request", "end"]:
+    """Route entry point based on state. For authenticated patients only."""
     next_action = state.get("next_action", "")
     
-    if next_action == "extract_patient_info":
-        return "extract_patient_info"
-    elif next_action == "fetch_history":
+    if next_action == "fetch_history":
         return "fetch_history"
+    elif next_action == "show_history":
+        return "show_history"
     elif next_action == "understand_request":
         return "understand_request"
     else:
         return "end"
-
-
-def route_after_extract(state: AgentState) -> Literal["validate_info", "end"]:
-    """Route after extracting patient info."""
-    # Always validate after extraction
-    if state.get("next_action") == "validate_info":
-        return "validate_info"
-    return "end"
-
-
-def route_after_validate(state: AgentState) -> Literal["ask_for_missing", "verify_patient", "end"]:
-    """Route after validating patient info."""
-    hitl = get_hitl(state)
-    
-    if hitl.is_waiting_for_input:
-        return "ask_for_missing"
-    elif state.get("next_action") == "verify_patient":
-        return "verify_patient"
-    else:
-        return "end"
-
-
-def route_after_verify(state: AgentState) -> Literal["create_patient", "fetch_history", "end"]:
-    """Route after verifying patient."""
-    next_action = state.get("next_action")
-    
-    if next_action == "create_patient":
-        return "create_patient"
-    elif next_action == "fetch_history":
-        return "fetch_history"
-    else:
-        return "end"
-
-
-def route_after_create(state: AgentState) -> Literal["fetch_history", "end"]:
-    """Route after creating patient."""
-    if state.get("next_action") == "fetch_history":
-        return "fetch_history"
-    return "end"
 
 
 def route_after_history(state: AgentState) -> Literal["show_history", "end"]:
@@ -1153,13 +1000,8 @@ def create_graph(checkpointer: Optional[AsyncPostgresSaver] = None):
     """Create the optimized workflow-based LangGraph."""
     workflow = StateGraph(AgentState)
     
-    # Add all workflow nodes
+    # Add all workflow nodes (removed extract/validate/verify/create nodes for authenticated patients)
     workflow.add_node("route_entry", route_entry_node)
-    workflow.add_node("extract_patient_info", extract_patient_info_node)
-    workflow.add_node("validate_info", validate_patient_info_node)
-    workflow.add_node("ask_for_missing", ask_for_missing_info_node)
-    workflow.add_node("verify_patient", verify_patient_node)
-    workflow.add_node("create_patient", create_patient_node)
     workflow.add_node("fetch_history", fetch_history_node)
     workflow.add_node("show_history", show_history_node)
     workflow.add_node("understand_request", understand_request_node)
@@ -1174,49 +1016,23 @@ def create_graph(checkpointer: Optional[AsyncPostgresSaver] = None):
     # Set entry point
     workflow.set_entry_point("route_entry")
     
-    # Route from entry
+    # Route from entry - for authenticated patients only
     workflow.add_conditional_edges(
         "route_entry",
         route_entry,
         {
-            "extract_patient_info": "extract_patient_info",
             "fetch_history": "fetch_history",
+            "show_history": "show_history",
             "understand_request": "understand_request",
             "end": END
         }
     )
     
-    # Add edges with conditional routing (extract_patient_info)
-    workflow.add_conditional_edges(
-        "extract_patient_info",
-        route_after_extract,
-        {"validate_info": "validate_info", "end": END}
-    )
-    
-    workflow.add_conditional_edges(
-        "validate_info",
-        route_after_validate,
-        {"ask_for_missing": "ask_for_missing", "verify_patient": "verify_patient", "fetch_history": "fetch_history", "end": END}
-    )
-    
-    workflow.add_edge("ask_for_missing", END)  # Wait for user
-    
-    workflow.add_conditional_edges(
-        "verify_patient",
-        route_after_verify,
-        {"create_patient": "create_patient", "fetch_history": "fetch_history", "end": END}
-    )
-    
-    workflow.add_conditional_edges(
-        "create_patient",
-        route_after_create,
-        {"fetch_history": "fetch_history", "end": END}
-    )
-    
+    # Fetch history and show it
     workflow.add_conditional_edges(
         "fetch_history",
         route_after_history,
-        {"show_history": "show_history", "understand_request": "understand_request", "end": END}
+        {"show_history": "show_history", "end": END}
     )
     
     workflow.add_edge("show_history", END)  # Always end after showing history (wait for user)

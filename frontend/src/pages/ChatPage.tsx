@@ -32,8 +32,7 @@ export default function ChatPage() {
           } catch (error) {
             console.error('Failed to load conversation:', error)
             // If conversation doesn't exist, create a new one
-            const patientId = user.type === 'patient' ? user.id : undefined
-            const conversation = await conversationApi.create(patientId, user.type !== 'patient')
+            const conversation = await conversationApi.create()
             setConversationId(conversation.conversation_id)
             // Update URL to reflect new conversation
             navigate(`/chat?conversation_id=${conversation.conversation_id}`, { replace: true })
@@ -41,8 +40,7 @@ export default function ChatPage() {
         } else {
           // Create new conversation
           console.log('Creating new conversation')
-          const patientId = user.type === 'patient' ? user.id : undefined
-          const conversation = await conversationApi.create(patientId, user.type !== 'patient')
+          const conversation = await conversationApi.create()
           setConversationId(conversation.conversation_id)
           // Update URL to include new conversation ID
           navigate(`/chat?conversation_id=${conversation.conversation_id}`, { replace: true })

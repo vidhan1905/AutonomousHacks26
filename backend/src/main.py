@@ -3,7 +3,7 @@ import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from backend.src.config import settings
-from backend.src.api.routes import auth, conversations, tickets, appointments
+from backend.src.api.routes import auth, conversations, tickets, appointments, patients
 
 # Initialize LangSmith tracing if enabled
 if settings.langsmith_tracing and settings.langsmith_api_key:
@@ -35,6 +35,7 @@ app.include_router(auth.router)
 app.include_router(conversations.router)
 app.include_router(tickets.router)
 app.include_router(appointments.router)
+app.include_router(patients.router)
 
 
 @app.get("/")

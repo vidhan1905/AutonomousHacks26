@@ -15,7 +15,8 @@ async def _schedule_appointment_async(
     service_person_id: Optional[str] = None,
     session_maker=None
 ) -> dict:
-    """Async implementation of schedule_appointment."""
+    """Async implementation of schedule_appointment.
+    """
     if session_maker is None:
         from backend.src.database.connection import async_session_maker
         session_maker = async_session_maker
@@ -23,12 +24,20 @@ async def _schedule_appointment_async(
     async with session_maker() as session:
         try:
             scheduled_date = datetime.fromisoformat(preferred_date.replace("Z", "+00:00"))
+            # Appointment model doesn't have service_type field
+            # If ticket_id is provided, service_type exists in the related Ticket
+            # If notes is None and service_type provided, include it in notes for context
+            appointment_notes = notes
+            if not appointment_notes and service_type:
+                appointment_notes = f"Service type: {service_type}"
+            elif appointment_notes and service_type:
+                appointment_notes = f"{appointment_notes}\nService type: {service_type}"
+            
             appointment = Appointment(
                 patient_id=uuid.UUID(patient_id),
-                service_type=service_type,
                 scheduled_date=scheduled_date,
-                notes=notes,
-                appointment_type="consultation",
+                notes=appointment_notes,
+                appointment_type="consultation",  # appointment_type, not service_type
                 status="scheduled"
             )
             if ticket_id:

@@ -316,8 +316,11 @@ Conversation ID: {state.get("conversation_id")}
 """
             else:
                 # History fetched, show it
-                history_records = patient_history.get("history", [])
-                if history_records:
+                # ROOT FIX: Use 'history_records' field (not 'history') from get_patient_history tool
+                history_records = patient_history.get("history_records", [])
+                if patient_history.get("status") == "schema_error":
+                    history_summary = f"Unable to retrieve medical history due to schema issue: {patient_history.get('error', 'Unknown error')}"
+                elif history_records:
                     history_summary = "\n".join([
                         f"- {record.get('visit_date', 'Unknown')}: {record.get('service_type', 'Unknown')} - {record.get('diagnosis', 'No diagnosis')}"
                         for record in history_records[:10]
@@ -576,7 +579,17 @@ def process_tool_results(state: AgentState) -> AgentState:
                 try:
                     content = msg.content
                     result = json.loads(content) if isinstance(content, str) else content
-                    if isinstance(result, dict) and result.get("status") == "success":
+                    result_status = result.get("status", "error")
+                    
+                    if result_status == "schema_error":
+                        # Schema error - log and set error state
+                        error_msg = result.get("error", "Unknown schema error")
+                        diagnostic = result.get("diagnostic", "Schema validation failed")
+                        print(f"[SCHEMA ERROR] {error_msg}")
+                        print(f"[SCHEMA ERROR] Diagnostic: {diagnostic}")
+                        state["doctors_found"] = False
+                        state["doctors_error"] = f"SCHEMA ERROR: {diagnostic}. Details: {error_msg}"
+                    elif result_status == "success":
                         state["available_doctors"] = result.get("doctors", [])
                         appointment_prefs = get_appointment_preferences(state)
                         if result.get("service_type"):
@@ -589,14 +602,30 @@ def process_tool_results(state: AgentState) -> AgentState:
                         set_appointment_preferences(state, appointment_prefs)
                         
                         doctors_list = result.get("doctors", [])
+                        diagnostic = result.get("diagnostic")
                         if not doctors_list or len(doctors_list) == 0:
                             state["doctors_found"] = False
-                            state["doctors_error"] = f"No doctors found for service type: {result.get('service_type')}"
+                            # Use diagnostic information if available
+                            if diagnostic and isinstance(diagnostic, dict):
+                                reason = diagnostic.get("reason", f"No doctors found for service type: {result.get('service_type')}")
+                                state["doctors_error"] = reason
+                                print(f"[DIAGNOSTIC] No doctors found: {reason}")
+                            else:
+                                state["doctors_error"] = f"No doctors found for service type: {result.get('service_type')}"
                         else:
                             state["doctors_found"] = True
+                    else:
+                        # Error status
+                        error_msg = result.get("error", "Unknown error")
+                        print(f"[ERROR] Error fetching doctors: {error_msg}")
+                        state["doctors_found"] = False
+                        state["doctors_error"] = f"Error fetching doctors: {error_msg}"
                 except Exception as e:
-                    print(f"Error processing get_available_doctors_by_type_and_time result: {e}")
+                    import traceback
+                    error_msg = f"Error processing get_available_doctors_by_type_and_time result: {e}\n{traceback.format_exc()}"
+                    print(f"[ERROR] {error_msg}")
                     state["doctors_found"] = False
+                    state["doctors_error"] = error_msg
             
             # Process rank_doctors_with_llm result
             elif "rank_doctors_with_llm" in tool_name:

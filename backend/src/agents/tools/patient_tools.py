@@ -296,22 +296,58 @@ async def _get_patient_history_async(patient_id: str, session_maker=None) -> dic
     
     async with session_maker() as session:
         try:
+            # Schema validation - verify Patient model columns exist
+            try:
+                test_result = await session.execute(
+                    select(Patient.patient_id, Patient.name, Patient.phone_number, Patient.date_of_birth).limit(1)
+                )
+            except (AttributeError, Exception) as schema_error:
+                error_msg = f"SCHEMA ERROR: Patient model columns may not exist. Error: {str(schema_error)}"
+                print(f"[SCHEMA ERROR] {error_msg}")
+                return {
+                    "status": "schema_error",
+                    "error": error_msg,
+                    "diagnostic": "Schema validation failed - check Patient model columns"
+                }
+            
             result = await session.execute(
                 select(Patient).where(Patient.patient_id == uuid.UUID(patient_id))
             )
             patient = result.scalar_one_or_none()
             if not patient:
-                return {"error": "Patient not found"}
+                return {"status": "error", "error": "Patient not found"}
             
-            history_result = await session.execute(
-                select(PatientHistory)
-                .where(PatientHistory.patient_id == uuid.UUID(patient_id))
-                .order_by(PatientHistory.visit_date.desc())
-            )
-            history_records = history_result.scalars().all()
+            # Schema validation for PatientHistory
+            try:
+                history_result = await session.execute(
+                    select(PatientHistory)
+                    .where(PatientHistory.patient_id == uuid.UUID(patient_id))
+                    .order_by(PatientHistory.visit_date.desc())
+                )
+                history_records = history_result.scalars().all()
+            except (AttributeError, Exception) as schema_error:
+                error_msg = f"SCHEMA ERROR: PatientHistory model columns may not exist. Error: {str(schema_error)}"
+                print(f"[SCHEMA ERROR] {error_msg}")
+                # Still return patient info but indicate history query failed
+                return {
+                    "status": "partial_success",
+                    "patient_id": str(patient.patient_id),
+                    "name": patient.name,
+                    "phone": patient.phone_number,
+                    "date_of_birth": str(patient.date_of_birth) if patient.date_of_birth else None,
+                    "age": (datetime.now().date() - patient.date_of_birth).days // 365 if patient.date_of_birth else None,
+                    "gender": patient.gender,
+                    "blood_group": patient.blood_group,
+                    "emergency_contact": patient.emergency_contact,
+                    "medical_history": patient.medical_history or {},
+                    "history_records": [],
+                    "error": error_msg,
+                    "diagnostic": "PatientHistory query failed - check schema"
+                }
             
             # ROOT FIX: Return ALL patient fields needed for tickets (single source of truth)
             return {
+                "status": "success",
                 "patient_id": str(patient.patient_id),
                 "name": patient.name,
                 "phone": patient.phone_number,  # ROOT FIX: Include phone
@@ -334,8 +370,20 @@ async def _get_patient_history_async(patient_id: str, session_maker=None) -> dic
                     for record in history_records
                 ]
             }
+        except AttributeError as e:
+            import traceback
+            error_msg = f"SCHEMA ERROR: Patient or PatientHistory model attribute may not exist. Error: {str(e)}\n{traceback.format_exc()}"
+            print(f"[SCHEMA ERROR] {error_msg}")
+            return {
+                "status": "schema_error",
+                "error": error_msg,
+                "diagnostic": "Schema validation failed - verify Patient and PatientHistory model columns"
+            }
         except Exception as e:
-            return {"error": str(e)}
+            import traceback
+            error_msg = f"Database query error: {str(e)}\n{traceback.format_exc()}"
+            print(f"[ERROR] {error_msg}")
+            return {"status": "error", "error": error_msg}
 
 
 @tool

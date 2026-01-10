@@ -158,26 +158,48 @@ def can_proceed_with_doctor_search(state: AgentState) -> bool:
     )
 
 
-def create_initial_state(conversation_id: str, patient_id: Optional[str] = None) -> AgentState:
+def create_initial_state(
+    conversation_id: str, 
+    patient_id: Optional[str] = None,
+    authenticated_patient: Optional[Any] = None
+) -> AgentState:
     """Create initial state for a new conversation.
     
-    CRITICAL: Always start with patient_verified=False
-    Verification MUST happen through the verification workflow only.
+    If authenticated_patient is provided, populate patient_info and set patient_verified=True.
+    Otherwise, start with patient_verified=False for verification workflow.
     The checkpointer will restore verified state if this conversation was already verified.
     """
     patient_info_dict = PatientInfo().model_dump()
-    if patient_id:
+    patient_verified = False
+    next_action = "extract_patient_info"
+    
+    # If authenticated patient is provided, populate info and mark as verified
+    if authenticated_patient and patient_id:
+        # Check if authenticated_patient has Patient attributes (defensive check)
+        if hasattr(authenticated_patient, 'name') and hasattr(authenticated_patient, 'phone_number'):
+            patient_info_dict = {
+                "name": authenticated_patient.name,
+                "phone": authenticated_patient.phone_number,
+                "date_of_birth": str(authenticated_patient.date_of_birth) if hasattr(authenticated_patient, 'date_of_birth') and authenticated_patient.date_of_birth else None,
+                "patient_id": str(authenticated_patient.patient_id) if hasattr(authenticated_patient, 'patient_id') else patient_id
+            }
+            patient_verified = True
+            # For authenticated patients, go directly to show_history which will greet
+            # (route_entry_node will route to show_history for new conversations)
+            next_action = ""  # Let route_entry_node decide based on state
+    
+    if patient_id and not patient_info_dict.get("patient_id"):
         patient_info_dict["patient_id"] = patient_id
     
     return AgentState(
         conversation_id=conversation_id,
         patient_id=patient_id,
-        patient_verified=False,  # NEVER auto-verify - must go through workflow
+        patient_verified=patient_verified,
         patient_info=patient_info_dict,
         messages=[],
         patient_history=None,
         history_shown=False,
-        next_action="extract_patient_info",  # Start with extracting patient info
+        next_action=next_action,
         retry_count={},
         appointment_preferences=AppointmentPreferences().model_dump(),
         doctors_found=None,

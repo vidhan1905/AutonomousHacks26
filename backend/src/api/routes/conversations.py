@@ -10,6 +10,7 @@ from datetime import datetime
 
 from backend.src.database.connection import get_db
 from backend.src.database.models import Conversation, Patient
+from backend.src.api.dependencies import get_current_patient
 from backend.src.agents.workflow_agent import get_graph
 from backend.src.agents.state_models import AgentState, create_initial_state
 from backend.src.agents.checkpointer import get_checkpointer
@@ -19,8 +20,8 @@ router = APIRouter(prefix="/api/conversations", tags=["conversations"])
 
 
 class CreateConversationRequest(BaseModel):
-    patient_id: Optional[str] = None
-    anonymous: bool = False
+    patient_id: Optional[str] = None  # Deprecated: will use authenticated patient
+    anonymous: bool = False  # Deprecated: not used for authenticated users
 
 
 class SendMessageRequest(BaseModel):
@@ -33,21 +34,14 @@ active_connections: dict[str, WebSocket] = {}
 
 @router.post("")
 async def create_conversation(
-    request: CreateConversationRequest,
+    current_patient: Patient = Depends(get_current_patient),
     db: AsyncSession = Depends(get_db)
 ):
-    """Create a new conversation."""
+    """Create a new conversation for the authenticated patient."""
     conversation_id = str(uuid.uuid4())
     
-    # If anonymous, create a temporary patient or use None
-    patient_id = None
-    if request.patient_id:
-        patient_id = uuid.UUID(request.patient_id)
-    elif not request.anonymous:
-        raise HTTPException(
-            status_code=400,
-            detail="Either patient_id or anonymous=true required"
-        )
+    # Use authenticated patient's ID
+    patient_id = current_patient.patient_id
     
     conversation = Conversation(
         conversation_id=uuid.UUID(conversation_id),
@@ -74,9 +68,10 @@ async def create_conversation(
 @router.get("/{conversation_id}")
 async def get_conversation(
     conversation_id: str,
+    current_patient: Patient = Depends(get_current_patient),
     db: AsyncSession = Depends(get_db)
 ):
-    """Get conversation details."""
+    """Get conversation details for the authenticated patient."""
     result = await db.execute(
         select(Conversation).where(Conversation.conversation_id == uuid.UUID(conversation_id))
     )
@@ -84,6 +79,10 @@ async def get_conversation(
     
     if not conversation:
         raise HTTPException(status_code=404, detail="Conversation not found")
+    
+    # Verify the conversation belongs to the authenticated patient
+    if conversation.patient_id != current_patient.patient_id:
+        raise HTTPException(status_code=403, detail="Access denied to this conversation")
     
     return {
         "conversation_id": str(conversation.conversation_id),
@@ -98,6 +97,7 @@ async def get_conversation(
 async def send_message(
     conversation_id: str,
     request: SendMessageRequest,
+    current_patient: Patient = Depends(get_current_patient),
     db: AsyncSession = Depends(get_db)
 ):
     """Send a message and get LLM response."""
@@ -109,6 +109,10 @@ async def send_message(
     
     if not conversation:
         raise HTTPException(status_code=404, detail="Conversation not found")
+    
+    # Verify the conversation belongs to the authenticated patient
+    if conversation.patient_id != current_patient.patient_id:
+        raise HTTPException(status_code=403, detail="Access denied to this conversation")
     
     # ROOT CAUSE FIX: Properly merge state with checkpointer
     # LangGraph's checkpointer loads previous state automatically, BUT
@@ -137,28 +141,43 @@ async def send_message(
         print(f"[STATE LOAD] No existing state found (new conversation): {e}")
         existing_state = None
     
-    # Create base initial state
+    # Create base initial state with authenticated patient info
     base_state = create_initial_state(
         conversation_id=conversation_id,
-        patient_id=str(conversation.patient_id) if conversation.patient_id else None
+        patient_id=str(conversation.patient_id) if conversation.patient_id else None,
+        authenticated_patient=current_patient if conversation.patient_id else None
     )
     
     # Merge existing state with base state
+    # CRITICAL: Always use authenticated patient info from base_state if available
+    # This ensures authenticated patients are always verified, even if existing state has patient_verified=False
     if existing_state:
-        # CRITICAL: Preserve existing state fields, especially patient_info and extracted data
-        # Only override with base_state defaults if field is missing or truly empty
+        # CRITICAL: Preserve existing state fields, but override with authenticated patient info
         merged_state = {}
         
-        # Preserve critical state fields from existing state
-        for key in ["patient_info", "appointment_preferences", "doctor_ranking", 
-                   "ticket_creation", "hitl", "patient_verified", "patient_id",
+        # Always use authenticated patient info from base_state if patient is verified there
+        # This handles cases where existing state might have patient_verified=False from old conversations
+        if base_state.get("patient_verified") and base_state.get("patient_info"):
+            merged_state["patient_verified"] = base_state["patient_verified"]
+            merged_state["patient_info"] = base_state["patient_info"]
+            merged_state["patient_id"] = base_state["patient_id"]
+            print(f"[STATE MERGE] Using authenticated patient info from base_state")
+        else:
+            # Fallback to existing state if base_state doesn't have verified patient
+            merged_state["patient_verified"] = existing_state.get("patient_verified", False)
+            merged_state["patient_info"] = existing_state.get("patient_info", base_state.get("patient_info", {}))
+            merged_state["patient_id"] = existing_state.get("patient_id") or base_state.get("patient_id")
+        
+        # Preserve other critical state fields from existing state
+        for key in ["appointment_preferences", "doctor_ranking", 
+                   "ticket_creation", "hitl",
                    "history_shown", "patient_history", "available_doctors",
                    "doctors_found", "doctor_tickets_created", "ticket_created",
                    "next_action", "retry_count"]:
             if key in existing_state:
-                # Merge dicts carefully (e.g., patient_info)
+                # Merge dicts carefully (e.g., appointment_preferences)
                 if isinstance(existing_state[key], dict) and isinstance(base_state.get(key), dict):
-                    # Merge: existing state values take precedence (they have extracted data)
+                    # Merge: existing state values take precedence (they have workflow data)
                     merged = {**base_state.get(key, {}), **existing_state[key]}
                     merged_state[key] = merged
                 else:
@@ -182,11 +201,11 @@ async def send_message(
         initial_state = merged_state
         print(f"[STATE MERGE] Merged existing state with {len(existing_messages)} existing messages")
     else:
-        # New conversation - start fresh
+        # New conversation - start fresh with authenticated patient info
         current_user_message = HumanMessage(content=request.content)
         base_state["messages"] = [current_user_message]
         initial_state = base_state
-        print(f"[STATE MERGE] New conversation - starting fresh")
+        print(f"[STATE MERGE] New conversation - starting fresh with authenticated patient")
     
     # Log user input
     print(f"\n{'='*80}")
@@ -211,6 +230,10 @@ async def send_message(
         
         # ROOT FIX: If workflow progressed (verified, history shown, etc.), skip old "ask_for_missing" responses
         # Start from the END and work backwards to find the MOST RECENT relevant response
+        # If tickets were created, prioritize the confirmation message
+        doctor_tickets_created = final_state.get("doctor_tickets_created", False)
+        next_action = final_state.get("next_action", "")
+        
         for msg in reversed(llm_messages):
             content = getattr(msg, 'content', None) or ""
             if not content or not str(content).strip():
@@ -224,10 +247,25 @@ async def send_message(
                     # This is likely an old "ask_for_missing" response - skip it
                     continue
             
+            # ROOT FIX: If tickets were created, skip old "ask_for_request_info" messages
+            # These might say "can't schedule" or ask for date/time even though tickets are already created
+            if doctor_tickets_created:
+                # Skip messages that look like they're asking for scheduling info or saying they can't schedule
+                content_lower = content.lower()
+                if any(phrase in content_lower for phrase in [
+                    "can't schedule", "cannot schedule", "unable to schedule", 
+                    "choose a different date", "when would you like", "provide a date",
+                    "i'm sorry, but i can't", "i'm sorry but i can't"
+                ]):
+                    # This is likely an old ask_for_request_info message - skip it
+                    print(f"[RESPONSE EXTRACTION] Skipping old scheduling message: {content[:100]}...")
+                    continue
+            
             # Found a relevant response
             has_tool_calls = hasattr(msg, 'tool_calls') and msg.tool_calls
             if not has_tool_calls:
                 llm_response = str(content)
+                print(f"[RESPONSE EXTRACTION] Selected response: {llm_response[:200]}...")
                 break
             elif not llm_response:
                 llm_response = str(content) if str(content).strip() else None
@@ -254,6 +292,44 @@ async def send_message(
             else:
                 # No LLM messages at all - shouldn't happen
                 llm_response = "I'm processing your request. Please wait."
+        
+        # ROOT FIX: If tickets were created but we don't have a proper confirmation message,
+        # generate one manually to avoid showing old "can't schedule" messages
+        if doctor_tickets_created and llm_response:
+            # Check if the response looks like a confirmation (positive, doesn't say "can't schedule")
+            content_lower = llm_response.lower()
+            is_negative_response = any(phrase in content_lower for phrase in [
+                "can't schedule", "cannot schedule", "unable to schedule",
+                "choose a different date", "i'm sorry, but i can't", "i'm sorry but i can't"
+            ])
+            
+            if is_negative_response:
+                # The response is negative but tickets were created - generate a proper confirmation
+                appointment_prefs_dict = final_state.get("appointment_preferences", {})
+                service_type = appointment_prefs_dict.get("service_type", "appointment")
+                date_time = appointment_prefs_dict.get("preferred_date_time", "")
+                
+                try:
+                    if date_time:
+                        dt = datetime.fromisoformat(date_time.replace('Z', '+00:00'))
+                        date_time_text = dt.strftime("%B %d, %Y at %I:%M %p")
+                    else:
+                        date_time_text = "to be confirmed"
+                except:
+                    date_time_text = date_time if date_time else "to be confirmed"
+                
+                patient_name = final_state.get("patient_info", {}).get("name", "")
+                service_type_display = service_type.replace('_', ' ').title()
+                
+                llm_response = f"Great! I've successfully scheduled your {service_type_display} appointment"
+                if date_time_text and date_time_text != "to be confirmed":
+                    llm_response += f" for {date_time_text}"
+                llm_response += ". Your appointment request has been submitted and you will be contacted with further details and confirmation soon."
+                if patient_name:
+                    llm_response += f" Thank you, {patient_name}!"
+                llm_response += " Is there anything else I can help you with?"
+                
+                print(f"[RESPONSE EXTRACTION] Generated fallback confirmation message (tickets created but old response was negative)")
         
         # Ensure we have a response
         if not llm_response or not llm_response.strip():
@@ -607,13 +683,12 @@ async def websocket_endpoint(websocket: WebSocket, conversation_id: str):
 
 @router.get("")
 async def list_conversations(
-    patient_id: Optional[str] = None,
+    current_patient: Patient = Depends(get_current_patient),
     db: AsyncSession = Depends(get_db)
 ):
-    """List conversations (requires patient_id filter)."""
-    query = select(Conversation)
-    if patient_id:
-        query = query.where(Conversation.patient_id == uuid.UUID(patient_id))
+    """List conversations for the authenticated patient."""
+    # Use authenticated patient's ID
+    query = select(Conversation).where(Conversation.patient_id == current_patient.patient_id)
     
     result = await db.execute(query.order_by(Conversation.started_at.desc()))
     conversations = result.scalars().all()

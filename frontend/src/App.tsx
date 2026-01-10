@@ -5,6 +5,7 @@ import ChatPage from './pages/ChatPage'
 import PatientDashboard from './pages/PatientDashboard'
 import ServicePersonDashboard from './pages/ServicePersonDashboard'
 import TicketDetailPage from './pages/TicketDetailPage'
+import EditProfilePage from './pages/EditProfilePage'
 import ProtectedRoute from './components/Auth/ProtectedRoute'
 import { useAuthStore } from './hooks/useAuth'
 
@@ -47,6 +48,14 @@ function App() {
           element={
             <ProtectedRoute requiredType="patient">
               <PatientDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/profile/edit"
+          element={
+            <ProtectedRoute requiredType="patient">
+              <EditProfilePage />
             </ProtectedRoute>
           }
         />

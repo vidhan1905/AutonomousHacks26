@@ -21,8 +21,8 @@ export default function PatientDashboard() {
   const loadConversations = async () => {
     if (!user?.id) return
     try {
-      console.log('Loading conversations for patient:', user.id)
-      const data = await conversationApi.list(user.id)
+      // Backend uses authenticated patient automatically
+      const data = await conversationApi.list()
       console.log('Loaded conversations:', data)
       setConversations(data)
     } catch (error) {
@@ -33,7 +33,7 @@ export default function PatientDashboard() {
 
   const handleStartChat = async () => {
     try {
-      const conversation = await conversationApi.create(user?.id, false)
+      const conversation = await conversationApi.create()
       navigate(`/chat?conversation_id=${conversation.conversation_id}`)
     } catch (error) {
       console.error('Failed to start conversation:', error)
@@ -50,6 +50,12 @@ export default function PatientDashboard() {
               <p className="text-sm text-gray-600 dark:text-gray-400">Welcome, {user?.name || 'Patient'}</p>
             </div>
             <div className="flex space-x-4">
+              <button
+                onClick={() => navigate('/profile/edit')}
+                className="px-4 py-2 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-600"
+              >
+                Edit Profile
+              </button>
               <button
                 onClick={handleStartChat}
                 className="px-4 py-2 bg-teal-500 text-white rounded-md hover:bg-teal-600"
