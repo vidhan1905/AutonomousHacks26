@@ -26,6 +26,9 @@ class Settings(BaseSettings):
     # CORS
     cors_origins: str = "http://localhost:3000"
     
+    # Doctor Recommendation
+    top_doctors_count: int = 5  # Number of top doctors to rank and create tickets for
+    
     class Config:
         env_file = ".env"
         case_sensitive = False

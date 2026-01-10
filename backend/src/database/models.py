@@ -77,24 +77,14 @@ class Conversation(Base):
 
     # Relationships
     patient = relationship("Patient", back_populates="conversations")
-    messages = relationship("Message", back_populates="conversation")
+    # NOTE: messages relationship removed - messages are now handled by PostgresSaver checkpointer
+    # All conversation messages are stored in the checkpoints table, not in messages table
     tickets = relationship("Ticket", back_populates="conversation")
 
 
-class Message(Base):
-    """Message model."""
-    __tablename__ = "messages"
-
-    message_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    conversation_id = Column(UUID(as_uuid=True), ForeignKey("conversations.conversation_id"), nullable=False)
-    sender_type = Column(String, nullable=False)  # "patient", "llm"
-    sender_id = Column(UUID(as_uuid=True), nullable=True)  # patient_id for patient messages, null for LLM
-    content = Column(Text, nullable=False)
-    message_metadata = Column(JSON, nullable=True)  # Renamed from metadata to avoid SQLAlchemy conflict
-    created_at = Column(TIMESTAMP, server_default=func.now())
-
-    # Relationships
-    conversation = relationship("Conversation", back_populates="messages")
+# Message model removed - all messages are now handled by PostgresSaver checkpointer
+# Messages are automatically persisted in the checkpoints table as part of LangGraph state
+# No backward compatibility - use checkpointer.aget() to retrieve messages
 
 
 class Ticket(Base):

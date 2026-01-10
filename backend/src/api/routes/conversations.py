@@ -9,8 +9,10 @@ import json
 from datetime import datetime
 
 from backend.src.database.connection import get_db
-from backend.src.database.models import Conversation, Message, Patient
-from backend.src.agents.conversation_agent import graph, AgentState
+from backend.src.database.models import Conversation, Patient
+from backend.src.agents.workflow_agent import get_graph
+from backend.src.agents.state_models import AgentState, create_initial_state
+from backend.src.agents.checkpointer import get_checkpointer
 from langchain_core.messages import HumanMessage, AIMessage
 
 router = APIRouter(prefix="/api/conversations", tags=["conversations"])
@@ -108,138 +110,127 @@ async def send_message(
     if not conversation:
         raise HTTPException(status_code=404, detail="Conversation not found")
     
-    # Save patient message
-    patient_message = Message(
-        conversation_id=uuid.UUID(conversation_id),
-        sender_type="patient",
-        sender_id=conversation.patient_id,
-        content=request.content
-    )
-    db.add(patient_message)
-    await db.commit()
+    # ROOT CAUSE FIX: Properly merge state with checkpointer
+    # LangGraph's checkpointer loads previous state automatically, BUT
+    # we're passing initial_state which can overwrite loaded state.
+    # Solution: Load previous state manually, merge carefully, then pass only the new message
     
-    # Load previous messages to maintain conversation context
-    messages_result = await db.execute(
-        select(Message)
-        .where(Message.conversation_id == uuid.UUID(conversation_id))
-        .order_by(Message.created_at)
-    )
-    previous_messages = messages_result.scalars().all()
+    # Get checkpointer and graph
+    checkpointer = await get_checkpointer()
+    graph = await get_graph()
     
-    # Build message history for the agent
-    message_history = []
-    collected_info = {}
-    
-    # Check if this is the first message (no previous messages)
-    is_first_message = len(previous_messages) == 0
-    
-    # Check if verification has been completed in this conversation
-    # Strategy: If there are LLM responses that don't ask for verification details,
-    # and there are subsequent patient messages, verification likely completed
-    verification_completed = False
-    if not is_first_message:
-        llm_messages = [msg for msg in previous_messages if msg.sender_type == "llm"]
-        patient_messages = [msg for msg in previous_messages if msg.sender_type == "patient"]
-        
-        if len(llm_messages) > 0:
-            # Check the most recent LLM message - if it doesn't ask for verification,
-            # and there are patient messages after it, verification likely completed
-            last_llm_msg = llm_messages[-1]
-            content_lower = last_llm_msg.content.lower()
-            
-            # Check if it asks for verification details
-            asks_for_verification = any(phrase in content_lower for phrase in [
-                "your name", "your phone", "your date of birth", "your dob",
-                "verify your identity", "verification", "provide me with your",
-                "could you please provide", "i need your", "i'll need your"
-            ])
-            
-            # If last LLM message doesn't ask for verification, assume it's completed
-            # (because if verification was needed, LLM would have asked)
-            if not asks_for_verification:
-                verification_completed = True
-            else:
-                # Check for explicit verification success phrases
-                for msg in llm_messages:
-                    content_lower = msg.content.lower()
-                    if any(phrase in content_lower for phrase in [
-                        "verified successfully", "verification successful", "found your record",
-                        "i've verified", "i have verified", "you're verified", "you are verified",
-                        "retrieved your history", "your medical history"
-                    ]):
-                        verification_completed = True
-                        break
-    
-    # Patient is only verified if verification has been completed in the conversation
-    # Always start with False for first message - LLM must verify first
-    patient_verified = verification_completed and conversation.patient_id is not None
-    
-    # Extract patient info from previous messages if available
-    for msg in previous_messages:
-        if msg.sender_type == "patient":
-            message_history.append(HumanMessage(content=msg.content))
-        elif msg.sender_type == "llm":
-            message_history.append(AIMessage(content=msg.content))
-    
-    # Add current message
-    message_history.append(HumanMessage(content=request.content))
-    
-    # Only set collected_info if patient is verified through conversation
-    # Don't pre-populate from patient record - let LLM verify first
-    if patient_verified and conversation.patient_id:
-        patient_result = await db.execute(
-            select(Patient).where(Patient.patient_id == conversation.patient_id)
-        )
-        patient = patient_result.scalar_one_or_none()
-        if patient:
-            collected_info = {
-                "name": patient.name,
-                "phone": patient.phone_number,
-                "date_of_birth": patient.date_of_birth.strftime("%Y-%m-%d") if patient.date_of_birth else None,
-                "patient_id": str(patient.patient_id)
-            }
-    
-    # Initialize agent state with conversation history
-    initial_state: AgentState = {
-        "conversation_id": conversation_id,
-        "patient_id": str(conversation.patient_id) if conversation.patient_id else None,
-        "patient_verified": patient_verified,
-        "messages": message_history,
-        "collected_info": collected_info,
-        "required_fields_missing": [] if patient_verified else ["name", "phone", "date_of_birth"],
-        "retry_count": {},
-        "patient_history": None,
-        "summary": None,
-        "ticket_created": False,
-        "next_action": "continue" if patient_verified else "collect_info",
-        "history_shown": False,
-        "service_type_determined": None,
-        "ranked_doctors": None,
-        "doctor_tickets_created": False
+    # Configure for checkpointer: use conversation_id as thread_id
+    config = {
+        "configurable": {"thread_id": conversation_id},
+        "recursion_limit": 100
     }
     
-    # Run agent with increased recursion limit
+    # Try to load existing state from checkpointer
+    existing_state = None
     try:
-        config = {"recursion_limit": 100}  # Increased to handle complex flows
+        checkpoint = await checkpointer.aget({"configurable": {"thread_id": conversation_id}})
+        if checkpoint and checkpoint.get("channel_values"):
+            existing_state = checkpoint["channel_values"]
+            print(f"[STATE LOAD] Loaded existing state from checkpointer")
+    except Exception as e:
+        # No existing checkpoint - this is a new conversation
+        print(f"[STATE LOAD] No existing state found (new conversation): {e}")
+        existing_state = None
+    
+    # Create base initial state
+    base_state = create_initial_state(
+        conversation_id=conversation_id,
+        patient_id=str(conversation.patient_id) if conversation.patient_id else None
+    )
+    
+    # Merge existing state with base state
+    if existing_state:
+        # CRITICAL: Preserve existing state fields, especially patient_info and extracted data
+        # Only override with base_state defaults if field is missing or truly empty
+        merged_state = {}
+        
+        # Preserve critical state fields from existing state
+        for key in ["patient_info", "appointment_preferences", "doctor_ranking", 
+                   "ticket_creation", "hitl", "patient_verified", "patient_id",
+                   "history_shown", "patient_history", "available_doctors",
+                   "doctors_found", "doctor_tickets_created", "ticket_created",
+                   "next_action", "retry_count"]:
+            if key in existing_state:
+                # Merge dicts carefully (e.g., patient_info)
+                if isinstance(existing_state[key], dict) and isinstance(base_state.get(key), dict):
+                    # Merge: existing state values take precedence (they have extracted data)
+                    merged = {**base_state.get(key, {}), **existing_state[key]}
+                    merged_state[key] = merged
+                else:
+                    # Use existing value if present and not None/empty
+                    merged_state[key] = existing_state[key]
+            else:
+                # Use base state default
+                merged_state[key] = base_state.get(key)
+        
+        # Messages will be handled by add_messages reducer
+        # But we need to preserve conversation_id
+        merged_state["conversation_id"] = conversation_id
+        
+        # Get existing messages
+        existing_messages = existing_state.get("messages", [])
+        current_user_message = HumanMessage(content=request.content)
+        
+        # Append new message to existing messages
+        merged_state["messages"] = list(existing_messages) + [current_user_message]
+        
+        initial_state = merged_state
+        print(f"[STATE MERGE] Merged existing state with {len(existing_messages)} existing messages")
+    else:
+        # New conversation - start fresh
+        current_user_message = HumanMessage(content=request.content)
+        base_state["messages"] = [current_user_message]
+        initial_state = base_state
+        print(f"[STATE MERGE] New conversation - starting fresh")
+    
+    # Log user input
+    print(f"\n{'='*80}")
+    print(f"[USER INPUT] Conversation: {conversation_id}")
+    print(f"[USER INPUT] Patient ID: {conversation.patient_id}")
+    print(f"[USER INPUT] Message: {request.content}")
+    print(f"{'='*80}\n")
+    
+    try:
+        # Run agent - checkpointer will save state automatically
         final_state = await graph.ainvoke(initial_state, config=config)
         
-        # Get LLM response - find the last AIMessage with actual content
-        # Skip tool call messages that might not have content
-        llm_messages = [msg for msg in final_state["messages"] if isinstance(msg, AIMessage)]
+
+        all_messages = final_state.get("messages", [])
+        
+        # Check if patient is verified - if so, we should NOT return old "ask_for_missing" responses
+        patient_verified = final_state.get("patient_verified", False)
+        history_shown = final_state.get("history_shown", False)
+        
+        llm_messages = [msg for msg in all_messages if isinstance(msg, AIMessage)]
         llm_response = None
         
-        # Look backwards for the last message with content
+        # ROOT FIX: If workflow progressed (verified, history shown, etc.), skip old "ask_for_missing" responses
+        # Start from the END and work backwards to find the MOST RECENT relevant response
         for msg in reversed(llm_messages):
-            # Check if message has content and it's not empty
             content = getattr(msg, 'content', None) or ""
-            if content and str(content).strip():
-                # Check if it has tool calls - if so, prefer a message without tool calls
-                has_tool_calls = hasattr(msg, 'tool_calls') and msg.tool_calls
-                if not has_tool_calls:
-                    llm_response = str(content)
-                    break
-                elif not llm_response:  # Use tool call message as fallback if no other content
-                    llm_response = str(content) if str(content).strip() else None
+            if not content or not str(content).strip():
+                continue
+            
+            # Skip old "ask_for_missing" responses if we've progressed past that stage
+            if patient_verified and not history_shown:
+                # If verified but history not shown, we should have a "show_history" response
+                # Skip messages that look like old "ask_for_missing" (asking for phone/DOB)
+                if "phone number" in content.lower() and "date of birth" in content.lower():
+                    # This is likely an old "ask_for_missing" response - skip it
+                    continue
+            
+            # Found a relevant response
+            has_tool_calls = hasattr(msg, 'tool_calls') and msg.tool_calls
+            if not has_tool_calls:
+                llm_response = str(content)
+                break
+            elif not llm_response:
+                llm_response = str(content) if str(content).strip() else None
         
         # If no content found, check if last message has tool calls
         if not llm_response:
@@ -269,16 +260,57 @@ async def send_message(
             llm_response = "I'm here to help. How can I assist you today?"
         
         # Check if this is a doctor recommendation message
-        ranked_doctors = final_state.get("ranked_doctors")
+        from backend.src.agents.state_models import DoctorRanking, TicketCreation
+        doctor_ranking_dict = final_state.get("doctor_ranking", {})
+        doctor_ranking = DoctorRanking(**doctor_ranking_dict)
+        ranked_doctors = doctor_ranking.ranked_doctors
+        
+        ticket_creation_dict = final_state.get("ticket_creation", {})
+        ticket_creation = TicketCreation(**ticket_creation_dict)
+        doctor_tickets = ticket_creation.doctor_tickets or []
+        
         doctor_tickets_created = final_state.get("doctor_tickets_created", False)
-        service_type_determined = final_state.get("service_type_determined")
-        doctor_tickets = final_state.get("doctor_tickets", [])
+        
+        appointment_prefs_dict = final_state.get("appointment_preferences", {})
+        from backend.src.agents.state_models import AppointmentPreferences
+        appointment_prefs = AppointmentPreferences(**appointment_prefs_dict)
+        service_type_determined = appointment_prefs.service_type
         
         is_doctor_recommendation = (
             doctor_tickets_created and 
             ranked_doctors and 
             len(ranked_doctors) > 0
         )
+        
+        # Log tool calls and state information
+        from langchain_core.messages import ToolMessage
+        patient_verified = final_state.get("patient_verified", False)
+        all_messages = final_state.get("messages", [])
+        tool_messages = [msg for msg in all_messages if isinstance(msg, ToolMessage)]
+        
+        if tool_messages:
+            tool_names = []
+            for tool_msg in tool_messages[-5:]:  # Last 5 tool calls
+                tool_name = str(getattr(tool_msg, 'name', 'unknown'))
+                if tool_name and tool_name not in tool_names:
+                    tool_names.append(tool_name)
+            
+            if tool_names:
+                print(f"[TOOL CALLS] Tools used: {', '.join(tool_names)}")
+        
+        print(f"[STATE] Patient verified: {patient_verified}")
+        if service_type_determined:
+            print(f"[STATE] Service type: {service_type_determined}")
+        if doctor_tickets_created:
+            print(f"[STATE] Doctor tickets created: {len(doctor_tickets)}")
+        
+        # Log LLM output
+        print(f"\n{'='*80}")
+        print(f"[LLM OUTPUT] Conversation: {conversation_id}")
+        print(f"[LLM OUTPUT] Response: {llm_response[:500]}{'...' if len(llm_response) > 500 else ''}")
+        if is_doctor_recommendation:
+            print(f"[LLM OUTPUT] Doctor recommendation: {len(ranked_doctors)} doctors recommended")
+        print(f"{'='*80}\n")
         
         # Prepare message metadata
         message_metadata = None
@@ -287,7 +319,10 @@ async def send_message(
             doctors_with_tickets = []
             ticket_map = {t["doctor_id"]: t["ticket_id"] for t in doctor_tickets}
             
-            for doctor in ranked_doctors[:5]:
+            from backend.src.config import settings
+            top_n = getattr(settings, 'top_doctors_count', 5)
+            
+            for doctor in ranked_doctors[:top_n]:
                 doctors_with_tickets.append({
                     "doctor_id": doctor["doctor_id"],
                     "name": doctor["name"],
@@ -305,22 +340,30 @@ async def send_message(
                 "tickets_created": len(doctor_tickets)
             }
         
-        # Save LLM message
-        llm_message = Message(
-            conversation_id=uuid.UUID(conversation_id),
-            sender_type="llm",
-            sender_id=None,
-            content=llm_response,
-            message_metadata=message_metadata
-        )
-        db.add(llm_message)
-        await db.commit()
+    
+        all_messages = final_state.get("messages", [])
         
+        # Convert to API format
+        from langchain_core.messages import ToolMessage
+        formatted_messages = []
+        for idx, msg in enumerate(all_messages):
+            if isinstance(msg, ToolMessage):
+                continue  # Skip tool messages
+            msg_data = {
+                "message_id": str(getattr(msg, 'id', f"msg-{idx}")),
+                "sender_type": "patient" if isinstance(msg, HumanMessage) else "llm",
+                "content": str(getattr(msg, 'content', '')),
+                "created_at": datetime.utcnow().isoformat()
+            }
+            formatted_messages.append(msg_data)
+        
+        # Create response with LLM response and all messages
         response_data = {
-            "message_id": str(llm_message.message_id),
+            "message_id": str(uuid.uuid4()),  # Generate ID for response
             "content": llm_response,
             "sender_type": "llm",
-            "created_at": llm_message.created_at.isoformat()
+            "created_at": datetime.utcnow().isoformat(),
+            "all_messages": formatted_messages  # Include all messages in response
         }
         
         # Add doctor recommendation data if present
@@ -328,6 +371,111 @@ async def send_message(
             response_data["type"] = "doctor_recommendation"
             response_data["doctors"] = message_metadata["doctors"]
             response_data["service_type"] = message_metadata["service_type"]
+            response_data["tickets_created"] = message_metadata["tickets_created"]
+        
+        # Add tickets to response if they exist (even if not doctor recommendation)
+        ticket_creation_dict = final_state.get("ticket_creation", {})
+        doctor_tickets_list = ticket_creation_dict.get('doctor_tickets', [])
+        if doctor_tickets_list:
+            response_data["tickets"] = doctor_tickets_list
+            response_data["tickets_count"] = len(doctor_tickets_list)
+            response_data["tickets_created_success"] = ticket_creation_dict.get('tickets_creation_success', False)
+        
+        # Log complete workflow state after conversation for debugging
+        print(f"\n{'#'*80}")
+        print(f"[WORKFLOW STATE] Conversation: {conversation_id}")
+        print(f"{'#'*80}")
+        
+        # Patient Info State
+        patient_info_dict = final_state.get("patient_info", {})
+        print(f"\n[STATE] Patient Info:")
+        print(f"  - Name: {patient_info_dict.get('name', 'Not provided')}")
+        print(f"  - Phone: {patient_info_dict.get('phone', 'Not provided')}")
+        print(f"  - DOB: {patient_info_dict.get('date_of_birth', 'Not provided')}")
+        print(f"  - Patient ID: {final_state.get('patient_id', 'Not set')}")
+        print(f"  - Verified: {final_state.get('patient_verified', False)}")
+        
+        # Appointment Preferences State
+        appointment_prefs_dict = final_state.get("appointment_preferences", {})
+        print(f"\n[STATE] Appointment Preferences:")
+        print(f"  - Service Type: {appointment_prefs_dict.get('service_type', 'Not set')}")
+        print(f"  - Preferred Date/Time: {appointment_prefs_dict.get('preferred_date_time', 'Not set')}")
+        
+        # HITL State
+        hitl_dict = final_state.get("hitl", {})
+        print(f"\n[STATE] HITL (Human In The Loop):")
+        print(f"  - Waiting for input: {hitl_dict.get('is_waiting_for_input', False)}")
+        print(f"  - Validation complete: {hitl_dict.get('validation_complete', False)}")
+        pending_questions = hitl_dict.get('pending_questions', [])
+        if pending_questions:
+            print(f"  - Pending questions: {len(pending_questions)}")
+            for i, q in enumerate(pending_questions[:3], 1):  # Show first 3
+                print(f"    {i}. {q[:100]}{'...' if len(q) > 100 else ''}")
+        collected_responses = hitl_dict.get('collected_responses', {})
+        if collected_responses:
+            print(f"  - Collected responses: {', '.join(collected_responses.keys())}")
+        
+        # Doctor Search State
+        print(f"\n[STATE] Doctor Search:")
+        print(f"  - Doctors found: {final_state.get('doctors_found', 'Unknown')}")
+        if final_state.get('doctors_error'):
+            print(f"  - Error: {final_state.get('doctors_error')}")
+        available_doctors = final_state.get("available_doctors", [])
+        if available_doctors:
+            print(f"  - Available doctors count: {len(available_doctors)}")
+        
+        # Doctor Ranking State
+        doctor_ranking_dict = final_state.get("doctor_ranking", {})
+        print(f"\n[STATE] Doctor Ranking:")
+        print(f"  - Success: {doctor_ranking_dict.get('ranking_success', 'Unknown')}")
+        if doctor_ranking_dict.get('ranking_error'):
+            print(f"  - Error: {doctor_ranking_dict.get('ranking_error')}")
+        ranked_doctors_list = doctor_ranking_dict.get('ranked_doctors', [])
+        if ranked_doctors_list:
+            print(f"  - Ranked doctors count: {len(ranked_doctors_list)}")
+            for i, doc in enumerate(ranked_doctors_list[:3], 1):  # Show top 3
+                print(f"    {i}. {doc.get('name', 'Unknown')} - Rank: {doc.get('rank', 'N/A')}")
+        
+        # Ticket Creation State
+        ticket_creation_dict = final_state.get("ticket_creation", {})
+        print(f"\n[STATE] Ticket Creation:")
+        print(f"  - Success: {ticket_creation_dict.get('tickets_creation_success', 'Unknown')}")
+        print(f"  - Tickets created: {ticket_creation_dict.get('tickets_created', 0)}")
+        if ticket_creation_dict.get('tickets_creation_error'):
+            print(f"  - Error: {ticket_creation_dict.get('tickets_creation_error')}")
+        doctor_tickets_list = ticket_creation_dict.get('doctor_tickets', [])
+        if doctor_tickets_list:
+            print(f"  - Doctor tickets: {len(doctor_tickets_list)}")
+            for i, ticket in enumerate(doctor_tickets_list, 1):  # Show ALL tickets
+                print(f"    {i}. Ticket ID: {ticket.get('ticket_id', 'Unknown')}")
+                print(f"       Doctor ID: {ticket.get('doctor_id', 'Unknown')}")
+                print(f"       Service Type: {ticket.get('service_type', 'Unknown')}")
+                print(f"       Status: {ticket.get('status', 'Unknown')}")
+                if ticket.get('assigned_to'):
+                    print(f"       Assigned To: {ticket.get('assigned_to')}")
+        else:
+            print(f"  - No tickets created yet")
+        
+        # Overall State Flags
+        print(f"\n[STATE] Overall Flags:")
+        print(f"  - Patient verified: {final_state.get('patient_verified', False)}")
+        print(f"  - History shown: {final_state.get('history_shown', False)}")
+        print(f"  - Ticket created: {final_state.get('ticket_created', False)}")
+        print(f"  - Doctor tickets created: {final_state.get('doctor_tickets_created', False)}")
+        print(f"  - Next action: {final_state.get('next_action', 'Not set')}")
+        
+        # Message Count
+        all_messages_final = final_state.get("messages", [])
+        human_msgs = [m for m in all_messages_final if isinstance(m, HumanMessage)]
+        ai_msgs = [m for m in all_messages_final if isinstance(m, AIMessage)]
+        tool_msgs = [m for m in all_messages_final if isinstance(m, ToolMessage)]
+        print(f"\n[STATE] Messages:")
+        print(f"  - Human messages: {len(human_msgs)}")
+        print(f"  - AI messages: {len(ai_msgs)}")
+        print(f"  - Tool messages: {len(tool_msgs)}")
+        print(f"  - Total messages: {len(all_messages_final)}")
+        
+        print(f"\n{'#'*80}\n")
         
         return response_data
     except Exception as e:
@@ -342,32 +490,18 @@ async def get_messages(
     conversation_id: str,
     db: AsyncSession = Depends(get_db)
 ):
-    """Get all messages in a conversation."""
-    result = await db.execute(
-        select(Message)
-        .where(Message.conversation_id == uuid.UUID(conversation_id))
-        .order_by(Message.created_at)
-    )
-    messages = result.scalars().all()
+    """Get all messages in a conversation from PostgresSaver checkpointer.
     
-    result_messages = []
-    for msg in messages:
-        msg_data = {
-            "message_id": str(msg.message_id),
-            "sender_type": msg.sender_type,
-            "content": msg.content,
-            "created_at": msg.created_at.isoformat()
-        }
-        # Include metadata if present (for doctor recommendations)
-        if msg.message_metadata:
-            msg_data["metadata"] = msg.message_metadata
-            if msg.message_metadata.get("type") == "doctor_recommendation":
-                msg_data["type"] = "doctor_recommendation"
-                msg_data["doctors"] = msg.message_metadata.get("doctors", [])
-                msg_data["service_type"] = msg.message_metadata.get("service_type")
-        result_messages.append(msg_data)
+    ROOT CAUSE FIX: Messages are returned in send_message response via all_messages field.
+    This endpoint is kept for backward compatibility but returns empty if no state exists.
+    """
+    # Import here to avoid scoping issues
+    from langchain_core.messages import ToolMessage
     
-    return result_messages
+    # ROOT CAUSE FIX: Don't manually access checkpointer - messages are in send_message response
+    # The graph handles state loading automatically - messages are returned in send_message
+    # This endpoint returns empty - frontend should use all_messages from send_message response
+    return []
 
 
 @router.websocket("/{conversation_id}/ws")
