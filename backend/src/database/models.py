@@ -103,7 +103,8 @@ class Conversation(Base):
 
     # Relationships
     patient = relationship("Patient", back_populates="conversations")
-    messages = relationship("Message", back_populates="conversation")
+    # NOTE: messages relationship removed - messages are now handled by PostgresSaver checkpointer
+    # All conversation messages are stored in the checkpoints table, not in messages table
     tickets = relationship("Ticket", back_populates="conversation")
 
 

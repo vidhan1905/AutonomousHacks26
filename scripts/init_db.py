@@ -16,7 +16,7 @@ from sqlalchemy.ext.asyncio import create_async_engine
 # Import all models to register them with Base.metadata
 from backend.src.database.connection import Base
 from backend.src.database.models import (
-    Patient, Admin, ServicePerson, Conversation, Message,
+    Patient, Admin, ServicePerson, Conversation,
     Ticket, Appointment, PatientHistory, TicketUpdate,
     DoctorExpertise, DoctorCaseHistory, TicketAssignment, PatientHistorySummary
 )

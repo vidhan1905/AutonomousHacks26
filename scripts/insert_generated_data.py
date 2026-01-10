@@ -25,7 +25,7 @@ import os
 
 # Import all models
 from backend.src.database.models import (
-    Patient, Admin, ServicePerson, Conversation, Message,
+    Patient, Admin, ServicePerson, Conversation,
     Ticket, Appointment, PatientHistory, TicketUpdate,
     DoctorExpertise, DoctorCaseHistory, TicketAssignment, PatientHistorySummary
 )
@@ -259,34 +259,6 @@ async def insert_conversations(session: AsyncSession, data: List[Dict[str, Any]]
     await session.commit()
     return inserted, skipped
 
-
-async def insert_messages(session: AsyncSession, data: List[Dict[str, Any]], skip_existing: bool = True) -> tuple:
-    """Insert message records."""
-    inserted = 0
-    skipped = 0
-    
-    for record in data:
-        message_id = parse_uuid(record["message_id"])
-        
-        if skip_existing and await check_exists(session, Message, message_id):
-            skipped += 1
-            continue
-        
-        message = Message(
-            message_id=message_id,
-            conversation_id=parse_uuid(record["conversation_id"]),
-            sender_type=record["sender_type"],
-            sender_id=parse_uuid(record.get("sender_id")),
-            content=record["content"],
-            message_metadata=record.get("message_metadata"),
-            created_at=parse_datetime(record.get("created_at"))
-        )
-        
-        session.add(message)
-        inserted += 1
-    
-    await session.commit()
-    return inserted, skipped
 
 
 async def insert_tickets(session: AsyncSession, data: List[Dict[str, Any]], skip_existing: bool = True) -> tuple:
@@ -575,11 +547,7 @@ async def main():
             print(f"   ✓ Inserted: {inserted}, Skipped: {skipped}, Total: {len(conversations_data)}")
             print()
             
-            print("6. Inserting messages...")
-            messages_data = load_json_file("messages.json")
-            inserted, skipped = await insert_messages(session, messages_data)
-            print(f"   ✓ Inserted: {inserted}, Skipped: {skipped}, Total: {len(messages_data)}")
-            print()
+            print("6. skipping messages...")
             
             print("7. Inserting tickets...")
             tickets_data = load_json_file("tickets.json")
