@@ -3,6 +3,7 @@ import type { Ticket } from '../../types'
 
 interface TicketCardProps {
   ticket: Ticket
+  onClick?: (ticket: Ticket) => void
 }
 
 const priorityColors = {
@@ -21,13 +22,21 @@ const statusColors = {
   cancelled: 'bg-red-100 text-red-800',
 }
 
-export default function TicketCard({ ticket }: TicketCardProps) {
+export default function TicketCard({ ticket, onClick }: TicketCardProps) {
   const navigate = useNavigate()
+
+  const handleClick = () => {
+    if (onClick) {
+      onClick(ticket)
+    } else {
+      navigate(`/tickets/${ticket.ticket_id}`)
+    }
+  }
 
   return (
     <div
       className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow cursor-pointer"
-      onClick={() => navigate(`/tickets/${ticket.ticket_id}`)}
+      onClick={handleClick}
     >
       <div className="flex items-start justify-between mb-4">
         <div>

@@ -9,11 +9,30 @@ export interface User {
   role?: string
 }
 
+export interface DoctorRecommendation {
+  doctor_id: string
+  name: string
+  service_type: string
+  specialization?: string
+  rank: number
+  reason: string
+  ticket_id?: string
+}
+
 export interface Message {
   message_id: string
   sender_type: 'patient' | 'llm'
   content: string
   created_at: string
+  type?: 'doctor_recommendation' | 'text'
+  doctors?: DoctorRecommendation[]
+  service_type?: string
+  metadata?: {
+    type?: string
+    doctors?: DoctorRecommendation[]
+    service_type?: string
+    tickets_created?: number
+  }
 }
 
 export interface Conversation {

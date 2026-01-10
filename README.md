@@ -58,3 +58,29 @@ See `.env.example` for a sample configuration file. Copy it to `.env` and fill i
 - `I'm having severe abdominal pain. I need emergency care`
 
 For detailed testing instructions and all test scenarios, see [TESTING.md](./TESTING.md).
+
+## Visualizing the LangGraph Workflow
+
+You can visualize the LangGraph conversation agent workflow using the provided script:
+
+```bash
+# Generate Mermaid diagram and HTML visualization
+uv run python scripts/visualize_graph.py
+```
+
+This will create:
+- `langgraph_visualization.html` - Interactive HTML file with Mermaid diagram (open in browser)
+- `langgraph_visualization.mmd` - Mermaid diagram source file
+
+For ASCII visualization (optional), install the visualization dependencies:
+```bash
+uv sync --extra viz
+```
+
+Then run the visualization script again to also generate `langgraph_ascii.txt`.
+
+The visualization shows:
+- **Nodes**: agent, tools, process_results, collect_info, verify_patient
+- **Edges**: Flow between nodes
+- **Conditional Edges**: Decision points that route based on state
+- **Workflow**: Complete conversation flow from user input to response

@@ -211,7 +211,11 @@ async def send_message(
         "patient_history": None,
         "summary": None,
         "ticket_created": False,
-        "next_action": "continue" if patient_verified else "collect_info"
+        "next_action": "continue" if patient_verified else "collect_info",
+        "history_shown": False,
+        "service_type_determined": None,
+        "ranked_doctors": None,
+        "doctor_tickets_created": False
     }
     
     # Run agent with increased recursion limit
@@ -264,22 +268,68 @@ async def send_message(
         if not llm_response or not llm_response.strip():
             llm_response = "I'm here to help. How can I assist you today?"
         
+        # Check if this is a doctor recommendation message
+        ranked_doctors = final_state.get("ranked_doctors")
+        doctor_tickets_created = final_state.get("doctor_tickets_created", False)
+        service_type_determined = final_state.get("service_type_determined")
+        doctor_tickets = final_state.get("doctor_tickets", [])
+        
+        is_doctor_recommendation = (
+            doctor_tickets_created and 
+            ranked_doctors and 
+            len(ranked_doctors) > 0
+        )
+        
+        # Prepare message metadata
+        message_metadata = None
+        if is_doctor_recommendation:
+            # Format doctor recommendations with ticket IDs
+            doctors_with_tickets = []
+            ticket_map = {t["doctor_id"]: t["ticket_id"] for t in doctor_tickets}
+            
+            for doctor in ranked_doctors[:5]:
+                doctors_with_tickets.append({
+                    "doctor_id": doctor["doctor_id"],
+                    "name": doctor["name"],
+                    "service_type": doctor["service_type"],
+                    "specialization": doctor.get("specialization"),
+                    "rank": doctor["rank"],
+                    "reason": doctor["reason"],
+                    "ticket_id": ticket_map.get(doctor["doctor_id"])
+                })
+            
+            message_metadata = {
+                "type": "doctor_recommendation",
+                "doctors": doctors_with_tickets,
+                "service_type": service_type_determined,
+                "tickets_created": len(doctor_tickets)
+            }
+        
         # Save LLM message
         llm_message = Message(
             conversation_id=uuid.UUID(conversation_id),
             sender_type="llm",
             sender_id=None,
-            content=llm_response
+            content=llm_response,
+            message_metadata=message_metadata
         )
         db.add(llm_message)
         await db.commit()
         
-        return {
+        response_data = {
             "message_id": str(llm_message.message_id),
             "content": llm_response,
             "sender_type": "llm",
             "created_at": llm_message.created_at.isoformat()
         }
+        
+        # Add doctor recommendation data if present
+        if is_doctor_recommendation and message_metadata:
+            response_data["type"] = "doctor_recommendation"
+            response_data["doctors"] = message_metadata["doctors"]
+            response_data["service_type"] = message_metadata["service_type"]
+        
+        return response_data
     except Exception as e:
         import traceback
         error_details = traceback.format_exc()
@@ -300,15 +350,24 @@ async def get_messages(
     )
     messages = result.scalars().all()
     
-    return [
-        {
+    result_messages = []
+    for msg in messages:
+        msg_data = {
             "message_id": str(msg.message_id),
             "sender_type": msg.sender_type,
             "content": msg.content,
             "created_at": msg.created_at.isoformat()
         }
-        for msg in messages
-    ]
+        # Include metadata if present (for doctor recommendations)
+        if msg.message_metadata:
+            msg_data["metadata"] = msg.message_metadata
+            if msg.message_metadata.get("type") == "doctor_recommendation":
+                msg_data["type"] = "doctor_recommendation"
+                msg_data["doctors"] = msg.message_metadata.get("doctors", [])
+                msg_data["service_type"] = msg.message_metadata.get("service_type")
+        result_messages.append(msg_data)
+    
+    return result_messages
 
 
 @router.websocket("/{conversation_id}/ws")

@@ -130,6 +130,13 @@ export const ticketApi = {
     })
     return response.data
   },
+  
+  acceptReject: async (ticketId: string, action: 'accept' | 'reject') => {
+    const response = await api.post(`/api/tickets/${ticketId}/accept-reject`, {
+      action,
+    })
+    return response.data
+  },
 }
 
 // Appointment endpoints

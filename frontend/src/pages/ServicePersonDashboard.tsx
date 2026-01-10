@@ -43,6 +43,23 @@ export default function ServicePersonDashboard() {
     }
   }
 
+  const handleAcceptReject = async (ticketId: string, action: 'accept' | 'reject') => {
+    try {
+      const result = await ticketApi.acceptReject(ticketId, action)
+      if (action === 'accept' && result.cancelled_tickets) {
+        alert(`Ticket accepted! ${result.cancelled_tickets} other ticket(s) have been cancelled.`)
+      }
+      if (selectedTicket?.ticket_id === ticketId) {
+        setSelectedTicket({ ...selectedTicket, status: result.status })
+      }
+      // Reload tickets
+      window.location.reload()
+    } catch (error: any) {
+      console.error('Failed to accept/reject ticket:', error)
+      alert(error.response?.data?.detail || 'Failed to accept/reject ticket')
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       <header className="bg-white shadow-sm border-b border-gray-200">
@@ -71,7 +88,10 @@ export default function ServicePersonDashboard() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2">
             <h2 className="text-xl font-semibold text-gray-900 mb-4">Tickets</h2>
-            <TicketDashboard userType="service_person" />
+            <TicketDashboard 
+              userType="service_person" 
+              onTicketClick={handleViewTicket}
+            />
           </div>
 
           {selectedTicket && (
@@ -105,19 +125,32 @@ export default function ServicePersonDashboard() {
                       </pre>
                     </div>
                   )}
-                  <div className="flex space-x-2">
+                  <div className="flex flex-col space-y-2">
                     {selectedTicket.status === 'open' && (
-                      <button
-                        onClick={() => handleAssignToMe(selectedTicket.ticket_id)}
-                        className="flex-1 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 text-sm"
-                      >
-                        Assign to Me
-                      </button>
+                      <>
+                        <div className="flex space-x-2">
+                          <button
+                            onClick={() => handleAcceptReject(selectedTicket.ticket_id, 'accept')}
+                            className="flex-1 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 text-sm font-medium"
+                          >
+                            Accept Ticket
+                          </button>
+                          <button
+                            onClick={() => handleAcceptReject(selectedTicket.ticket_id, 'reject')}
+                            className="flex-1 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 text-sm font-medium"
+                          >
+                            Reject Ticket
+                          </button>
+                        </div>
+                        <p className="text-xs text-gray-500 text-center">
+                          Accepting will cancel tickets for other doctors
+                        </p>
+                      </>
                     )}
                     {selectedTicket.status === 'assigned' && (
                       <button
                         onClick={() => handleUpdateStatus(selectedTicket.ticket_id, 'in_progress')}
-                        className="flex-1 px-4 py-2 bg-yellow-600 text-white rounded-md hover:bg-yellow-700 text-sm"
+                        className="w-full px-4 py-2 bg-yellow-600 text-white rounded-md hover:bg-yellow-700 text-sm"
                       >
                         Start Work
                       </button>
@@ -125,7 +158,7 @@ export default function ServicePersonDashboard() {
                     {selectedTicket.status === 'in_progress' && (
                       <button
                         onClick={() => handleUpdateStatus(selectedTicket.ticket_id, 'completed')}
-                        className="flex-1 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 text-sm"
+                        className="w-full px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 text-sm"
                       >
                         Complete
                       </button>

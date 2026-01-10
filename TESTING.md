@@ -16,6 +16,11 @@ This guide provides step-by-step instructions and example inputs to test all fea
 My name is April Maldonado, 001-852-326-5094x079 and 1955-02-28
 ```
 
+**Doctor Recommendation (NEW):**
+```
+My leg is broken, I need urgent help
+```
+
 **Schedule Appointment:**
 ```
 I'd like to schedule an appointment for next week for my follow-up.
@@ -99,13 +104,113 @@ I'm having severe abdominal pain. I need emergency care.
 
 **Expected Response**:
 - Patient is verified
-- Medical history is retrieved and displayed
-- Summary of past visits shown
-- LLM asks how it can help
+- Medical history is retrieved and displayed in chat
+- Summary of past visits shown (last 10 records)
+- LLM asks: "What help do you need today?"
 
 ---
 
-### Scenario 2: Schedule an Appointment
+### Scenario 2: Doctor Recommendation System (NEW FEATURE)
+
+**Prerequisites**: Patient must be verified (complete Scenario 1 first)
+
+**Step 1: After Verification and History Display**
+- After providing patient info, you should see your medical history displayed
+- LLM asks: "What help do you need today?"
+
+**Step 2: Request Help with a Medical Issue**
+**Input**: 
+```
+My leg is broken, I need urgent help
+```
+
+**Expected Behavior**:
+1. **Service Type Determination**:
+   - LLM determines service type: `orthopedics` (from "broken leg")
+   - Other examples:
+     - "chest pain" → `cardiology`
+     - "headache" → `neurology`
+     - "blood test" → `blood_test`
+     - "emergency" → `emergency`
+
+2. **Doctor Query**:
+   - System queries `get_service_persons_by_type(service_type="orthopedics")`
+   - Returns list of available doctors for that service type
+
+3. **Doctor Ranking**:
+   - LLM ranks top 5 doctors using `rank_doctors_with_llm`
+   - Ranking considers:
+     - Patient's medical history
+     - Current symptoms/request
+     - Doctor specialization match
+   - Each doctor gets a rank (1-5) and reasoning
+
+4. **Ticket Creation**:
+   - System creates tickets for ALL 5 ranked doctors using `create_multiple_tickets`
+   - Each ticket includes:
+     - Patient details (blood group, etc.)
+     - Past history summary
+     - LLM-generated summary
+     - Ranking reason for that doctor
+   - Tickets are assigned to respective doctors
+
+5. **Frontend Display**:
+   - Doctor recommendation cards appear in chat
+   - Each card shows:
+     - Doctor name
+     - Rank badge (1-5, with labels like "Best Match", "Excellent")
+     - Specialization
+     - Ranking reason
+     - Ticket ID
+   - Cards displayed in responsive grid layout
+
+**Alternative Test Inputs**:
+```
+I'm having chest pain and need to see a cardiologist
+```
+- Expected: `cardiology` service type, cardiology doctors ranked
+
+```
+I need help with my mental health, I've been feeling depressed
+```
+- Expected: `mental_health` service type, mental health specialists ranked
+
+```
+I have a skin rash that won't go away
+```
+- Expected: `dermatology` service type, dermatologists ranked
+
+```
+I need urgent surgery consultation
+```
+- Expected: `surgery_consultation` service type, surgeons ranked
+
+**Verification Steps**:
+1. Check backend logs for tool calls:
+   - `get_service_persons_by_type`
+   - `rank_doctors_with_llm`
+   - `create_multiple_tickets`
+
+2. Check database:
+   - 5 tickets should be created
+   - Each ticket assigned to different doctor
+   - All tickets have same `service_type`
+   - Tickets include patient details and history
+
+3. Check frontend:
+   - Doctor cards display correctly
+   - Rank badges show proper colors
+   - Ticket IDs are visible
+   - Cards are responsive (test on mobile)
+
+4. Check Service Person Dashboard:
+   - Login as a doctor from the ranked list
+   - Should see ticket assigned to them
+   - Ticket includes ranking reason and patient history
+
+---
+
+### Scenario 3: Schedule an Appointment
 
 **Prerequisites**: Patient must be verified (complete Scenario 1 first)
 
@@ -127,7 +232,7 @@ I'd like to schedule an appointment for next week for my follow-up.
 
 ---
 
-### Scenario 3: Request a Service (Create Ticket)
+### Scenario 4: Request a Service (Create Ticket)
 
 **Prerequisites**: Patient must be verified
 
@@ -152,7 +257,7 @@ I need a blood test done. I've been feeling tired lately.
 
 ---
 
-### Scenario 4: Emergency Service Request
+### Scenario 5: Emergency Service Request
 
 **Input**:
 ```
@@ -167,7 +272,7 @@ I'm having severe abdominal pain. I think I need emergency care.
 
 ---
 
-### Scenario 5: Multiple Services
+### Scenario 6: Multiple Services
 
 **Input**:
 ```
@@ -181,7 +286,7 @@ I need both a blood test and an imaging scan. I've been having headaches and diz
 
 ---
 
-### Scenario 6: Specific Department Consultation
+### Scenario 7: Specific Department Consultation
 
 **Input**:
 ```
@@ -195,7 +300,7 @@ I need to see a neurologist about my migraines.
 
 ---
 
-### Scenario 7: Follow-up on Previous Visit
+### Scenario 8: Follow-up on Previous Visit
 
 **Input**:
 ```
@@ -209,7 +314,7 @@ I want to follow up on my previous emergency visit from November. The pain has r
 
 ---
 
-### Scenario 8: General Health Concern
+### Scenario 9: General Health Concern
 
 **Input**:
 ```
@@ -272,6 +377,36 @@ I've been experiencing dizziness and fatigue for the past few days. What should 
 
 When testing, check the backend logs to see which tools the LLM calls:
 
+### For Doctor Recommendation Flow:
+```
+# Step 1: Get patient history (after verification)
+get_patient_history(patient_id="...")
+
+# Step 2: Determine service type and query doctors
+get_service_persons_by_type(service_type="orthopedics")
+
+# Step 3: Rank doctors using LLM
+rank_doctors_with_llm(
+    patient_history={...},
+    user_request="My leg is broken, I need urgent help",
+    doctors=[{doctor_id, name, service_type, specialization}, ...],
+    service_type="orthopedics"
+)
+
+# Step 4: Create tickets for all 5 ranked doctors
+create_multiple_tickets(
+    patient_id="...",
+    conversation_id="...",
+    ranked_doctors=[{doctor_id, name, rank, reason}, ...],
+    service_type="orthopedics",
+    description="My leg is broken, I need urgent help",
+    patient_details={...},
+    past_history_summary="...",
+    llm_summary="...",
+    priority=5
+)
+```
+
 ### For Appointment Scheduling:
 ```
 schedule_appointment(
@@ -317,6 +452,14 @@ create_ticket(
 - `I want an imaging scan`
 - `I need to see a cardiologist`
 
+### Doctor Recommendation Requests:
+- `My leg is broken, I need urgent help` → orthopedics
+- `I'm having chest pain` → cardiology
+- `I have severe headaches` → neurology
+- `I need mental health support` → mental_health
+- `I have a skin condition` → dermatology
+- `I need surgery consultation` → surgery_consultation
+
 ### Emergency:
 - `I'm having severe pain, I need emergency care`
 - `This is an emergency, I need help now`
@@ -354,9 +497,11 @@ create_ticket(
 
 After testing, verify:
 
+### Basic Functionality:
 - [ ] Patient can login with phone number
 - [ ] Patient verification works correctly
-- [ ] Medical history is retrieved and displayed
+- [ ] Medical history is retrieved and displayed in chat after verification
+- [ ] LLM asks "What help do you need today?" after showing history
 - [ ] Appointments can be scheduled
 - [ ] Tickets are created for services
 - [ ] Service persons can see tickets
@@ -365,20 +510,61 @@ After testing, verify:
 - [ ] Conversation history is maintained across messages
 - [ ] Different service types work correctly
 
+### Doctor Recommendation System (NEW):
+- [ ] Patient history is displayed in chat after verification
+- [ ] Service type is correctly determined from user request
+- [ ] Doctors are queried by service type
+- [ ] Top 5 doctors are ranked with LLM
+- [ ] Ranking includes clear reasoning for each doctor
+- [ ] Tickets are created for all 5 ranked doctors
+- [ ] Each ticket is assigned to the respective doctor
+- [ ] Doctor recommendation cards display in frontend
+- [ ] Cards show rank badges, names, specializations, and reasons
+- [ ] Ticket IDs are visible on doctor cards
+- [ ] Cards are responsive (test on mobile/tablet)
+- [ ] Service persons can see their assigned tickets in dashboard
+- [ ] Tickets include ranking reason and patient history summary
+
 ---
 
 ## Example Complete Flow
 
+### Basic Flow:
 1. **Login**: Patient ? Phone: `001-852-326-5094x079`
 2. **Start Chat**: Click "New Conversation"
 3. **Greet**: Send `Hi`
 4. **Provide Info**: Send `My name is April Maldonado, 001-852-326-5094x079 and 1955-02-28`
-5. **Verify**: Should see medical history summary
+5. **Verify**: Should see medical history displayed in chat
 6. **Request Service**: Send `I need a blood test done`
 7. **Check Dashboard**: Ticket should appear in patient dashboard
 8. **Login as Service Person**: Username `blood_test_1`, Password `password123`
 9. **View Ticket**: Should see ticket with all patient details
 10. **Update Status**: Change status to "in_progress" or "completed"
+
+### Doctor Recommendation Flow (NEW):
+1. **Login**: Patient ? Phone: `001-852-326-5094x079`
+2. **Start Chat**: Click "New Conversation"
+3. **Provide Info**: Send `My name is April Maldonado, 001-852-326-5094x079 and 1955-02-28`
+4. **Verify & History**: 
+   - Patient verified
+   - Medical history displayed in chat
+   - LLM asks: "What help do you need today?"
+5. **Request Help**: Send `My leg is broken, I need urgent help`
+6. **Doctor Recommendation**:
+   - Service type determined: `orthopedics`
+   - Top 5 doctors ranked and displayed as cards
+   - 5 tickets created (one for each doctor)
+7. **View Doctor Cards**: 
+   - Cards show rank, name, specialization, reason, ticket ID
+   - Cards are clickable/viewable
+8. **Check Tickets**: 
+   - Login as one of the ranked doctors
+   - Should see ticket assigned to them
+   - Ticket includes ranking reason and patient history
+9. **Verify All Tickets**: 
+   - Check patient dashboard - should see 5 tickets
+   - Each ticket assigned to different doctor
+   - All tickets have same service_type: `orthopedics`
 
 ---
 
@@ -389,3 +575,31 @@ After testing, verify:
 - Phone numbers should match database format exactly
 - Patient verification happens once per conversation
 - Each conversation maintains its own state
+
+### Doctor Recommendation System Notes:
+- **Service Type Mapping**: The LLM maps user requests to service types:
+  - "broken leg", "fracture" → `orthopedics`
+  - "chest pain", "heart" → `cardiology`
+  - "headache", "neurological" → `neurology`
+  - "blood test", "lab work" → `blood_test`
+  - "emergency", "urgent" → `emergency`
+  - "mental health", "depression" → `mental_health`
+  - "skin", "rash" → `dermatology`
+  - "surgery" → `surgery_consultation`
+  - Default: `general_consultation`
+
+- **Ranking Criteria**: Doctors are ranked based on:
+  - Specialization match with patient history
+  - Service type alignment
+  - Patient's current symptoms/needs
+  - Relevance to medical condition
+
+- **Ticket Creation**: All 5 ranked doctors get tickets automatically
+  - Each ticket includes the ranking reason
+  - Tickets are pre-assigned to doctors
+  - Patient can see all tickets in their dashboard
+
+- **Frontend Display**: Doctor cards are only shown for doctor recommendation messages
+  - Regular text messages still use standard message bubbles
+  - Cards are responsive and work on mobile devices
+  - Rank badges use color coding (1=Best Match, 2=Excellent, etc.)
