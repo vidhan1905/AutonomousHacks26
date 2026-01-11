@@ -23,4 +23,3 @@ uv.lock
 .pytest_cache/
 .coverage
 htmlcov/
-generated/
