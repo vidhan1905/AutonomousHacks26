@@ -29,6 +29,25 @@ export default function TicketDetailPage() {
   const [error, setError] = useState<string | null>(null)
   const [actionLoading, setActionLoading] = useState(false)
   const [reviewNotes, setReviewNotes] = useState('')
+  
+  // Determine dashboard route based on user type
+  const getDashboardRoute = () => {
+    if (user?.type === 'patient') {
+      return '/dashboard/patient'
+    }
+    return '/dashboard/service-person'
+  }
+  
+  // Handle back navigation - go back in browser history, fallback to dashboard
+  const handleBack = () => {
+    // Try to go back in browser history first
+    if (window.history.length > 1) {
+      navigate(-1)
+    } else {
+      // Fallback to dashboard route if no history
+      navigate(getDashboardRoute())
+    }
+  }
 
   const loadTicket = useCallback(async () => {
     if (!ticketId) return
@@ -123,7 +142,7 @@ export default function TicketDetailPage() {
             </p>
           )}
           <button
-            onClick={() => navigate('/dashboard/service-person')}
+            onClick={handleBack}
             className="px-4 py-2 bg-teal-500 text-white rounded-md hover:bg-teal-600"
           >
             Back to Dashboard
@@ -170,17 +189,7 @@ export default function TicketDetailPage() {
     }
   }
 
-  // Parse step information from llm_summary
-  let currentStep: number | null = null
-  let totalSteps: number | null = null
-  if (ticket.is_sequential_review && ticket.llm_summary) {
-    const summary = typeof ticket.llm_summary === 'string' ? ticket.llm_summary : JSON.stringify(ticket.llm_summary)
-    const stepMatch = summary.match(/Step (\d+) of (\d+)/)
-    if (stepMatch) {
-      currentStep = parseInt(stepMatch[1])
-      totalSteps = parseInt(stepMatch[2])
-    }
-  }
+  // Step information is now available via sequential_review_info
 
   return (
     <div className="min-h-screen bg-teal-50 dark:bg-gray-900">
@@ -190,7 +199,7 @@ export default function TicketDetailPage() {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <button
-                onClick={() => navigate('/dashboard/service-person')}
+                onClick={handleBack}
                 className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200"
               >
                 ← Back
@@ -273,12 +282,80 @@ export default function TicketDetailPage() {
                 <p className="text-gray-900 dark:text-gray-100 whitespace-pre-wrap">
                   {currentCaseDescription || 'No description provided'}
                 </p>
-                {ticket.is_sequential_review && currentStep && totalSteps && (
-                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
-                    Sequential Review - Step {currentStep} of {totalSteps}
-                  </p>
+                {ticket.is_sequential_review && ticket.sequential_review_info && (
+                  <div className="mt-3 p-3 bg-blue-50 dark:bg-blue-900/30 rounded-lg border border-blue-200 dark:border-blue-800">
+                    <p className="text-sm font-medium text-blue-800 dark:text-blue-200">
+                      Step {ticket.sequential_review_info.current_step_number} of {ticket.sequential_review_info.total_steps}
+                    </p>
+                    {ticket.sequential_review_info.steps[ticket.sequential_review_info.current_step_index] && (
+                      <p className="text-xs text-blue-700 dark:text-blue-300 mt-1">
+                        Currently with: {ticket.sequential_review_info.steps[ticket.sequential_review_info.current_step_index].doctor_name} ({ticket.sequential_review_info.steps[ticket.sequential_review_info.current_step_index].service_type})
+                      </p>
+                    )}
+                    {ticket.sequential_review_info && ticket.sequential_review_info.current_step_number < ticket.sequential_review_info.total_steps && (
+                      <p className="text-xs text-blue-600 dark:text-blue-400 mt-1">
+                        Next: {ticket.sequential_review_info.steps[ticket.sequential_review_info.current_step_index + 1]?.doctor_name || 'Pending'}
+                      </p>
+                    )}
+                  </div>
                 )}
               </div>
+              
+              {/* All Doctors Section - for regular requests with multiple tickets */}
+              {ticket.all_doctors && ticket.all_doctors.length > 0 && !ticket.is_sequential_review && (
+                <div className="border-t border-gray-200 dark:border-gray-700 pt-4 mt-4">
+                  <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                    All Doctors ({ticket.total_tickets || ticket.all_doctors.length} {ticket.total_tickets === 1 ? 'doctor' : 'doctors'} offered)
+                  </h3>
+                  <div className="space-y-2">
+                    {ticket.all_doctors.map((doctor, idx) => (
+                      <div
+                        key={doctor.ticket_id}
+                        className={`p-3 rounded-lg border ${
+                          doctor.accepted
+                            ? 'bg-green-50 dark:bg-green-900/30 border-green-200 dark:border-green-800'
+                            : doctor.status === 'cancelled' || doctor.assignment_status === 'rejected'
+                            ? 'bg-red-50 dark:bg-red-900/30 border-red-200 dark:border-red-800'
+                            : 'bg-gray-50 dark:bg-gray-700/50 border-gray-200 dark:border-gray-600'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <p className="font-medium text-gray-900 dark:text-gray-100">
+                              {idx + 1}. {doctor.doctor_name}
+                            </p>
+                            <p className="text-xs text-gray-600 dark:text-gray-400">
+                              {doctor.service_type}
+                            </p>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            {doctor.accepted && (
+                              <span className="px-2 py-1 rounded text-xs font-medium bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200">
+                                ✓ Accepted
+                              </span>
+                            )}
+                            {!doctor.accepted && doctor.status === 'cancelled' && (
+                              <span className="px-2 py-1 rounded text-xs font-medium bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200">
+                                Rejected
+                              </span>
+                            )}
+                            {!doctor.accepted && doctor.status !== 'cancelled' && (
+                              <span className="px-2 py-1 rounded text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200">
+                                Pending
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                        {doctor.accepted && doctor.accepted_at && (
+                          <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                            Accepted: {new Date(doctor.accepted_at).toLocaleString()}
+                          </p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               {ticket.current_symptoms && (
                 <div className="border-t border-gray-200 dark:border-gray-700 pt-4 mt-4">
@@ -455,8 +532,8 @@ export default function TicketDetailPage() {
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 sticky top-4">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Actions</h3>
               
-              {/* Accept/Reject Buttons - Hidden for sequential review tickets */}
-              {ticket.status === 'open' && !ticket.is_sequential_review && (
+              {/* Accept/Reject Buttons - Only for service persons, hidden for sequential review tickets */}
+              {user?.type === 'service_person' && ticket.status === 'open' && !ticket.is_sequential_review && (
                 <div className="space-y-3">
                   <button
                     onClick={() => handleAcceptReject('accept')}
@@ -478,82 +555,27 @@ export default function TicketDetailPage() {
                 </div>
               )}
               
-              {/* Sequential Review Info */}
-              {ticket.is_sequential_review && ticket.status === 'assigned' && (() => {
-                // Only show message if ticket is assigned to current user and current step is not completed
-                if (ticket.sequential_review_info && user && user.type === 'service_person') {
-                  // Check if ticket is assigned to current user
-                  if (ticket.assigned_to && ticket.assigned_to !== user.id) {
-                    return null
-                  }
-                  
-                  const currentStep = ticket.sequential_review_info.steps.find(
-                    step => step.step_index === ticket.sequential_review_info!.current_step_index
-                  )
-                  if (currentStep && currentStep.status === 'completed') {
-                    return null
-                  }
-                  
-                  // Only show if current user's step is the current step
-                  const userStep = ticket.sequential_review_info.steps.find(
-                    step => step.doctor_id === user.id
-                  )
-                  if (userStep && userStep.step_index !== ticket.sequential_review_info.current_step_index) {
-                    return null
-                  }
-                }
-                return (
-                  <div className="mb-4 p-3 bg-blue-50 dark:bg-blue-900/30 rounded-lg border border-blue-200 dark:border-blue-800">
-                    <p className="text-sm text-blue-800 dark:text-blue-200">
-                      This ticket is automatically assigned to you. Click "Start Work" to begin your review.
-                    </p>
-                  </div>
-                )
-              })()}
-
-              {/* Status Update Buttons */}
-              {ticket.status === 'assigned' && (
-                (() => {
-                  // For sequential review tickets, only show "Start Work" if:
-                  // 1. The ticket is assigned to the current user
-                  // 2. The current step is not completed
-                  if (ticket.is_sequential_review && ticket.sequential_review_info && user && user.type === 'service_person') {
-                    // Check if ticket is assigned to current user
-                    if (ticket.assigned_to && ticket.assigned_to !== user.id) {
-                      return null
-                    }
-                    
-                    // Find the current step
-                    const currentStep = ticket.sequential_review_info.steps.find(
-                      step => step.step_index === ticket.sequential_review_info!.current_step_index
-                    )
-                    
-                    // Don't show button if current step is already completed
-                    if (currentStep && currentStep.status === 'completed') {
-                      return null
-                    }
-                    
-                    // Only show if current user's step is the current step
-                    const userStep = ticket.sequential_review_info.steps.find(
-                      step => step.doctor_id === user.id
-                    )
-                    if (userStep && userStep.step_index !== ticket.sequential_review_info.current_step_index) {
-                      return null
-                    }
-                  }
-                  return (
-                    <button
-                      onClick={() => handleUpdateStatus('in_progress')}
-                      disabled={actionLoading}
-                      className="w-full px-4 py-3 bg-yellow-600 text-white rounded-md hover:bg-yellow-700 font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                    >
-                      {actionLoading ? 'Processing...' : 'Start Work'}
-                    </button>
-                  )
-                })()
+              {/* Sequential Review Info - Only for service persons */}
+              {user?.type === 'service_person' && ticket.is_sequential_review && ticket.status === 'assigned' && (
+                <div className="mb-4 p-3 bg-blue-50 dark:bg-blue-900/30 rounded-lg border border-blue-200 dark:border-blue-800">
+                  <p className="text-sm text-blue-800 dark:text-blue-200">
+                    This ticket is automatically assigned to you. Click "Start Work" to begin your review.
+                  </p>
+                </div>
               )}
 
-              {ticket.status === 'in_progress' && (
+              {/* Status Update Buttons - Only for service persons */}
+              {user?.type === 'service_person' && ticket.status === 'assigned' && (
+                <button
+                  onClick={() => handleUpdateStatus('in_progress')}
+                  disabled={actionLoading}
+                  className="w-full px-4 py-3 bg-yellow-600 text-white rounded-md hover:bg-yellow-700 font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  {actionLoading ? 'Processing...' : 'Start Work'}
+                </button>
+              )}
+
+              {user?.type === 'service_person' && ticket.status === 'in_progress' && (
                 <div className="space-y-3">
                   {ticket.is_sequential_review && (
                     <div>

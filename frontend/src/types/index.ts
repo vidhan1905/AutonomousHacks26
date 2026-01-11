@@ -86,6 +86,17 @@ export interface Ticket {
   is_sequential_review?: boolean
   sequential_review_chain_id?: string | null
   sequential_review_info?: SequentialReviewInfo
+  all_doctors?: Array<{
+    ticket_id: string
+    doctor_id: string
+    doctor_name: string
+    service_type: string
+    status: string
+    assignment_status: string
+    accepted: boolean
+    accepted_at: string | null
+  }>
+  total_tickets?: number
 }
 
 export interface Appointment {

@@ -70,7 +70,7 @@ function App() {
         <Route
           path="/tickets/:ticketId"
           element={
-            <ProtectedRoute requiredType="service_person">
+            <ProtectedRoute>
               <TicketDetailPage />
             </ProtectedRoute>
           }

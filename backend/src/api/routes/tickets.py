@@ -57,7 +57,158 @@ async def list_tickets(
     # Filter based on user type
     try:
         if user_type == "patient":
+            # For patients, we'll aggregate tickets by conversation_id
+            # Get all tickets first, then aggregate
             query = query.where(Ticket.patient_id == user.patient_id)
+            result = await db.execute(query.order_by(Ticket.created_at.desc()))
+            all_tickets = result.scalars().all()
+            
+            # Group tickets by conversation_id
+            tickets_by_conversation = {}
+            for ticket in all_tickets:
+                conv_id = str(ticket.conversation_id)
+                if conv_id not in tickets_by_conversation:
+                    tickets_by_conversation[conv_id] = []
+                tickets_by_conversation[conv_id].append(ticket)
+            
+            # Aggregate: one ticket per conversation
+            aggregated_tickets = []
+            for conv_id, tickets in tickets_by_conversation.items():
+                # Sort tickets: accepted first, then by created_at
+                tickets_sorted = sorted(
+                    tickets,
+                    key=lambda t: (
+                        0 if t.accepted_by else 1,  # Accepted tickets first
+                        t.created_at  # Then by creation time
+                    )
+                )
+                primary_ticket = tickets_sorted[0]
+                
+                # Build list of all doctors/statuses for this conversation
+                all_doctors_info = []
+                for t in tickets:
+                    if t.assigned_to:
+                        doctor_result = await db.execute(
+                            select(ServicePerson).where(ServicePerson.service_person_id == t.assigned_to)
+                        )
+                        doctor = doctor_result.scalar_one_or_none()
+                        all_doctors_info.append({
+                            "ticket_id": str(t.ticket_id),
+                            "doctor_id": str(t.assigned_to),
+                            "doctor_name": doctor.name if doctor else "Unknown",
+                            "service_type": doctor.service_type if doctor else "Unknown",
+                            "status": t.status,
+                            "assignment_status": t.assignment_status,
+                            "accepted": t.accepted_by is not None,
+                            "accepted_at": t.accepted_at.isoformat() if t.accepted_at else None
+                        })
+                
+                # Calculate aggregated status (best status among all tickets)
+                statuses = [t.status for t in tickets]
+                aggregated_status = primary_ticket.status
+                if "completed" in statuses:
+                    aggregated_status = "completed"
+                elif "in_progress" in statuses:
+                    aggregated_status = "in_progress"
+                elif any(t.accepted_by for t in tickets):
+                    aggregated_status = "accepted"
+                elif "assigned" in statuses:
+                    aggregated_status = "assigned"
+                
+                # Build ticket data
+                ticket_data = {
+                    "ticket_id": str(primary_ticket.ticket_id),
+                    "conversation_id": conv_id,
+                    "patient_id": str(primary_ticket.patient_id),
+                    "service_type": primary_ticket.service_type,
+                    "status": aggregated_status,
+                    "priority": primary_ticket.priority,
+                    "assigned_to": str(primary_ticket.assigned_to) if primary_ticket.assigned_to else None,
+                    "description": primary_ticket.description,
+                    "patient_details": primary_ticket.patient_details,
+                    "past_history_summary": primary_ticket.past_history_summary,
+                    "llm_summary": primary_ticket.llm_summary,
+                    "current_symptoms": primary_ticket.current_symptoms,
+                    "assignment_status": primary_ticket.assignment_status,
+                    "accepted_by": str(primary_ticket.accepted_by) if primary_ticket.accepted_by else None,
+                    "accepted_at": primary_ticket.accepted_at.isoformat() if primary_ticket.accepted_at else None,
+                    "offered_to_count": primary_ticket.offered_to_count,
+                    "created_at": primary_ticket.created_at.isoformat(),
+                    "assigned_at": primary_ticket.assigned_at.isoformat() if primary_ticket.assigned_at else None,
+                    "completed_at": primary_ticket.completed_at.isoformat() if primary_ticket.completed_at else None,
+                    "is_sequential_review": primary_ticket.is_sequential_review if hasattr(primary_ticket, 'is_sequential_review') else False,
+                    "sequential_review_chain_id": str(primary_ticket.sequential_review_chain_id) if hasattr(primary_ticket, 'sequential_review_chain_id') and primary_ticket.sequential_review_chain_id else None,
+                    "all_doctors": all_doctors_info,
+                    "total_tickets": len(tickets)
+                }
+                
+                # Add sequential review info if applicable
+                if primary_ticket.is_sequential_review and primary_ticket.sequential_review_chain_id:
+                    chain_result = await db.execute(
+                        select(SequentialReviewChain).where(
+                            SequentialReviewChain.chain_id == primary_ticket.sequential_review_chain_id
+                        )
+                    )
+                    chain = chain_result.scalar_one_or_none()
+                    
+                    if chain:
+                        # Get all steps
+                        steps_result = await db.execute(
+                            select(SequentialReviewStep).where(
+                                SequentialReviewStep.chain_id == chain.chain_id
+                            ).order_by(SequentialReviewStep.step_index)
+                        )
+                        steps = steps_result.scalars().all()
+                        
+                        # Get doctor info for each step
+                        steps_info = []
+                        for step in steps:
+                            doctor_result = await db.execute(
+                                select(ServicePerson).where(ServicePerson.service_person_id == step.doctor_id)
+                            )
+                            doctor = doctor_result.scalar_one_or_none()
+                            
+                            steps_info.append({
+                                "step_id": str(step.step_id),
+                                "step_index": step.step_index,
+                                "step_number": step.step_index + 1,
+                                "doctor_id": str(step.doctor_id),
+                                "doctor_name": doctor.name if doctor else "Unknown",
+                                "service_type": doctor.service_type if doctor else "Unknown",
+                                "status": step.status,
+                                "review_notes": step.review_notes,
+                                "review_summary": step.review_summary,
+                                "started_at": step.started_at.isoformat() if step.started_at else None,
+                                "completed_at": step.completed_at.isoformat() if step.completed_at else None,
+                            })
+                        
+                        # Calculate current_step_number
+                        if chain.status == "completed":
+                            current_step_number = chain.required_doctors_count
+                        else:
+                            current_step_number = min(chain.current_step_index + 1, chain.required_doctors_count)
+                        
+                        ticket_data["sequential_review_info"] = {
+                            "chain_id": str(chain.chain_id),
+                            "current_step_index": chain.current_step_index,
+                            "current_step_number": current_step_number,
+                            "total_steps": chain.required_doctors_count,
+                            "chain_status": chain.status,
+                            "steps": steps_info
+                        }
+                
+                aggregated_tickets.append(ticket_data)
+            
+            # Apply filters to aggregated tickets
+            if status:
+                aggregated_tickets = [t for t in aggregated_tickets if t["status"] == status]
+            if service_type:
+                aggregated_tickets = [t for t in aggregated_tickets if t["service_type"] == service_type]
+            if priority:
+                aggregated_tickets = [t for t in aggregated_tickets if t["priority"] == priority]
+            
+            return aggregated_tickets
+            
         elif user_type == "service_person":
             # Service persons see tickets assigned to them OR offered to them (via assignment_status)
             # OR tickets that are part of sequential review chains where they are a reviewer
@@ -269,6 +420,39 @@ async def get_ticket(
                 "steps": steps_info
             }
     
+    # For patients, include information about all tickets in the same conversation
+    all_doctors_info = None
+    total_tickets = None
+    if user_type == "patient":
+        # Get all tickets for this conversation
+        all_tickets_result = await db.execute(
+            select(Ticket).where(
+                Ticket.conversation_id == ticket.conversation_id,
+                Ticket.patient_id == ticket.patient_id
+            ).order_by(Ticket.created_at)
+        )
+        all_tickets = all_tickets_result.scalars().all()
+        total_tickets = len(all_tickets)
+        
+        # Build list of all doctors/statuses
+        all_doctors_info = []
+        for t in all_tickets:
+            if t.assigned_to:
+                doctor_result = await db.execute(
+                    select(ServicePerson).where(ServicePerson.service_person_id == t.assigned_to)
+                )
+                doctor = doctor_result.scalar_one_or_none()
+                all_doctors_info.append({
+                    "ticket_id": str(t.ticket_id),
+                    "doctor_id": str(t.assigned_to),
+                    "doctor_name": doctor.name if doctor else "Unknown",
+                    "service_type": doctor.service_type if doctor else "Unknown",
+                    "status": t.status,
+                    "assignment_status": t.assignment_status,
+                    "accepted": t.accepted_by is not None,
+                    "accepted_at": t.accepted_at.isoformat() if t.accepted_at else None
+                })
+    
     response = {
         "ticket_id": str(ticket.ticket_id),
         "conversation_id": str(ticket.conversation_id),
@@ -293,6 +477,10 @@ async def get_ticket(
         "is_sequential_review": is_sequential_review,
         "sequential_review_chain_id": str(ticket.sequential_review_chain_id) if hasattr(ticket, 'sequential_review_chain_id') and ticket.sequential_review_chain_id else None
     }
+    
+    if all_doctors_info is not None:
+        response["all_doctors"] = all_doctors_info
+        response["total_tickets"] = total_tickets
     
     if sequential_review_info:
         response["sequential_review_info"] = sequential_review_info
@@ -451,14 +639,6 @@ async def update_ticket_status(
             step = step_result.scalar_one_or_none()
             
             if step:
-                # Verify that the current doctor is assigned to this step
-                current_doctor_id = current_user["user"].service_person_id
-                if step.doctor_id != current_doctor_id:
-                    raise HTTPException(
-                        status_code=403,
-                        detail=f"This step is assigned to a different doctor. Step {step.step_index + 1} is assigned to another doctor, not you."
-                    )
-                
                 # Current doctor is reviewing - extract review notes and trigger workflow
                 review_notes = request.comment or ""
                 
@@ -480,25 +660,8 @@ async def update_ticket_status(
                     
                     if review_result.get("status") == "success":
                         # Step is now completed, chain is advanced
-                        # Re-query step and chain to get updated values from submit_doctor_review (which uses separate session)
-                        chain_result_after = await db.execute(
-                            select(SequentialReviewChain).where(
-                                SequentialReviewChain.chain_id == chain.chain_id
-                            )
-                        )
-                        chain_after = chain_result_after.scalar_one_or_none()
-                        
-                        step_result_after = await db.execute(
-                            select(SequentialReviewStep).where(
-                                SequentialReviewStep.step_id == step.step_id
-                            )
-                        )
-                        step_after = step_result_after.scalar_one_or_none()
-                        
-                        if chain_after:
-                            chain = chain_after
-                        if step_after:
-                            step = step_after
+                        # Refresh chain to get updated current_step_index
+                        await db.refresh(chain)
                         
                         # Check if more steps remain
                         total_steps = review_result.get("total_steps", 0)

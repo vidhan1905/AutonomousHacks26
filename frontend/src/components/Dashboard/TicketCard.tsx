@@ -44,13 +44,18 @@ export default function TicketCard({ ticket, onClick }: TicketCardProps) {
     >
       <div className="flex items-start justify-between mb-4">
         <div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
               {ticket.service_type?.replace('_', ' ').toUpperCase() || ticket.service_type || 'Unknown Service'}
             </h3>
             {ticket.is_sequential_review && ticket.sequential_review_info && (
               <span className="px-2 py-1 rounded-full text-xs font-medium bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200">
                 Sequential Review - Step {ticket.sequential_review_info.current_step_number}/{ticket.sequential_review_info.total_steps}
+              </span>
+            )}
+            {ticket.total_tickets && ticket.total_tickets > 1 && !ticket.is_sequential_review && (
+              <span className="px-2 py-1 rounded-full text-xs font-medium bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200">
+                {ticket.total_tickets} doctors offered
               </span>
             )}
           </div>
