@@ -51,7 +51,7 @@ from backend.src.agents.tools.complex_case_tools import (
     run_async_safely,
 )
 from backend.src.agents.state_models import SequentialReviewState
-from backend.src.database.models import SequentialReviewStep, Ticket
+from backend.src.database.models import SequentialReviewStep, Ticket, SequentialReviewTicket
 from sqlalchemy import select
 import uuid
 from datetime import datetime
@@ -94,7 +94,8 @@ def route_entry_node(state: AgentState) -> AgentState:
     # Valid continuation actions for authenticated patients
     valid_continuation_actions = [
         "fetch_history", "show_history", "validate_request", "find_doctors", 
-        "rank_doctors", "create_tickets", "confirm_booking", "inform_no_doctors"
+        "rank_doctors", "create_tickets", "confirm_booking", "inform_no_doctors",
+        "collect_doctor_review", "route_to_next_doctor", "create_sequential_chain"
     ]
     
     # Valid waiting states
@@ -416,7 +417,8 @@ def create_sequential_chain_node(state: AgentState) -> AgentState:
         print(f"[WORKFLOW] 📋 Sequential Review Chain Assignment:")
         for idx, step in enumerate(review_steps, 1):
             print(f"  Step {idx}/{len(review_steps)}: {step.get('doctor_name', 'Unknown')} ({step.get('service_type', 'Unknown')}) - Doctor ID: {step.get('doctor_id', 'Unknown')}")
-        state["next_action"] = "route_to_next_doctor"
+        print(f"[WORKFLOW] ✅ Tickets created for all steps. First doctor can now start.")
+        state["next_action"] = "end"  # Tickets are created, wait for doctors to review
     else:
         print(f"[WORKFLOW] Error creating sequential chain: {result.get('error')}")
         state["next_action"] = "end"
@@ -425,11 +427,14 @@ def create_sequential_chain_node(state: AgentState) -> AgentState:
 
 
 def route_to_next_doctor_node(state: AgentState) -> AgentState:
-    """Node: Route to next doctor in chain and create ticket.
+    """Node: Route to next doctor in chain.
     
-    Gets next doctor, creates ticket with accumulated context, links to SequentialReviewStep.
+    Note: Tickets are now created upfront when the chain is created.
+    This node is kept for backward compatibility but tickets are managed via API endpoints.
+    The API endpoint handles enabling the next step's ticket when a step completes.
     """
     print("[WORKFLOW] Executing route_to_next_doctor_node")
+    print("[WORKFLOW] Note: Tickets are created upfront. Next step will be enabled via API when previous step completes.")
     
     sequential_review = SequentialReviewState(**state.get("sequential_review", {}))
     chain_id = sequential_review.chain_id
@@ -439,198 +444,22 @@ def route_to_next_doctor_node(state: AgentState) -> AgentState:
         state["next_action"] = "end"
         return state
     
-    # Get next doctor in chain
+    # Get next doctor info for logging
     result = get_next_doctor_in_chain.invoke({"chain_id": chain_id})
     
-    if result.get("status") != "success":
-        print(f"[WORKFLOW] Error getting next doctor: {result.get('error')}")
-        state["next_action"] = "end"
-        return state
-    
-    step_id = result.get("step_id")
-    doctor_id = result.get("doctor_id")
-    doctor_info = result.get("doctor_info", {})
-    accumulated_context = result.get("accumulated_context", "")
-    step_index = result.get("step_index", 0)
-    total_steps = result.get("total_steps", 0)
-    
-    # Log which doctor we're routing to
-    doctor_name = doctor_info.get("name", "Unknown")
-    service_type = doctor_info.get("service_type", "Unknown")
-    print(f"[WORKFLOW] 🔄 Routing to Step {step_index + 1}/{total_steps}: {doctor_name} ({service_type})")
-    print(f"[WORKFLOW]    Doctor ID: {doctor_id}")
-    print(f"[WORKFLOW]    Step ID: {step_id}")
-    if accumulated_context and accumulated_context != "No previous reviews.":
-        print(f"[WORKFLOW]    Accumulated context from previous reviews: {len(accumulated_context)} characters")
-    
-    # Get patient and conversation info
-    patient_id = state.get("patient_id")
-    conversation_id = state.get("conversation_id")
-    patient_info = get_patient_info(state)
-    patient_history = state.get("patient_history")
-    
-    # Build ticket description with accumulated context
-    description_parts = []
-    if accumulated_context and accumulated_context != "No previous reviews.":
-        description_parts.append("PREVIOUS DOCTORS' REVIEWS:\n" + accumulated_context + "\n\n")
-    
-    # Add original case description
-    messages = state.get("messages", [])
-    last_user_message = None
-    for msg in reversed(messages):
-        if isinstance(msg, HumanMessage):
-            last_user_message = msg.content
-            break
-    
-    if last_user_message:
-        description_parts.append(f"CURRENT CASE:\n{last_user_message}\n\n")
-    
-    description_parts.append(f"Sequential Review - Step {step_index + 1} of {total_steps}")
-    description = "\n".join(description_parts)
-    
-    # Build patient details
-    patient_details = {
-        "name": patient_info.name if patient_info.name else "Unknown",
-        "phone": patient_info.phone if patient_info.phone else "",
-        "date_of_birth": patient_info.date_of_birth if patient_info.date_of_birth else "",
-    }
-    
-    # Build LLM summary
-    llm_summary = f"Sequential Review Chain - Step {step_index + 1} of {total_steps}\n"
-    llm_summary += f"Doctor: {doctor_info.get('name', 'Unknown')} ({doctor_info.get('service_type', 'Unknown')})\n"
-    if accumulated_context and accumulated_context != "No previous reviews.":
-        llm_summary += f"\nPrevious Reviews:\n{accumulated_context}\n"
-    
-    # Check if ticket already exists for this chain, or create new one
-    from backend.src.agents.tools.complex_case_tools import run_async_safely
-    from backend.src.database.models import Ticket
-    
-    # Get past history summary
-    past_history_summary = ""
-    if patient_history and isinstance(patient_history, dict):
-        if patient_history.get("summary"):
-            past_history_summary = patient_history["summary"]
-        elif patient_history.get("history_records"):
-            past_history_summary = f"Patient has {len(patient_history['history_records'])} previous medical records."
-    
-    async def get_or_create_ticket_async(session_maker=None):
-        """Get existing ticket for chain or create new one."""
-        if session_maker is None:
-            from backend.src.database.connection import create_async_session_maker
-            session_maker = create_async_session_maker()
-        
-        async with session_maker() as session:
-            # Find existing ticket for this chain
-            existing_ticket_result = await session.execute(
-                select(Ticket).where(
-                    Ticket.sequential_review_chain_id == uuid.UUID(chain_id),
-                    Ticket.status != "cancelled"
-                ).order_by(Ticket.created_at.desc())
-            )
-            existing_ticket = existing_ticket_result.scalar_one_or_none()
-            
-            if existing_ticket:
-                # Update existing ticket
-                print(f"[WORKFLOW] Updating existing ticket {existing_ticket.ticket_id} for next doctor")
-                print(f"[WORKFLOW]    Step: {step_index + 1}/{total_steps}")
-                print(f"[WORKFLOW]    Doctor: {doctor_name} ({service_type})")
-                print(f"[WORKFLOW]    Description length: {len(description)} chars")
-                print(f"[WORKFLOW]    Has accumulated context: {accumulated_context and accumulated_context != 'No previous reviews.'}")
-                existing_ticket.assigned_to = uuid.UUID(doctor_id)
-                existing_ticket.description = description
-                existing_ticket.llm_summary = llm_summary
-                existing_ticket.service_type = doctor_info.get("service_type", "general consultation")
-                existing_ticket.status = "open"
-                existing_ticket.assigned_at = None  # Reset assignment time
-                existing_ticket.completed_at = None
-                existing_ticket.accepted_by = None
-                existing_ticket.accepted_at = None
-                await session.commit()
-                await session.refresh(existing_ticket)
-                print(f"[WORKFLOW] ✅ Ticket updated successfully - Status: {existing_ticket.status}, Step info in description: Step {step_index + 1} of {total_steps}")
-                return {"status": "updated", "ticket_id": str(existing_ticket.ticket_id)}
-            else:
-                # Create new ticket (first doctor)
-                from backend.src.agents.tools.ticket_tools import create_ticket
-                ticket_result = create_ticket.invoke({
-                    "patient_id": patient_id,
-                    "conversation_id": conversation_id,
-                    "service_type": doctor_info.get("service_type", "general consultation"),
-                    "description": description,
-                    "patient_details": patient_details,
-                    "past_history_summary": past_history_summary,
-                    "llm_summary": llm_summary,
-                    "priority": 3,
-                    "assigned_to": doctor_id,
-                    "sequential_review_chain_id": chain_id,
-                    "is_sequential_review": True
-                })
-                return ticket_result
-    
-    # Execute get_or_create_ticket
-    ticket_result = run_async_safely(get_or_create_ticket_async, session_maker_param=True)
-    
-    print(f"[WORKFLOW] Ticket result: {ticket_result}")
-    
-    if not ticket_result:
-        print(f"[WORKFLOW] ERROR: Ticket operation returned None or empty result")
-        state["next_action"] = "end"
-        return state
-    
-    ticket_status = ticket_result.get("status")
-    if ticket_status in ["success", "created", "updated"]:
-        ticket_id = ticket_result.get("ticket_id")
-        
-        if not ticket_id:
-            print(f"[WORKFLOW] ERROR: Ticket operation succeeded but ticket_id is missing from result")
-            state["next_action"] = "end"
-            return state
-        
-        # Link ticket to SequentialReviewStep
-        # Use run_async_safely from complex_case_tools to handle async in sync context
-        from backend.src.agents.tools.complex_case_tools import run_async_safely
-        from backend.src.database.models import SequentialReviewStep
-        
-        async def link_ticket_to_step_async(session_maker=None):
-            """Async function to link ticket to step."""
-            if session_maker is None:
-                from backend.src.database.connection import create_async_session_maker
-                session_maker = create_async_session_maker()
-            
-            async with session_maker() as session:
-                step_result = await session.execute(
-                    select(SequentialReviewStep).where(SequentialReviewStep.step_id == uuid.UUID(step_id))
-                )
-                step = step_result.scalar_one_or_none()
-                if step:
-                    step.ticket_id = uuid.UUID(ticket_id)
-                    step.status = "pending"  # Set to pending so doctor can accept it
-                    step.started_at = None  # Don't set started_at until doctor accepts
-                    await session.commit()
-                    print(f"[WORKFLOW] ✅ Linked ticket {ticket_id} to step {step_id} (status: pending)")
-                else:
-                    print(f"[WORKFLOW] ⚠️  WARNING: Step {step_id} not found for linking ticket")
-        
-        try:
-            # Use run_async_safely with session_maker_param=True to create fresh session maker in new event loop
-            run_async_safely(link_ticket_to_step_async, session_maker_param=True)
-        except Exception as e:
-            print(f"[WORKFLOW] Error linking ticket to step: {e}")
-            import traceback
-            traceback.print_exc()
-            # Continue anyway - ticket is created, linking can be done later if needed
-        
-        # Update chain status to in_progress
-        sequential_review.current_step_index = step_index
-        state["sequential_review"] = sequential_review.model_dump()
-        
-        print(f"[WORKFLOW] ✅ Created ticket {ticket_id} for doctor {doctor_name} ({service_type}) - Step {step_index + 1}/{total_steps}")
-        state["next_action"] = "end"  # Wait for doctor to review
+    if result.get("status") == "success":
+        step_index = result.get("step_index", 0)
+        total_steps = result.get("total_steps", 0)
+        doctor_info = result.get("doctor_info", {})
+        doctor_name = doctor_info.get("name", "Unknown")
+        service_type = doctor_info.get("service_type", "Unknown")
+        print(f"[WORKFLOW] Next step: {step_index + 1}/{total_steps} - {doctor_name} ({service_type})")
+        print(f"[WORKFLOW] Ticket already exists. Next step will be enabled when previous step completes.")
     else:
-        error_msg = ticket_result.get("error", "Unknown error")
-        print(f"[WORKFLOW] ERROR: Ticket creation failed with status '{ticket_status}': {error_msg}")
-        state["next_action"] = "end"
+        print(f"[WORKFLOW] Error getting next doctor: {result.get('error')}")
     
+    # No ticket creation needed - tickets are created upfront
+    state["next_action"] = "end"
     return state
 
 
@@ -659,6 +488,13 @@ def collect_doctor_review_node(state: AgentState) -> AgentState:
         "doctor_id": doctor_id
     })
     
+    # #region agent log
+    import json
+    from datetime import datetime
+    with open('/Users/vidhan/Vidhan/GDG FINAL/AutonomousHacks26/.cursor/debug.log', 'a') as f:
+        f.write(json.dumps({"sessionId":"debug-session","runId":"run1","hypothesisId":"E","location":"workflow_agent.py:672","message":"After submit_doctor_review call","data":{"result_status":result.get("status"),"has_next_step_id":bool(result.get("next_step_id")),"chain_status":result.get("chain_status")},"timestamp":int(datetime.utcnow().timestamp()*1000)}) + '\n')
+    # #endregion
+    
     if result.get("status") == "success":
         next_step_id = result.get("next_step_id")
         chain_status = result.get("chain_status")
@@ -671,19 +507,36 @@ def collect_doctor_review_node(state: AgentState) -> AgentState:
         
         print(f"[WORKFLOW] ✅ Doctor review submitted by {current_doctor_name} ({current_service_type}) - Step {current_step_index + 1}/{total_steps}")
         
+        # #region agent log
+        with open('/Users/vidhan/Vidhan/GDG FINAL/AutonomousHacks26/.cursor/debug.log', 'a') as f:
+            f.write(json.dumps({"sessionId":"debug-session","runId":"run1","hypothesisId":"E","location":"workflow_agent.py:684","message":"Checking next step routing","data":{"next_step_id":next_step_id,"chain_status":chain_status,"current_step_index":current_step_index,"total_steps":total_steps},"timestamp":int(datetime.utcnow().timestamp()*1000)}) + '\n')
+        # #endregion
+        
         if next_step_id:
             # More steps remaining, route to next doctor
             print(f"[WORKFLOW] 🔄 Advancing to next doctor: {next_doctor_name} ({next_service_type}) - Step {current_step_index + 2}/{total_steps}")
             print(f"[WORKFLOW]    Next step ID: {next_step_id}")
             state["next_action"] = "route_to_next_doctor"
+            # #region agent log
+            with open('/Users/vidhan/Vidhan/GDG FINAL/AutonomousHacks26/.cursor/debug.log', 'a') as f:
+                f.write(json.dumps({"sessionId":"debug-session","runId":"run1","hypothesisId":"E","location":"workflow_agent.py:688","message":"Setting next_action to route_to_next_doctor","data":{"next_action":"route_to_next_doctor"},"timestamp":int(datetime.utcnow().timestamp()*1000)}) + '\n')
+            # #endregion
         elif chain_status == "completed":
             # All steps completed, generate final summary
             print(f"[WORKFLOW] ✅ All doctor reviews completed ({total_steps} steps), generating final summary")
             state["next_action"] = "generate_final_summary"
         else:
+            # #region agent log
+            with open('/Users/vidhan/Vidhan/GDG FINAL/AutonomousHacks26/.cursor/debug.log', 'a') as f:
+                f.write(json.dumps({"sessionId":"debug-session","runId":"run1","hypothesisId":"E","location":"workflow_agent.py:692","message":"No next step, setting next_action to end","data":{"next_step_id":next_step_id,"chain_status":chain_status},"timestamp":int(datetime.utcnow().timestamp()*1000)}) + '\n')
+            # #endregion
             state["next_action"] = "end"
     else:
         print(f"[WORKFLOW] Error submitting doctor review: {result.get('error')}")
+        # #region agent log
+        with open('/Users/vidhan/Vidhan/GDG FINAL/AutonomousHacks26/.cursor/debug.log', 'a') as f:
+            f.write(json.dumps({"sessionId":"debug-session","runId":"run1","hypothesisId":"E","location":"workflow_agent.py:695","message":"Error in submit_doctor_review","data":{"error":result.get("error")},"timestamp":int(datetime.utcnow().timestamp()*1000)}) + '\n')
+        # #endregion
         state["next_action"] = "end"
     
     return state
@@ -1449,7 +1302,7 @@ IMPORTANT: The appointment is ALREADY scheduled. Your response should be a CONFI
 # ============================================================================
 
 
-def route_entry(state: AgentState) -> Literal["fetch_history", "show_history", "understand_request", "detect_complex_case", "end"]:
+def route_entry(state: AgentState) -> Literal["fetch_history", "show_history", "understand_request", "detect_complex_case", "collect_doctor_review", "end"]:
     """Route entry point based on state. For authenticated patients only."""
     next_action = state.get("next_action", "")
     
@@ -1461,6 +1314,8 @@ def route_entry(state: AgentState) -> Literal["fetch_history", "show_history", "
         return "understand_request"
     elif next_action == "detect_complex_case":
         return "detect_complex_case"
+    elif next_action == "collect_doctor_review":
+        return "collect_doctor_review"
     else:
         return "end"
 
@@ -1513,6 +1368,12 @@ def route_after_create_chain(state: AgentState) -> Literal["route_to_next_doctor
 
 
 def route_after_doctor_review(state: AgentState) -> Literal["route_to_next_doctor", "generate_final_summary", "end"]:
+    # #region agent log
+    import json
+    from datetime import datetime
+    with open('/Users/vidhan/Vidhan/GDG FINAL/AutonomousHacks26/.cursor/debug.log', 'a') as f:
+        f.write(json.dumps({"sessionId":"debug-session","runId":"run1","hypothesisId":"E","location":"workflow_agent.py:1525","message":"route_after_doctor_review called","data":{"next_action":state.get("next_action")},"timestamp":int(datetime.utcnow().timestamp()*1000)}) + '\n')
+    # #endregion
     """Route after doctor review submission."""
     next_action = state.get("next_action")
     
@@ -1600,6 +1461,7 @@ def create_graph(checkpointer: Optional[AsyncPostgresSaver] = None):
             "show_history": "show_history",
             "understand_request": "understand_request",
             "detect_complex_case": "detect_complex_case",
+            "collect_doctor_review": "collect_doctor_review",
             "end": END
         }
     )

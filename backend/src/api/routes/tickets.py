@@ -1,7 +1,7 @@
 """Ticket management endpoints."""
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, or_
+from sqlalchemy import select, or_, and_
 from pydantic import BaseModel
 from typing import Optional, List
 import uuid
@@ -54,6 +54,14 @@ async def list_tickets(
     
     query = select(Ticket)
     
+    # Filter out sequential review tickets (they have their own endpoint)
+    query = query.where(
+        or_(
+            Ticket.is_sequential_review == False,
+            Ticket.is_sequential_review.is_(None)
+        )
+    )
+    
     # Filter based on user type
     try:
         if user_type == "patient":
@@ -63,7 +71,6 @@ async def list_tickets(
             # OR tickets that are part of sequential review chains where they are a reviewer
             # Check both assigned_to and accepted_by for service person
             # Also check if ticket is part of sequential review and user is in the chain
-            from sqlalchemy import or_, and_
             
             # Get chain IDs where user is a reviewer
             chain_ids_subquery = select(SequentialReviewStep.chain_id).where(
@@ -106,6 +113,12 @@ async def list_tickets(
         raise HTTPException(status_code=500, detail=f"Database error: {error_msg}")
     
     # Filter sequential review tickets to only show when it's the doctor's turn
+    # #region agent log
+    import json
+    from datetime import datetime
+    with open('/Users/vidhan/Vidhan/GDG FINAL/AutonomousHacks26/.cursor/debug.log', 'a') as f:
+        f.write(json.dumps({"sessionId":"debug-session","runId":"run1","hypothesisId":"D","location":"tickets.py:108","message":"Starting ticket filtering","data":{"total_tickets":len(tickets),"user_id":str(user.service_person_id) if hasattr(user, 'service_person_id') else None},"timestamp":int(datetime.utcnow().timestamp()*1000)}) + '\n')
+    # #endregion
     filtered_tickets = []
     for ticket in tickets:
         if ticket.is_sequential_review and ticket.sequential_review_chain_id:
@@ -127,9 +140,17 @@ async def list_tickets(
                 chain = chain_result.scalar_one_or_none()
                 
                 if chain:
+                    # #region agent log
+                    with open('/Users/vidhan/Vidhan/GDG FINAL/AutonomousHacks26/.cursor/debug.log', 'a') as f:
+                        f.write(json.dumps({"sessionId":"debug-session","runId":"run1","hypothesisId":"D","location":"tickets.py:131","message":"Checking ticket filtering","data":{"ticket_id":str(ticket.ticket_id),"ticket_status":ticket.status,"step_index":step.step_index,"chain_current_step":chain.current_step_index,"step_status":step.status},"timestamp":int(datetime.utcnow().timestamp()*1000)}) + '\n')
+                    # #endregion
                     # Check if it's their turn
                     if step.step_index == chain.current_step_index:
                         # It's their turn, include ticket
+                        # #region agent log
+                        with open('/Users/vidhan/Vidhan/GDG FINAL/AutonomousHacks26/.cursor/debug.log', 'a') as f:
+                            f.write(json.dumps({"sessionId":"debug-session","runId":"run1","hypothesisId":"D","location":"tickets.py:133","message":"Ticket included - their turn","data":{"ticket_id":str(ticket.ticket_id)},"timestamp":int(datetime.utcnow().timestamp()*1000)}) + '\n')
+                        # #endregion
                         filtered_tickets.append(ticket)
                     else:
                         # Not their turn yet - check if all previous steps are completed
@@ -141,8 +162,16 @@ async def list_tickets(
                             )
                         )
                         incomplete = previous_steps_result.scalars().all()
+                        # #region agent log
+                        with open('/Users/vidhan/Vidhan/GDG FINAL/AutonomousHacks26/.cursor/debug.log', 'a') as f:
+                            f.write(json.dumps({"sessionId":"debug-session","runId":"run1","hypothesisId":"D","location":"tickets.py:144","message":"Checking previous steps","data":{"ticket_id":str(ticket.ticket_id),"incomplete_count":len(incomplete),"incomplete_indices":[s.step_index for s in incomplete]},"timestamp":int(datetime.utcnow().timestamp()*1000)}) + '\n')
+                        # #endregion
                         if not incomplete:
                             # All previous steps completed, show ticket
+                            # #region agent log
+                            with open('/Users/vidhan/Vidhan/GDG FINAL/AutonomousHacks26/.cursor/debug.log', 'a') as f:
+                                f.write(json.dumps({"sessionId":"debug-session","runId":"run1","hypothesisId":"D","location":"tickets.py:147","message":"Ticket included - previous steps completed","data":{"ticket_id":str(ticket.ticket_id)},"timestamp":int(datetime.utcnow().timestamp()*1000)}) + '\n')
+                            # #endregion
                             filtered_tickets.append(ticket)
                         # Otherwise, don't add to filtered_tickets (it's not their turn yet)
                 else:
@@ -154,7 +183,10 @@ async def list_tickets(
         else:
             # Not sequential review, include ticket
             filtered_tickets.append(ticket)
-    
+    # #region agent log
+    with open('/Users/vidhan/Vidhan/GDG FINAL/AutonomousHacks26/.cursor/debug.log', 'a') as f:
+        f.write(json.dumps({"sessionId":"debug-session","runId":"run1","hypothesisId":"D","location":"tickets.py:160","message":"Ticket filtering complete","data":{"filtered_count":len(filtered_tickets),"original_count":len(tickets)},"timestamp":int(datetime.utcnow().timestamp()*1000)}) + '\n')
+    # #endregion
     return [
         {
             "ticket_id": str(ticket.ticket_id),
@@ -175,6 +207,69 @@ async def list_tickets(
         }
         for ticket in filtered_tickets
     ]
+
+
+@router.get("/{ticket_id}/sequential-progress")
+async def get_ticket_sequential_progress(
+    ticket_id: str,
+    current_user: dict = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    """Get sequential review progress for a ticket."""
+    # Get ticket
+    ticket_result = await db.execute(
+        select(Ticket).where(Ticket.ticket_id == uuid.UUID(ticket_id))
+    )
+    ticket = ticket_result.scalar_one_or_none()
+    
+    if not ticket or not ticket.is_sequential_review or not ticket.sequential_review_chain_id:
+        raise HTTPException(status_code=404, detail="Sequential review ticket not found")
+    
+    # Get chain and steps
+    chain_result = await db.execute(
+        select(SequentialReviewChain).where(
+            SequentialReviewChain.chain_id == ticket.sequential_review_chain_id
+        )
+    )
+    chain = chain_result.scalar_one_or_none()
+    
+    if not chain:
+        raise HTTPException(status_code=404, detail="Chain not found")
+    
+    # Get all steps
+    steps_result = await db.execute(
+        select(SequentialReviewStep).where(
+            SequentialReviewStep.chain_id == chain.chain_id
+        ).order_by(SequentialReviewStep.step_index)
+    )
+    steps = steps_result.scalars().all()
+    
+    # Build progress data
+    steps_progress = []
+    for step in steps:
+        doctor_result = await db.execute(
+            select(ServicePerson).where(ServicePerson.service_person_id == step.doctor_id)
+        )
+        doctor = doctor_result.scalar_one_or_none()
+        
+        steps_progress.append({
+            "step_number": step.step_index + 1,
+            "doctor_name": doctor.name if doctor else "Unknown",
+            "service_type": doctor.service_type if doctor else "",
+            "status": step.status,  # pending, in_review, completed
+            "completed_at": step.completed_at.isoformat() if step.completed_at else None,
+            "review_summary": step.review_summary,
+            "review_notes": step.review_notes
+        })
+    
+    completed_count = sum(1 for s in steps if s.status == "completed")
+    
+    return {
+        "total_steps": chain.required_doctors_count,
+        "current_step": chain.current_step_index + 1,
+        "completed_steps": completed_count,
+        "steps": steps_progress
+    }
 
 
 @router.get("/{ticket_id}")
@@ -354,6 +449,9 @@ async def update_ticket_status(
                 step.status = "in_review"
                 step.started_at = datetime.utcnow()
     
+    # Initialize chain_advanced flag
+    chain_advanced = False
+    
     if is_sequential_review and user_type == "service_person":
         # Get the SequentialReviewStep for this ticket
         step_result = await db.execute(
@@ -373,6 +471,13 @@ async def update_ticket_status(
             if chain and chain.current_step_index == step.step_index:
                 # Current doctor is reviewing - extract review notes and trigger workflow
                 review_notes = request.comment or ""
+                
+                # #region agent log
+                import json
+                from datetime import datetime
+                with open('/Users/vidhan/Vidhan/GDG FINAL/AutonomousHacks26/.cursor/debug.log', 'a') as f:
+                    f.write(json.dumps({"sessionId":"debug-session","runId":"run1","hypothesisId":"E","location":"tickets.py:465","message":"Checking if workflow should trigger","data":{"request_status":request.status,"has_review_notes":bool(review_notes),"review_notes_length":len(review_notes),"step_index":step.step_index,"chain_current_step":chain.current_step_index},"timestamp":int(datetime.utcnow().timestamp()*1000)}) + '\n')
+                # #endregion
                 
                 if request.status == "completed" and review_notes:
                     # Trigger collect_doctor_review workflow node
@@ -425,6 +530,16 @@ async def update_ticket_status(
                             final_state = await graph.ainvoke(final_state, config)
                             if final_state.get("next_action") == "end":
                                 break
+                        
+                        # After workflow completes, refresh ticket to get updated status
+                        await db.refresh(ticket)
+                        # #region agent log
+                        import json
+                        from datetime import datetime
+                        with open('/Users/vidhan/Vidhan/GDG FINAL/AutonomousHacks26/.cursor/debug.log', 'a') as f:
+                            f.write(json.dumps({"sessionId":"debug-session","runId":"run1","hypothesisId":"E","location":"tickets.py:426","message":"After workflow completion","data":{"ticket_id":ticket_id,"ticket_status":ticket.status,"assigned_to":str(ticket.assigned_to) if ticket.assigned_to else None,"next_action":final_state.get("next_action")},"timestamp":int(datetime.utcnow().timestamp()*1000)}) + '\n')
+                        # #endregion
+                        print(f"[API] Ticket status after workflow: {ticket.status}, assigned_to: {ticket.assigned_to}")
                     except Exception as e:
                         print(f"[API] Error invoking collect_doctor_review workflow: {e}")
                         import traceback
@@ -445,13 +560,26 @@ async def update_ticket_status(
                         )
                         next_step = next_step_result.scalar_one_or_none()
                         if next_step:
+                            chain_advanced = True
                             ticket.assigned_to = next_step.doctor_id
+                            # Ensure ticket status is open for next doctor
+                            ticket.status = "open"
+                            ticket.assigned_at = None
+                            ticket.completed_at = None
+                            ticket.accepted_by = None
+                            ticket.accepted_at = None
+                            print(f"[API] Reset ticket status to 'open' for next doctor (Step {chain.current_step_index + 1})")
     
+    # Store old status before any updates
     old_status = ticket.status
-    ticket.status = request.status
     
-    if request.status == "completed":
-        ticket.completed_at = datetime.utcnow()
+    # Only update ticket status if chain didn't advance (for sequential reviews)
+    # If chain advanced, status is already set to "open" above
+    if not (is_sequential_review and chain_advanced):
+        ticket.status = request.status
+        
+        if request.status == "completed":
+            ticket.completed_at = datetime.utcnow()
     
     # Create update record
     update = TicketUpdate(
@@ -459,7 +587,7 @@ async def update_ticket_status(
         updated_by=uuid.UUID(str(current_user["user"].service_person_id if user_type == "service_person" else current_user["user"].admin_id)),
         update_type="status_change",
         old_value=old_status,
-        new_value=request.status,
+        new_value=ticket.status,  # Use actual ticket status, not request.status (might be "open" if chain advanced)
         comment=request.comment
     )
     db.add(update)

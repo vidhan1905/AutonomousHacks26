@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import type { Ticket } from '../../types'
 
 interface TicketCardProps {
-  ticket: Ticket
+  ticket: Ticket & { ticket_type?: 'sequential_review'; step_index?: number; can_start?: boolean }
   onClick?: (ticket: Ticket) => void
 }
 
@@ -33,7 +33,12 @@ export default function TicketCard({ ticket, onClick }: TicketCardProps) {
     if (onClick) {
       onClick(ticket)
     } else {
-      navigate(`/tickets/${ticket.ticket_id}`)
+      // Route to appropriate detail page based on ticket type
+      if (ticket.ticket_type === 'sequential_review' || ticket.is_sequential_review) {
+        navigate(`/tickets/sequential-review/${ticket.ticket_id}`)
+      } else {
+        navigate(`/tickets/${ticket.ticket_id}`)
+      }
     }
   }
 
@@ -52,9 +57,22 @@ export default function TicketCard({ ticket, onClick }: TicketCardProps) {
           </p>
         </div>
         <div className="flex space-x-2">
-          <span className={`px-2 py-1 rounded-full text-xs font-medium ${priorityColors[ticket.priority as keyof typeof priorityColors] || 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200'}`}>
-            Priority {ticket.priority}
-          </span>
+          {ticket.ticket_type === 'sequential_review' || ticket.is_sequential_review ? (
+            <>
+              <span className="px-2 py-1 rounded-full text-xs font-medium bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200">
+                Step {ticket.step_index !== undefined ? ticket.step_index + 1 : '?'}
+              </span>
+              {ticket.can_start === false && (
+                <span className="px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200">
+                  ⏳ Waiting
+                </span>
+              )}
+            </>
+          ) : (
+            <span className={`px-2 py-1 rounded-full text-xs font-medium ${priorityColors[ticket.priority as keyof typeof priorityColors] || 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200'}`}>
+              Priority {ticket.priority}
+            </span>
+          )}
           <span className={`px-2 py-1 rounded-full text-xs font-medium ${statusColors[ticket.status as keyof typeof statusColors] || 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200'}`}>
             {ticket.status?.replace('_', ' ') || ticket.status || 'Unknown'}
           </span>

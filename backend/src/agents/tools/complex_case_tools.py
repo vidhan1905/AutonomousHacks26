@@ -269,6 +269,7 @@ async def _create_sequential_review_chain_async(
             
             # Create SequentialReviewStep records
             review_steps = []
+            steps_list = []  # Store step objects with their data for ticket creation
             for step_data in review_steps_data:
                 step = SequentialReviewStep(
                     chain_id=chain.chain_id,
@@ -277,6 +278,7 @@ async def _create_sequential_review_chain_async(
                     status="pending"
                 )
                 session.add(step)
+                steps_list.append((step, step_data))  # Store both step and step_data
                 review_steps.append({
                     "step_id": str(step.step_id),
                     "step_index": step_data["step_index"],
@@ -285,6 +287,71 @@ async def _create_sequential_review_chain_async(
                     "service_type": step_data["service_type"],
                     "specialization": step_data["specialization"]
                 })
+            
+            await session.flush()  # Flush to get step_ids
+            
+            # Create SequentialReviewTicket for each step
+            from backend.src.database.models import SequentialReviewTicket
+            from backend.src.database.models import ServicePerson
+            
+            # Get patient info for ticket description
+            patient_name = patient.name if patient.name else "Unknown"
+            patient_phone = patient.phone_number if patient.phone_number else ""
+            patient_dob = str(patient.date_of_birth) if patient.date_of_birth else ""
+            
+            # Build base description from user query
+            base_description = f"CURRENT CASE:\n{user_query}\n\n"
+            base_description += f"Sequential Review - Step {{step_num}} of {len(steps_list)}"
+            
+            # Build patient details
+            patient_details = {
+                "name": patient_name,
+                "phone": patient_phone,
+                "date_of_birth": patient_dob,
+            }
+            
+            # Build past history summary
+            past_history_summary = ""
+            if patient_history and isinstance(patient_history, dict):
+                if patient_history.get("summary"):
+                    past_history_summary = patient_history["summary"]
+                elif patient_history.get("history_records"):
+                    past_history_summary = f"Patient has {len(patient_history['history_records'])} previous medical records."
+            
+            # Create tickets for all steps
+            for idx, (step, step_data) in enumerate(steps_list):
+                # Get doctor info for LLM summary
+                doctor_result = await session.execute(
+                    select(ServicePerson).where(ServicePerson.service_person_id == step.doctor_id)
+                )
+                doctor = doctor_result.scalar_one_or_none()
+                doctor_name = doctor.name if doctor else step_data["doctor_name"]
+                service_type = step_data["service_type"]
+                
+                # Build description for this step
+                description = base_description.format(step_num=idx + 1)
+                if idx > 0:
+                    description = "PREVIOUS DOCTORS' REVIEWS:\nNo previous reviews yet.\n\n" + description
+                
+                # Build LLM summary
+                llm_summary = f"Sequential Review Chain - Step {idx + 1} of {len(steps_list)}\n"
+                llm_summary += f"Doctor: {doctor_name} ({service_type})\n"
+                
+                # Create ticket - only first step can start
+                ticket = SequentialReviewTicket(
+                    chain_id=chain.chain_id,
+                    conversation_id=uuid.UUID(conversation_id),
+                    patient_id=uuid.UUID(patient_id),
+                    step_id=step.step_id,
+                    step_index=step.step_index,
+                    can_start=(idx == 0),  # Only first step can start
+                    description=description,
+                    llm_summary=llm_summary,
+                    patient_details=patient_details,
+                    past_history_summary=past_history_summary,
+                    status="step_pending"
+                )
+                session.add(ticket)
             
             await session.commit()
             await session.refresh(chain)
@@ -420,6 +487,11 @@ async def _get_next_doctor_in_chain_async(
                 print(f"[TOOLS] Added context from Step {prev_step.step_index + 1}: {doctor_name}")
             
             accumulated_context = "\n\n".join(accumulated_context_parts) if accumulated_context_parts else "No previous reviews."
+            # #region agent log
+            import json
+            with open('/Users/vidhan/Vidhan/GDG FINAL/AutonomousHacks26/.cursor/debug.log', 'a') as f:
+                f.write(json.dumps({"sessionId":"debug-session","runId":"run1","hypothesisId":"C","location":"complex_case_tools.py:419","message":"Accumulated context built","data":{"chain_id":chain_id,"current_step_index":chain.current_step_index,"previous_steps_count":len(previous_steps),"accumulated_context_length":len(accumulated_context),"has_review_notes":any(s.review_notes for s in previous_steps)},"timestamp":int(datetime.utcnow().timestamp()*1000)}) + '\n')
+            # #endregion
             print(f"[TOOLS] Accumulated context length: {len(accumulated_context)} characters")
             
             # Get total steps
@@ -482,6 +554,11 @@ async def _submit_doctor_review_async(
     session_maker=None
 ) -> dict:
     """Submit doctor review and advance chain to next step."""
+    # #region agent log
+    import json
+    with open('/Users/vidhan/Vidhan/GDG FINAL/AutonomousHacks26/.cursor/debug.log', 'a') as f:
+        f.write(json.dumps({"sessionId":"debug-session","runId":"run1","hypothesisId":"A","location":"complex_case_tools.py:478","message":"_submit_doctor_review_async called","data":{"step_id":step_id,"doctor_id":doctor_id,"review_notes_length":len(review_notes) if review_notes else 0},"timestamp":int(datetime.utcnow().timestamp()*1000)}) + '\n')
+    # #endregion
     if session_maker is None:
         from backend.src.database.connection import async_session_maker
         session_maker = async_session_maker
@@ -494,6 +571,10 @@ async def _submit_doctor_review_async(
             )
             step = step_result.scalar_one_or_none()
             if not step:
+                # #region agent log
+                with open('/Users/vidhan/Vidhan/GDG FINAL/AutonomousHacks26/.cursor/debug.log', 'a') as f:
+                    f.write(json.dumps({"sessionId":"debug-session","runId":"run1","hypothesisId":"A","location":"complex_case_tools.py:497","message":"Step not found","data":{"step_id":step_id},"timestamp":int(datetime.utcnow().timestamp()*1000)}) + '\n')
+                # #endregion
                 return {"status": "error", "error": f"Step {step_id} not found"}
             
             # Verify doctor matches
@@ -551,6 +632,10 @@ async def _submit_doctor_review_async(
             await session.commit()
             await session.refresh(step)
             await session.refresh(chain)
+            # #region agent log
+            with open('/Users/vidhan/Vidhan/GDG FINAL/AutonomousHacks26/.cursor/debug.log', 'a') as f:
+                f.write(json.dumps({"sessionId":"debug-session","runId":"run1","hypothesisId":"A","location":"complex_case_tools.py:551","message":"After commit - step and chain status","data":{"step_status":step.status,"chain_current_step":chain.current_step_index,"chain_status":chain.status,"has_completed_at":step.completed_at is not None},"timestamp":int(datetime.utcnow().timestamp()*1000)}) + '\n')
+            # #endregion
             
             # Get current doctor info for logging
             current_doctor_result = await session.execute(

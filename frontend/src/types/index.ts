@@ -64,6 +64,34 @@ export interface Ticket {
   sequential_review_chain_id?: string | null
 }
 
+export interface SequentialReviewTicket {
+  ticket_id: string
+  chain_id: string
+  conversation_id: string
+  patient_id: string
+  status: 'step_pending' | 'step_accepted' | 'step_in_progress' | 'step_completed' | 'chain_completed' | 'chain_cancelled'
+  step_id: string  // Direct link to step (replaces current_step_id)
+  step_index: number  // Position in sequence (0, 1, 2, 3...)
+  can_start: boolean  // Whether this step can be started (previous step completed)
+  current_step?: {  // Keep for backward compatibility
+    step_id: string
+    step_index: number
+    doctor_id: string
+    doctor_name: string
+    service_type: string
+    status: string
+    review_notes: string | null
+    review_summary: string | null
+  }
+  description: string
+  llm_summary: string | null
+  patient_details: any
+  past_history_summary: string | null
+  created_at: string
+  updated_at: string
+  chain_completed_at: string | null
+}
+
 export interface Appointment {
   appointment_id: string
   ticket_id: string | null

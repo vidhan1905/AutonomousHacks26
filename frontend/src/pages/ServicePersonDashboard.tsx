@@ -3,13 +3,48 @@ import { useAuthStore } from '../hooks/useAuth'
 import TicketDashboard from '../components/Dashboard/TicketDashboard'
 import type { Ticket } from '../types'
 
+// #region agent log
+const DEBUG_LOG_PATH = '/Users/vidhan/Vidhan/GDG FINAL/AutonomousHacks26/.cursor/debug.log'
+const logDebug = (location: string, message: string, data: any = {}, hypothesisId?: string) => {
+  const payload = {
+    sessionId: 'debug-session',
+    runId: 'run1',
+    hypothesisId: hypothesisId || 'A',
+    location,
+    message,
+    data,
+    timestamp: Date.now()
+  }
+  fetch('http://127.0.0.1:7242/ingest/a61d17be-af11-4c91-8ff2-4d1814fc0e77', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  }).catch(() => {})
+}
+// #endregion
+
 export default function ServicePersonDashboard() {
+  // #region agent log
+  logDebug('ServicePersonDashboard.tsx:6', 'ServicePersonDashboard rendering', {}, 'A')
+  // #endregion
   const { user, logout } = useAuthStore()
   const navigate = useNavigate()
+  
+  // #region agent log
+  logDebug('ServicePersonDashboard.tsx:10', 'User state', { 
+    userExists: !!user, 
+    userType: user?.type,
+    userId: user?.id 
+  }, 'A')
+  // #endregion
 
-  const handleTicketClick = (ticket: Ticket) => {
-    // Navigate to ticket detail page
-    navigate(`/tickets/${ticket.ticket_id}`)
+  const handleTicketClick = (ticket: Ticket & { ticket_type?: 'sequential_review' }) => {
+    // Navigate to appropriate ticket detail page
+    if (ticket.ticket_type === 'sequential_review' || ticket.is_sequential_review) {
+      navigate(`/tickets/sequential-review/${ticket.ticket_id}`)
+    } else {
+      navigate(`/tickets/${ticket.ticket_id}`)
+    }
   }
 
   return (
@@ -39,6 +74,12 @@ export default function ServicePersonDashboard() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div>
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Your Tickets</h2>
+          {/* #region agent log */}
+          {(() => {
+            logDebug('ServicePersonDashboard.tsx:46', 'Rendering TicketDashboard component', {}, 'A')
+            return null
+          })()}
+          {/* #endregion */}
           <TicketDashboard 
             userType="service_person" 
             onTicketClick={handleTicketClick}

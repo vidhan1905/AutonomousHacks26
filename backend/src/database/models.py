@@ -387,3 +387,47 @@ class SequentialReviewStep(Base):
         Index("ix_sequential_review_step_doctor", "doctor_id"),
         UniqueConstraint("chain_id", "step_index", name="uq_sequential_review_step_chain_index"),
     )
+
+
+class SequentialReviewTicket(Base):
+    """Dedicated ticket model for sequential review chains - one ticket per step."""
+    __tablename__ = "sequential_review_tickets"
+    
+    ticket_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    chain_id = Column(UUID(as_uuid=True), ForeignKey("sequential_review_chains.chain_id"), nullable=False)  # Removed unique=True to allow multiple tickets per chain
+    conversation_id = Column(UUID(as_uuid=True), ForeignKey("conversations.conversation_id"), nullable=False)
+    patient_id = Column(UUID(as_uuid=True), ForeignKey("patients.patient_id"), nullable=False)
+    
+    # Link to specific step (replaces current_step_id)
+    step_id = Column(UUID(as_uuid=True), ForeignKey("sequential_review_steps.step_id"), nullable=False, unique=True)
+    step_index = Column(Integer, nullable=False)  # Position in sequence (0, 1, 2, 3...)
+    can_start = Column(Boolean, nullable=False, default=False)  # Whether this step can be started (previous step completed)
+    
+    # Status based on current step
+    status = Column(String, nullable=False, default="step_pending")  # step_pending, step_accepted, step_in_progress, step_completed, chain_completed, chain_cancelled
+    
+    # Ticket content (updated as chain progresses)
+    description = Column(Text, nullable=True)  # Includes accumulated context
+    llm_summary = Column(Text, nullable=True)
+    patient_details = Column(JSON, nullable=True)
+    past_history_summary = Column(Text, nullable=True)
+    
+    # Timestamps
+    created_at = Column(TIMESTAMP, server_default=func.now())
+    updated_at = Column(TIMESTAMP, server_default=func.now(), onupdate=func.now())
+    chain_completed_at = Column(TIMESTAMP, nullable=True)
+    
+    # Relationships
+    chain = relationship("SequentialReviewChain", backref="sequential_review_tickets")
+    step = relationship("SequentialReviewStep", foreign_keys=[step_id], backref="sequential_review_ticket")
+    
+    # Indexes
+    __table_args__ = (
+        Index("ix_sequential_review_ticket_chain", "chain_id"),
+        Index("ix_sequential_review_ticket_status", "status"),
+        Index("ix_sequential_review_ticket_step", "step_id"),
+        Index("ix_sequential_review_ticket_step_index", "chain_id", "step_index"),
+        Index("ix_sequential_review_ticket_conversation", "conversation_id"),
+        Index("ix_sequential_review_ticket_patient", "patient_id"),
+        Index("ix_sequential_review_ticket_can_start", "can_start"),
+    )

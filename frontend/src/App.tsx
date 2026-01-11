@@ -5,6 +5,7 @@ import ChatPage from './pages/ChatPage'
 import PatientDashboard from './pages/PatientDashboard'
 import ServicePersonDashboard from './pages/ServicePersonDashboard'
 import TicketDetailPage from './pages/TicketDetailPage'
+import SequentialReviewTicketDetailPage from './pages/SequentialReviewTicketDetailPage'
 import EditProfilePage from './pages/EditProfilePage'
 import ProtectedRoute from './components/Auth/ProtectedRoute'
 import { useAuthStore } from './hooks/useAuth'
@@ -72,6 +73,14 @@ function App() {
           element={
             <ProtectedRoute requiredType="service_person">
               <TicketDetailPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/tickets/sequential-review/:ticketId"
+          element={
+            <ProtectedRoute requiredType="service_person">
+              <SequentialReviewTicketDetailPage />
             </ProtectedRoute>
           }
         />
