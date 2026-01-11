@@ -15,6 +15,9 @@ async def _create_ticket_async(
     description: str, priority: int, patient_details: dict,
     past_history_summary: str, llm_summary: str,
     current_symptoms: Optional[dict] = None,
+    assigned_to: Optional[str] = None,
+    sequential_review_chain_id: Optional[str] = None,
+    is_sequential_review: bool = False,
     session_maker=None
 ) -> dict:
     """Async implementation of create_ticket."""
@@ -33,7 +36,10 @@ async def _create_ticket_async(
                 patient_details=patient_details,
                 past_history_summary=past_history_summary,
                 llm_summary=llm_summary,
-                current_symptoms=current_symptoms or {}
+                current_symptoms=current_symptoms or {},
+                assigned_to=uuid.UUID(assigned_to) if assigned_to else None,
+                sequential_review_chain_id=uuid.UUID(sequential_review_chain_id) if sequential_review_chain_id else None,
+                is_sequential_review=is_sequential_review
             )
             session.add(ticket)
             await session.commit()
@@ -73,19 +79,28 @@ def create_ticket(
     patient_id: str, conversation_id: str, service_type: str,
     description: str, priority: int, patient_details: dict,
     past_history_summary: str, llm_summary: str,
-    current_symptoms: Optional[dict] = None
+    current_symptoms: Optional[dict] = None,
+    assigned_to: Optional[str] = None,
+    sequential_review_chain_id: Optional[str] = None,
+    is_sequential_review: bool = False
 ) -> dict:
     """Create a new ticket with comprehensive patient information.
     
     Use this when a patient needs a service like blood test, lab test, imaging, etc.
     Do NOT use this for scheduling appointments - use schedule_appointment instead.
+    
+    Args:
+        assigned_to: Optional doctor UUID to assign ticket to
+        sequential_review_chain_id: Optional chain UUID for sequential review tickets
+        is_sequential_review: Whether this is a sequential review ticket
     """
     try:
         return run_async_safely(
             _create_ticket_async,
             patient_id, conversation_id, service_type, description,
             priority, patient_details, past_history_summary,
-            llm_summary, current_symptoms,
+            llm_summary, current_symptoms, assigned_to,
+            sequential_review_chain_id, is_sequential_review,
             session_maker_param=True
         )
     except Exception as e:

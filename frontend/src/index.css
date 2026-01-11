@@ -10,3 +10,11 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+/* Classic medical theme customizations - softer blues and teals */
+@layer base {
+  :root {
+    --medical-primary: 20 165 145; /* teal-500 */
+    --medical-light: 240 249 248; /* teal-50 */
+  }
+}

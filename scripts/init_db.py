@@ -1,4 +1,4 @@
-"""Initialize database - create database if it doesn't exist."""
+"""Initialize database - create database if it doesn't exist and create all tables."""
 import asyncio
 import asyncpg
 from urllib.parse import urlparse
@@ -11,6 +11,15 @@ project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
 from dotenv import load_dotenv
+from sqlalchemy.ext.asyncio import create_async_engine
+
+# Import all models to register them with Base.metadata
+from backend.src.database.connection import Base
+from backend.src.database.models import (
+    Patient, Admin, ServicePerson, Conversation,
+    Ticket, Appointment, PatientHistory, TicketUpdate,
+    DoctorExpertise, DoctorCaseHistory, TicketAssignment, PatientHistorySummary
+)
 
 load_dotenv()
 
@@ -84,6 +93,135 @@ async def create_database_if_not_exists():
         return False
 
 
+async def create_tables():
+    """Create all tables using SQLAlchemy."""
+    print("Creating database tables...")
+    try:
+        engine = create_async_engine(DATABASE_URL, echo=False)
+        async with engine.begin() as conn:
+            await conn.run_sync(Base.metadata.create_all)
+        await engine.dispose()
+        print("All tables created successfully!")
+        return True
+    except Exception as e:
+        print(f"Error creating tables: {str(e)}")
+        return False
+
+
+async def add_missing_columns():
+    """Add missing columns to existing tables (idempotent)."""
+    parsed = urlparse(DATABASE_URL.replace("postgresql+asyncpg://", "postgresql://"))
+    user = parsed.username or "postgres"
+    password = parsed.password or "postgres"
+    host = parsed.hostname or "localhost"
+    port = parsed.port or 5432
+    database_name = parsed.path.lstrip("/") or "hospital_ai_assistant"
+    
+    try:
+        conn = await asyncpg.connect(
+            host=host,
+            port=port,
+            user=user,
+            password=password,
+            database=database_name
+        )
+        
+        print("Checking for missing columns in existing tables...")
+        
+        # Check and add columns to service_persons table
+        columns_to_add = [
+            ("service_persons", "current_workload", "INTEGER NOT NULL DEFAULT 0"),
+            ("service_persons", "max_workload", "INTEGER NOT NULL DEFAULT 10"),
+            ("service_persons", "max_daily_appointments", "INTEGER NOT NULL DEFAULT 15"),
+            ("service_persons", "workload_updated_at", "TIMESTAMP"),
+            ("service_persons", "is_available", "BOOLEAN NOT NULL DEFAULT true"),
+        ]
+        
+        # Check and add columns to tickets table
+        columns_to_add.extend([
+            ("tickets", "assignment_status", "VARCHAR NOT NULL DEFAULT 'unassigned'"),
+            ("tickets", "offered_to_count", "INTEGER NOT NULL DEFAULT 0"),
+            ("tickets", "accepted_by", "UUID"),
+            ("tickets", "accepted_at", "TIMESTAMP"),
+        ])
+        
+        for table_name, column_name, column_def in columns_to_add:
+            # Check if column exists
+            column_exists = await conn.fetchval("""
+                SELECT EXISTS (
+                    SELECT 1 
+                    FROM information_schema.columns 
+                    WHERE table_name = $1 AND column_name = $2
+                )
+            """, table_name, column_name)
+            
+            if not column_exists:
+                try:
+                    # For foreign key columns, add the column first, then the constraint
+                    if column_name == "accepted_by":
+                        await conn.execute(f"""
+                            ALTER TABLE {table_name} 
+                            ADD COLUMN {column_name} {column_def}
+                        """)
+                        # Add foreign key constraint
+                        await conn.execute(f"""
+                            ALTER TABLE {table_name}
+                            ADD CONSTRAINT fk_{table_name}_{column_name}
+                            FOREIGN KEY ({column_name}) 
+                            REFERENCES service_persons(service_person_id)
+                        """)
+                        print(f"  Added column {column_name} to {table_name} with foreign key")
+                    else:
+                        await conn.execute(f"""
+                            ALTER TABLE {table_name} 
+                            ADD COLUMN {column_name} {column_def}
+                        """)
+                        print(f"  Added column {column_name} to {table_name}")
+                except Exception as e:
+                    # Column might have been added by another process, ignore
+                    if "already exists" not in str(e).lower() and "duplicate" not in str(e).lower():
+                        print(f"  Warning: Could not add {column_name} to {table_name}: {str(e)}")
+        
+        # Create indexes for new columns if they don't exist
+        indexes_to_create = [
+            ("service_persons", "ix_service_persons_current_workload", "current_workload"),
+            ("service_persons", "ix_service_persons_is_available", "is_available"),
+            ("service_persons", "ix_service_persons_max_daily_appointments", "max_daily_appointments"),
+            ("service_persons", "ix_service_persons_service_type_available_workload", 
+             "service_type, is_available, current_workload"),
+            ("tickets", "ix_tickets_assignment_status", "assignment_status"),
+            ("tickets", "ix_tickets_accepted_by", "accepted_by"),
+        ]
+        
+        for table_name, index_name, columns in indexes_to_create:
+            index_exists = await conn.fetchval("""
+                SELECT EXISTS (
+                    SELECT 1 
+                    FROM pg_indexes 
+                    WHERE tablename = $1 AND indexname = $2
+                )
+            """, table_name, index_name)
+            
+            if not index_exists:
+                try:
+                    await conn.execute(f"""
+                        CREATE INDEX {index_name} 
+                        ON {table_name} ({columns})
+                    """)
+                    print(f"  Created index {index_name} on {table_name}")
+                except Exception as e:
+                    if "already exists" not in str(e).lower():
+                        print(f"  Warning: Could not create index {index_name}: {str(e)}")
+        
+        await conn.close()
+        print("Column and index checks completed!")
+        return True
+        
+    except Exception as e:
+        print(f"Error adding missing columns: {str(e)}")
+        return False
+
+
 async def main():
     """Main function."""
     print("=" * 60)
@@ -95,10 +233,24 @@ async def main():
     
     if success:
         print()
-        print("=" * 60)
-        print("Database initialization completed successfully!")
-        print("You can now run migrations with: uv run alembic upgrade head")
-        print("=" * 60)
+        # Create all tables
+        tables_created = await create_tables()
+        
+        if tables_created:
+            # Add missing columns to existing tables
+            await add_missing_columns()
+            
+            print()
+            print("=" * 60)
+            print("Database initialization completed successfully!")
+            print("All tables and columns are ready to use.")
+            print("=" * 60)
+        else:
+            print()
+            print("=" * 60)
+            print("Warning: Some tables may not have been created.")
+            print("Please check the error messages above.")
+            print("=" * 60)
     else:
         print()
         print("=" * 60)

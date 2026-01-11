@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LangGraph Workflow Visualization</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+
+        h2 {
+            color: #34495e;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            padding-top: 20px;
+            border-top: 2px solid #ecf0f1;
+            font-size: 2em;
+        }
+
+        h3 {
+            color: #555;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        .section {
+            margin-bottom: 50px;
+        }
+
+        .diagram-container {
+            background-color: #fafafa;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 30px;
+            margin: 20px 0;
+            overflow-x: auto;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .diagram-container h3 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            color: #2c3e50;
+            font-size: 1.3em;
+        }
+
+        .mermaid {
+            text-align: center;
+            background-color: white;
+            padding: 20px;
+            border-radius: 4px;
+        }
+
+        .description {
+            background-color: #f8f9fa;
+            border-left: 4px solid #3498db;
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .description h4 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .description p {
+            color: #555;
+            margin-bottom: 8px;
+        }
+
+        .description ul {
+            margin-left: 20px;
+            color: #555;
+        }
+
+        .description li {
+            margin-bottom: 5px;
+        }
+
+        .toc {
+            background-color: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 40px;
+        }
+
+        .toc h2 {
+            margin-top: 0;
+            border: none;
+            padding: 0;
+        }
+
+        .toc ul {
+            list-style: none;
+            margin-left: 0;
+        }
+
+        .toc li {
+            margin: 10px 0;
+        }
+
+        .toc a {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .toc a:hover {
+            text-decoration: underline;
+        }
+
+        .overview {
+            background-color: #e8f4f8;
+            border-left: 4px solid #3498db;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .overview p {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .nav {
+            position: sticky;
+            top: 20px;
+            background-color: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .nav a {
+            color: #3498db;
+            text-decoration: none;
+            margin: 0 15px;
+            font-weight: 500;
+        }
+
+        .nav a:hover {
+            text-decoration: underline;
+        }
+
+        @media print {
+            body {
+                background-color: white;
+            }
+            .container {
+                box-shadow: none;
+            }
+            .nav {
+                display: none;
+            }
+        }
+
+        code {
+            background-color: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>LangGraph Workflow Visualization</h1>
+        
+        <div class="nav">
+            <a href="#overview">Overview</a>
+            <a href="#architecture">System Architecture</a>
+            <a href="#sequence">Sequence Diagram</a>
+            <a href="#flow">Node Flow</a>
+        </div>
+
+        <div class="overview" id="overview">
+            <h2>Overview</h2>
+            <p>This document describes the current LangGraph workflow-based agent system for the Hospital AI Assistant. The system uses a hybrid workflow pattern with explicit nodes for predictable execution, while maintaining conversational flexibility through LLM nodes.</p>
+            <p><strong>Implementation:</strong> Based on <code>backend/src/agents/workflow_agent.py</code> with 17 explicit workflow nodes.</p>
+            <p><strong>Key Features:</strong></p>
+            <ul>
+                <li>Hybrid workflow pattern: Explicit nodes for predictable execution</li>
+                <li>17 workflow nodes: route_entry, fetch_history, show_history, understand_request, detect_complex_case, create_sequential_chain, route_to_next_doctor, collect_doctor_review, generate_final_summary, validate_request, ask_for_request_info, find_doctors, inform_no_doctors, rank_doctors, create_tickets, confirm_booking</li>
+                <li>Sequential review support: Complex cases use a single ticket that progresses through multiple doctors</li>
+                <li>LLM nodes for extraction, understanding, and formatting (9 nodes use LLM)</li>
+                <li>Tool nodes for database operations (6 nodes call tools)</li>
+                <li>PostgresSaver checkpointer for state persistence (automatic after each node)</li>
+                <li>LangSmith integration for observability and tracing</li>
+            </ul>
+            <p><strong>Execution Flow:</strong></p>
+            <ol>
+                <li>Conversation API receives message → calls <code>graph.ainvoke(initial_state, config)</code></li>
+                <li>LangGraph Engine loads state from PostgresSaver checkpointer (if exists)</li>
+                <li>Executes nodes sequentially based on routing logic</li>
+                <li>Saves checkpoint after each node execution</li>
+                <li>Returns final state with all messages</li>
+            </ol>
+        </div>
+
+        <div class="section" id="architecture">
+            <h2>System Architecture</h2>
+            <div class="description">
+                <h4>Architecture Overview</h4>
+                <p>The system consists of multiple layers matching the actual implementation in <code>workflow_agent.py</code>:</p>
+                <ul>
+                    <li><strong>Client Layer:</strong> Frontend React App → REST API Endpoints (FastAPI)</li>
+                    <li><strong>Application Layer:</strong> Conversation API (<code>routes/conversations.py</code>) → Workflow Agent (<code>workflow_agent.py</code>)</li>
+                    <li><strong>LangGraph Layer:</strong> StateGraph Engine with 17 workflow nodes, PostgresSaver Checkpointer for state persistence</li>
+                    <li><strong>Node Types:</strong> 
+                        <ul>
+                            <li>LLM Nodes: show_history, understand_request, detect_complex_case, ask_for_request_info, inform_no_doctors, rank_doctors, confirm_booking, generate_final_summary</li>
+                            <li>Validation Nodes: validate_request</li>
+                            <li>Tool Nodes: fetch_history, create_sequential_chain, route_to_next_doctor, collect_doctor_review, find_doctors, create_tickets</li>
+                        </ul>
+                    </li>
+                    <li><strong>Sequential Review:</strong> Complex cases use sequential review chain with single ticket progression</li>
+                    <li><strong>Tool Layer:</strong> Extraction Tools, Patient Tools, Doctor Tools, Ticket Tools (called from nodes)</li>
+                    <li><strong>LLM Services:</strong> ChatOpenAI (gpt-4o-mini) with Structured Output (Pydantic models)</li>
+                    <li><strong>Database Layer:</strong> PostgreSQL with patients, service_persons, tickets, conversations, checkpoints tables</li>
+                    <li><strong>Observability:</strong> LangSmith integration for tracing all LLM calls and workflow execution</li>
+                </ul>
+            </div>
+            
+            <div class="diagram-container">
+                <h3>System Architecture Diagram</h3>
+                <div class="mermaid">
+graph TB
+    subgraph Frontend["Frontend"]
+        FE[React Application<br/>TypeScript + Vite]
+        UI[UI Components<br/>Chat, Dashboard,<br/>Ticket Management]
+    end
+    
+    subgraph Backend["Backend"]
+        API_GW[REST API Endpoints<br/>FastAPI]
+        CA[Conversation API<br/>routes/conversations.py]
+        TA[Ticket API<br/>routes/tickets.py]
+        PA[Patient API<br/>routes/patients.py]
+        WA[Workflow Agent<br/>workflow_agent.py<br/>17 nodes]
+        GE[StateGraph<br/>create_graph]
+        CP[PostgresSaver Checkpointer<br/>Auto-save state]
+        Nodes[17 Workflow Nodes<br/>route_entry, fetch, show,<br/>understand, detect_complex,<br/>create_chain, route_doctor,<br/>collect_review, find, rank,<br/>create_tickets, etc.]
+        PT[patient_tools.py<br/>get_patient_history]
+        DT[doctor_tools.py<br/>get_available_doctors,<br/>rank_doctors_with_llm]
+        TT[ticket_tools.py<br/>create_multiple_tickets]
+        CCT[complex_case_tools.py<br/>detect_complex_case,<br/>create_sequential_review_chain,<br/>submit_doctor_review]
+        PG[(PostgreSQL)]
+        PC[patients]
+        DC[service_persons]
+        TC[tickets]
+        CT[conversations]
+        CH[checkpoints]
+    end
+    
+    subgraph AI["AI Services"]
+        LLM[ChatOpenAI<br/>model: gpt-4o-mini<br/>temperature: 0.7]
+        Struct[Structured Output<br/>Pydantic Models<br/>RequestInfo, PatientInfo]
+        LS[LangSmith<br/>Observability & Debugging]
+    end
+    
+    FE -->|HTTP/REST| API_GW
+    UI --> FE
+    
+    API_GW --> CA
+    API_GW --> TA
+    API_GW --> PA
+    
+    CA -->|await get_graph()| WA
+    CA -->|graph.ainvoke(state, config)| WA
+    TA -->|Ticket operations| PG
+    PA -->|Patient operations| PG
+    
+    WA -->|compile with checkpointer| GE
+    GE -->|Execute nodes sequentially| Nodes
+    GE -->|After each node| CP
+    
+    Nodes -->|Call tools| PT
+    Nodes -->|Call tools| DT
+    Nodes -->|Call tools| TT
+    Nodes -->|Call tools| CCT
+    Nodes -->|Direct LLM calls| LLM
+    
+    DT -->|Uses LLM for ranking| LLM
+    CCT -->|Uses LLM for detection| LLM
+    
+    PT -->|SQL queries| PC
+    DT -->|SQL queries| DC
+    TT -->|SQL INSERT| TC
+    CA -->|Create/Load| CT
+    
+    CP -->|Save state| CH
+    CH -->|Load on resume| CP
+    CH -.->|State recovery| CP
+    
+    LLM -->|Traces| LS
+    Struct -->|Used by| LLM
+    
+    style Frontend fill:#e1f5ff,stroke:#2196F3,stroke-width:3px
+    style Backend fill:#fff4e1,stroke:#FF9800,stroke-width:3px
+    style AI fill:#f3e5f5,stroke:#9C27B0,stroke-width:3px
+    style FE fill:#e1f5ff
+    style UI fill:#e1f5ff
+    style API_GW fill:#fff4e1
+    style CA fill:#fff4e1
+    style TA fill:#fff4e1
+    style PA fill:#fff4e1
+    style WA fill:#fff4e1
+    style GE fill:#e8f5e9
+    style Nodes fill:#e8f5e9
+    style CP fill:#e8f5e9
+    style LLM fill:#f3e5f5
+    style Struct fill:#f3e5f5
+    style PG fill:#ffebee
+    style LS fill:#fff9c4
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="sequence">
+            <h2>Workflow Sequence Diagram</h2>
+            <div class="description">
+                <h4>Complete Workflow Flow</h4>
+                <p>This sequence diagram shows the complete interaction flow through all workflow nodes, including:</p>
+                <ul>
+                    <li>Patient verification flow (extract → validate → verify → fetch → show history)</li>
+                    <li>Appointment request flow (understand → validate → find → rank → create tickets → confirm)</li>
+                    <li>Interactions with Database, LLM, and Checkpointer</li>
+                    <li>State persistence via PostgresSaver checkpointer</li>
+                </ul>
+            </div>
+
+            <div class="diagram-container">
+                <h3>Complete Workflow Sequence</h3>
+                <div class="mermaid">
+sequenceDiagram
+    participant User
+    participant API as Conversation API
+    participant Graph as LangGraph Engine
+    participant Entry as route_entry
+    participant Fetch as fetch_history
+    participant Show as show_history
+    participant Understand as understand_request
+    participant Detect as detect_complex_case
+    participant CreateChain as create_sequential_chain
+    participant RouteDoc as route_to_next_doctor
+    participant VReq as validate_request
+    participant AskRequest as ask_for_request_info
+    participant Find as find_doctors
+    participant NoDoctors as inform_no_doctors
+    participant Rank as rank_doctors
+    participant Tickets as create_tickets
+    participant Confirm as confirm_booking
+    participant DB as PostgreSQL
+    participant LLM as ChatOpenAI
+    participant Checkpoint as PostgresSaver
+
+    User->>API: POST /messages
+    API->>Graph: graph.ainvoke(initial_state, config)
+    Graph->>Checkpoint: Load checkpoint by thread_id
+    Checkpoint->>DB: SELECT from checkpoints table
+    DB-->>Checkpoint: Existing state (if any)
+    Checkpoint-->>Graph: Loaded state with messages
+    
+    Graph->>Entry: Execute route_entry_node
+    
+    alt History Not Shown
+        Entry->>Fetch: Execute fetch_history_node
+        Fetch->>DB: get_patient_history tool: SELECT history_records
+        DB-->>Fetch: History records array
+        Fetch->>Show: Execute show_history_node
+        Show->>LLM: Generate formatted history
+        LLM-->>Show: Formatted history message
+        Show-->>API: Add AI message to state
+        API-->>User: Display history
+        Graph->>Checkpoint: Save checkpoint automatically
+        Checkpoint->>DB: INSERT/UPDATE checkpoint
+        Note over User,API: Wait for user request
+    end
+    
+    alt History Shown - New Request
+        Entry->>Understand: Execute understand_request_node
+        Understand->>LLM: Structured extraction (service_type, date)
+        LLM-->>Understand: RequestInfo object
+        Understand->>Detect: Execute detect_complex_case_node
+        Detect->>LLM: Analyze case complexity
+        LLM-->>Detect: Complex or normal case
+        
+        alt Complex Case
+            Detect->>CreateChain: Execute create_sequential_chain_node
+            CreateChain->>DB: Create SequentialReviewChain and Steps
+            DB-->>CreateChain: Chain ID
+            CreateChain->>RouteDoc: Execute route_to_next_doctor_node
+            RouteDoc->>DB: Create/Update ticket for first step
+            DB-->>RouteDoc: Ticket ID
+            RouteDoc-->>API: Add confirmation message
+            API-->>User: Sequential review started
+            Graph->>Checkpoint: Save checkpoint automatically
+            Checkpoint->>DB: INSERT/UPDATE checkpoint
+            Note over User,API: Wait for doctor review
+        else Normal Case
+            Detect->>VReq: Execute validate_request_node
+            
+            alt Missing Request Info
+                VReq->>AskRequest: Execute ask_for_request_info_node
+                AskRequest->>LLM: Generate question prompt
+                LLM-->>AskRequest: Question message
+                AskRequest-->>API: Add AI message to state
+                API-->>User: Ask for service type/date
+                Graph->>Checkpoint: Save checkpoint automatically
+                Checkpoint->>DB: INSERT/UPDATE checkpoint
+                Note over User,API: Wait for user response
+            else All Request Info Present
+                VReq->>Find: Execute find_doctors_node
+                Find->>DB: get_available_doctors_by_type_and_time: SELECT WHERE service_type AND is_active
+                DB-->>Find: Available doctors list
+                
+                alt No Doctors Found
+                    Find->>NoDoctors: Execute inform_no_doctors_node
+                    NoDoctors->>LLM: Generate message prompt
+                    LLM-->>NoDoctors: No doctors message
+                    NoDoctors-->>API: Add AI message to state
+                    API-->>User: Inform no availability
+                    Graph->>Checkpoint: Save checkpoint automatically
+                    Checkpoint->>DB: INSERT/UPDATE checkpoint
+                else Doctors Found
+                    Find->>Rank: Execute rank_doctors_node
+                    Rank->>LLM: rank_doctors_with_llm tool (with patient history & criteria)
+                    LLM-->>Rank: Ranked doctor list with reasons
+                    Rank->>Tickets: Execute create_tickets_node
+                    Tickets->>DB: create_multiple_tickets tool: INSERT tickets (top N)
+                    DB-->>Tickets: Ticket IDs array
+                    Tickets->>Confirm: Execute confirm_booking_node
+                    Confirm->>LLM: Generate simple confirmation (no doctor details)
+                    LLM-->>Confirm: Confirmation message
+                    Confirm-->>Graph: Add AI message to state
+                    Graph->>Checkpoint: Save checkpoint automatically
+                    Checkpoint->>DB: INSERT/UPDATE checkpoint
+                    Graph-->>API: Return final state
+                    API-->>User: Booking confirmed
+                end
+            end
+        end
+    end
+    
+    Note over Graph,Checkpoint: Checkpoint automatically saved after each node execution
+    Note over User,API: Conversation ends, waiting for next user message
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="flow">
+            <h2>Detailed Node Flow Diagram</h2>
+            <div class="description">
+                <h4>Node Flow Overview</h4>
+                <p>This diagram shows all 17 workflow nodes and their routing logic:</p>
+                <ul>
+                    <li><strong>Entry Node:</strong> route_entry (initial routing)</li>
+                    <li><strong>Patient History Nodes:</strong> fetch_history, show_history</li>
+                    <li><strong>Request Processing Nodes:</strong> understand_request, detect_complex_case, validate_request, ask_for_request_info</li>
+                    <li><strong>Sequential Review Nodes:</strong> create_sequential_chain, route_to_next_doctor, collect_doctor_review, generate_final_summary</li>
+                    <li><strong>Doctor Management Nodes:</strong> find_doctors, inform_no_doctors, rank_doctors</li>
+                    <li><strong>Booking Nodes:</strong> create_tickets, confirm_booking</li>
+                </ul>
+            </div>
+
+            <div class="diagram-container">
+                <h3>Complete Node Flow</h3>
+                <div class="mermaid">
+graph TD
+    Start([User Message]) --> Entry[route_entry]
+    
+    Entry -->|History Not Shown| Fetch[fetch_history]
+    Entry -->|History Shown + New Message| Understand[understand_request]
+    Entry -->|Waiting| End1([END - Wait for User])
+    
+    Fetch --> Show[show_history]
+    Fetch -->|Error| Show
+    Show --> End2([END - Wait for User])
+    
+    Understand --> Detect[detect_complex_case]
+    Detect -->|Normal Case| VRequest[validate_request]
+    Detect -->|Complex Case| CreateChain[create_sequential_chain]
+    
+    VRequest -->|Missing Fields| AskRequest[ask_for_request_info]
+    VRequest -->|All Fields Present| Find[find_doctors]
+    AskRequest --> End3([END - Wait for User])
+    
+    Find -->|No Doctors| NoDoctors[inform_no_doctors]
+    Find -->|Doctors Found| Rank[rank_doctors]
+    NoDoctors --> End4([END])
+    
+    Rank --> Tickets[create_tickets]
+    Tickets -->|Success| Confirm[confirm_booking]
+    Tickets -->|Error| End5([END])
+    Confirm --> End6([END])
+    
+    CreateChain --> RouteDoc[route_to_next_doctor]
+    RouteDoc --> WaitReview[Wait for Doctor Review]
+    WaitReview -->|Doctor Completes| CollectReview[collect_doctor_review]
+    CollectReview -->|More Steps| RouteDoc
+    CollectReview -->|All Complete| FinalSummary[generate_final_summary]
+    FinalSummary --> End7([END])
+    
+    style Entry fill:#fff4e1
+    style Fetch fill:#e8f5e9
+    style Show fill:#e1f5ff
+    style Understand fill:#e3f2fd
+    style Detect fill:#f3e5f5
+    style CreateChain fill:#ffebee
+    style RouteDoc fill:#ffebee
+    style CollectReview fill:#e8f5e9
+    style FinalSummary fill:#e1f5ff
+    style VRequest fill:#fff9c4
+    style Find fill:#e8f5e9
+    style Rank fill:#f3e5f5
+    style Tickets fill:#ffebee
+    style Confirm fill:#e8f5e9
+                </div>
+            </div>
+
+            <div class="description">
+                <h4>Node Type Legend</h4>
+                <ul>
+                    <li><span style="background-color: #fff4e1; padding: 3px 8px; border-radius: 3px;">Routing Nodes</span> - Entry and routing logic</li>
+                    <li><span style="background-color: #e3f2fd; padding: 3px 8px; border-radius: 3px;">LLM Extraction Nodes</span> - Structured data extraction using LLM</li>
+                    <li><span style="background-color: #fff9c4; padding: 3px 8px; border-radius: 3px;">Validation Nodes</span> - State validation and checks</li>
+                    <li><span style="background-color: #e8f5e9; padding: 3px 8px; border-radius: 3px;">Database/Tool Nodes</span> - Database operations and tool calls</li>
+                    <li><span style="background-color: #e1f5ff; padding: 3px 8px; border-radius: 3px;">Display Nodes</span> - Format and present information to user</li>
+                    <li><span style="background-color: #f3e5f5; padding: 3px 8px; border-radius: 3px;">LLM Processing Nodes</span> - LLM-based processing (ranking, etc.)</li>
+                    <li><span style="background-color: #ffebee; padding: 3px 8px; border-radius: 3px;">Action Nodes</span> - Create tickets, confirmations</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Patient Verification Flow</h2>
+            <div class="diagram-container">
+                <h3>Patient Verification Sequence</h3>
+                <div class="mermaid">
+graph LR
+    A[User Message] --> B[Extract Patient Info]
+    B -->|LLM Extraction| C[Validate Info]
+    C -->|Missing| D[Ask for Missing]
+    C -->|Complete| E[Verify Patient]
+    E -->|Not Found| F[Create Patient]
+    E -->|Found| G[Fetch History]
+    F --> G
+    G --> H[Show History]
+    H --> I[END - Wait for Request]
+    D --> I
+    
+    style B fill:#e3f2fd
+    style C fill:#fff9c4
+    style D fill:#e1f5ff
+    style E fill:#e8f5e9
+    style F fill:#e8f5e9
+    style G fill:#e8f5e9
+    style H fill:#e1f5ff
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Appointment Request Flow</h2>
+            <div class="diagram-container">
+                <h3>Appointment Request Sequence</h3>
+                <div class="mermaid">
+graph LR
+    A[User Request] --> B[Understand Request]
+    B -->|LLM Extraction| C[Detect Complex Case]
+    C -->|Normal| D[Validate Request]
+    C -->|Complex| E[Create Sequential Chain]
+    D -->|Missing| F[Ask for Request Info]
+    D -->|Complete| G[Find Doctors]
+    G -->|None| H[Inform No Doctors]
+    G -->|Found| I[Rank Doctors]
+    I -->|LLM Ranking| J[Create Tickets]
+    J -->|Database Insert| K[Confirm Booking]
+    K -->|LLM Confirmation| L[END - Complete]
+    F --> M[END - Wait for Info]
+    H --> L
+    
+    E -->|Create Chain| N[Route to Next Doctor]
+    N -->|Create/Update Ticket| O[Wait for Doctor Review]
+    O -->|Doctor Completes| P[Collect Doctor Review]
+    P -->|More Steps| N
+    P -->|All Complete| Q[Generate Final Summary]
+    Q -->|LLM Summary| R[END - Complete]
+    
+    style B fill:#e3f2fd
+    style C fill:#f3e5f5
+    style D fill:#fff9c4
+    style E fill:#ffebee
+    style F fill:#e1f5ff
+    style G fill:#e8f5e9
+    style H fill:#e1f5ff
+    style I fill:#f3e5f5
+    style J fill:#ffebee
+    style K fill:#e8f5e9
+    style N fill:#ffebee
+    style P fill:#e8f5e9
+    style Q fill:#e1f5ff
+                </div>
+            </div>
+            <div class="description">
+                <h4>Complex Case Detection</h4>
+                <p>After understanding the request, the system detects if it's a complex case requiring multiple specialists:</p>
+                <ul>
+                    <li><strong>Normal Case:</strong> Routes to standard flow (Validate → Find → Rank → Create Tickets → Confirm)</li>
+                    <li><strong>Complex Case:</strong> Routes to sequential review flow (Create Chain → Route to Next Doctor → Wait for Review → Collect Review → Route to Next Doctor → Repeat)</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Sequential Review (Complex Case) Flow</h2>
+            <div class="description">
+                <h4>Overview</h4>
+                <p>For complex cases requiring multiple specialists, the system uses a <strong>sequential review chain</strong> where a <strong>single ticket</strong> progresses through multiple doctors in sequence. Each doctor reviews the case and provides notes that are visible to subsequent doctors.</p>
+                <p><strong>Key Features:</strong></p>
+                <ul>
+                    <li><strong>Single Ticket:</strong> Only ONE ticket is created for the entire sequential review chain</li>
+                    <li><strong>Step Progression:</strong> The ticket progresses through sequential steps (Step 1, Step 2, Step 3, etc.)</li>
+                    <li><strong>Auto-Assignment:</strong> Steps are auto-assigned (no accept/reject for sequential review tickets)</li>
+                    <li><strong>Review Notes Accumulation:</strong> Review notes from completed steps are visible to subsequent doctors</li>
+                    <li><strong>UI Progress Tracking:</strong> The UI displays step progression and review notes from previous doctors</li>
+                </ul>
+            </div>
+            <div class="diagram-container">
+                <h3>Sequential Review Flow Sequence</h3>
+                <div class="mermaid">
+graph TD
+    A[Detect Complex Case] -->|Complex| B[Create Sequential Chain]
+    B -->|Create Chain + Steps| C[Route to Next Doctor]
+    C -->|First Step| D[Create Single Ticket]
+    C -->|Subsequent Steps| E[Update Ticket<br/>Reassign to Next Doctor]
+    D --> F[Wait for Doctor Review]
+    E --> F
+    F -->|Doctor Marks Complete| G[Collect Doctor Review]
+    G -->|Update Step Status| H{More Steps?}
+    H -->|Yes| C
+    H -->|No| I[Generate Final Summary]
+    I -->|LLM Summary| J[END - Complete]
+    
+    style A fill:#f3e5f5
+    style B fill:#ffebee
+    style C fill:#ffebee
+    style D fill:#e8f5e9
+    style E fill:#e8f5e9
+    style F fill:#fff9c4
+    style G fill:#e8f5e9
+    style I fill:#e1f5ff
+                </div>
+            </div>
+            <div class="description">
+                <h4>Sequential Review Process</h4>
+                <ol>
+                    <li><strong>Detect Complex Case:</strong> LLM analyzes case and determines if multiple specialists are needed</li>
+                    <li><strong>Create Sequential Chain:</strong> Creates SequentialReviewChain and SequentialReviewStep records</li>
+                    <li><strong>Route to Next Doctor:</strong> 
+                        <ul>
+                            <li>For first step: Creates a NEW ticket assigned to the first doctor</li>
+                            <li>For subsequent steps: UPDATES the existing ticket by reassigning it to the next doctor</li>
+                        </ul>
+                    </li>
+                    <li><strong>Wait for Doctor Review:</strong> Doctor reviews the ticket and marks it as "completed" with review notes</li>
+                    <li><strong>Collect Doctor Review:</strong> API endpoint calls submit_doctor_review to update step status and advance chain</li>
+                    <li><strong>Route to Next Doctor:</strong> If more steps remain, ticket is reassigned to the next doctor</li>
+                    <li><strong>Generate Final Summary:</strong> When all steps are complete, generate comprehensive summary</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>State Management Flow</h2>
+            <div class="description">
+                <h4>State Persistence</h4>
+                <p>The workflow uses PostgresSaver checkpointer for state persistence:</p>
+                <ul>
+                    <li>State is persisted after each node execution</li>
+                    <li>Uses <code>conversation_id</code> as thread_id for checkpointing</li>
+                    <li>State is automatically loaded when conversation continues</li>
+                    <li>All messages (HumanMessage, AIMessage, ToolMessage) are stored in checkpoints</li>
+                </ul>
+            </div>
+
+            <div class="diagram-container">
+                <h3>State Persistence Flow</h3>
+                <div class="mermaid">
+sequenceDiagram
+    participant Node as Workflow Node
+    participant State as AgentState
+    participant Checkpoint as PostgresSaver
+    participant DB as PostgreSQL
+
+    Node->>State: Update state
+    Node->>Checkpoint: Save checkpoint
+    Checkpoint->>DB: INSERT checkpoint
+    DB-->>Checkpoint: Checkpoint saved
+    
+    Note over Checkpoint,DB: Uses conversation_id as thread_id
+    
+    alt Conversation Continues
+        Checkpoint->>DB: Query checkpoint by thread_id
+        DB-->>Checkpoint: Latest checkpoint
+        Checkpoint->>State: Load state
+        State->>Node: Continue workflow
+    end
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Node Categories</h2>
+            <div class="description">
+                <h4>Node Type Classification</h4>
+                <p>The 16 workflow nodes are categorized as follows:</p>
+            </div>
+
+            <div class="diagram-container">
+                <h3>Node Classification</h3>
+                <div class="mermaid">
+graph TB
+    subgraph "Entry & Routing"
+        Entry[route_entry]
+    end
+    
+    subgraph "Patient Verification Nodes"
+        Extract[extract_patient_info]
+        Validate[validate_info]
+        AskMissing[ask_for_missing]
+        Verify[verify_patient]
+        Create[create_patient]
+        Fetch[fetch_history]
+        Show[show_history]
+    end
+    
+    subgraph "Request Processing Nodes"
+        Understand[understand_request]
+        Detect[detect_complex_case]
+        VRequest[validate_request]
+        AskRequest[ask_for_request_info]
+    end
+    
+    subgraph "Sequential Review Nodes"
+        CreateChain[create_sequential_chain]
+        RouteDoc[route_to_next_doctor]
+        CollectReview[collect_doctor_review]
+        FinalSummary[generate_final_summary]
+    end
+    
+    subgraph "Doctor Management Nodes"
+        Find[find_doctors]
+        NoDoctors[inform_no_doctors]
+        Rank[rank_doctors]
+    end
+    
+    subgraph "Booking Nodes"
+        Tickets[create_tickets]
+        Confirm[confirm_booking]
+    end
+    
+    Entry --> Fetch
+    Entry --> Understand
+    Understand --> Detect
+    Detect --> CreateChain
+    Detect --> VRequest
+    
+    style Entry fill:#fff4e1
+    style Fetch fill:#e8f5e9
+    style Show fill:#e1f5ff
+    style Understand fill:#e3f2fd
+    style Detect fill:#f3e5f5
+    style CreateChain fill:#ffebee
+    style RouteDoc fill:#ffebee
+    style CollectReview fill:#e8f5e9
+    style FinalSummary fill:#e1f5ff
+    style VRequest fill:#fff9c4
+    style AskRequest fill:#e1f5ff
+    style Find fill:#e8f5e9
+    style NoDoctors fill:#e1f5ff
+    style Rank fill:#f3e5f5
+    style Tickets fill:#ffebee
+    style Confirm fill:#e8f5e9
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Code Verification</h2>
+            <div class="description">
+                <h4>Implementation Verification</h4>
+                <p>This visualization is based on the actual implementation in <code>backend/src/agents/workflow_agent.py</code>:</p>
+                <ul>
+                    <li><strong>Graph Creation:</strong> <code>create_graph(checkpointer)</code> creates StateGraph with 16 nodes (lines 1152-1271)</li>
+                    <li><strong>Entry Point:</strong> <code>route_entry_node</code> (line 62) routes based on patient_verified, history_shown, and new messages</li>
+                    <li><strong>Patient History Flow:</strong> fetch_history → show_history (for authenticated patients)</li>
+                    <li><strong>Request Processing Flow:</strong> understand_request → detect_complex_case → (create_sequential_chain for complex or validate_request for normal) → (ask_for_request_info or find_doctors) → (inform_no_doctors or rank_doctors) → create_tickets → confirm_booking</li>
+                    <li><strong>Sequential Review Flow:</strong> create_sequential_chain → route_to_next_doctor → (wait for review) → collect_doctor_review → route_to_next_doctor (repeat) → generate_final_summary</li>
+                    <li><strong>Checkpointer:</strong> PostgresSaver automatically saves state after each node execution (configured at line 1261)</li>
+                    <li><strong>LLM Initialization:</strong> ChatOpenAI initialized at line 50 with settings from config.py</li>
+                    <li><strong>Tool Calls:</strong> Tools are called via <code>.invoke()</code> method from nodes (e.g., line 158, 308, 369)</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Workflow Execution Model</h2>
+            <div class="description">
+                <h4>Execution Flow</h4>
+                <p>The workflow executes in the following manner (based on actual code execution):</p>
+                <ul>
+                    <li><strong>Sequential Execution:</strong> Nodes execute sequentially in a single invocation cycle via LangGraph StateGraph</li>
+                    <li><strong>Entry Routing:</strong> <code>route_entry_node</code> analyzes state and routes to first appropriate node</li>
+                    <li><strong>Conditional Routing:</strong> Each node sets <code>next_action</code> in state, routing functions determine next node</li>
+                    <li><strong>User Interaction Points:</strong> Workflow ends (waits for user) at show_history, ask_for_request_info</li>
+                    <li><strong>Automatic Continuation:</strong> When user provides new message, route_entry detects it and routes to appropriate node</li>
+                    <li><strong>State Recovery:</strong> State is automatically loaded from checkpointer when conversation continues (conversations.py line 131-138)</li>
+                    <li><strong>Checkpoint Saving:</strong> PostgresSaver checkpointer automatically saves state after each node (configured at compile time)</li>
+                </ul>
+            </div>
+
+            <div class="diagram-container">
+                <h3>Execution Flow</h3>
+                <div class="mermaid">
+graph TD
+    Start([User Message]) --> Invoke[Graph Invocation]
+    Invoke --> Entry[route_entry]
+    Entry --> Node1[Node 1]
+    Node1 --> Node2[Node 2]
+    Node2 --> Decision{Check next_action}
+    Decision -->|Continue| Node3[Node 3]
+    Decision -->|Wait| END([END - Wait for User])
+    Node3 --> Checkpoint[Save Checkpoint]
+    Checkpoint --> DB[(Database)]
+    
+    UserMsg[New User Message] --> Entry
+    
+    style Invoke fill:#fff4e1
+    style Entry fill:#fff4e1
+    style Checkpoint fill:#e8f5e9
+    style DB fill:#ffebee
+                </div>
+            </div>
+        </div>
+
+        <div style="margin-top: 60px; padding-top: 30px; border-top: 2px solid #e0e0e0; text-align: center; color: #999;">
+            <p>LangGraph Workflow Visualization | Hospital AI Assistant</p>
+            <p style="font-size: 0.9em; margin-top: 10px;">Generated from WORKFLOW_DOCUMENTATION.md</p>
+        </div>
+    </div>
+
+    <script>
+        mermaid.initialize({ 
+            startOnLoad: true,
+            theme: 'default',
+            themeVariables: {
+                primaryColor: '#e3f2fd',
+                primaryTextColor: '#2c3e50',
+                primaryBorderColor: '#3498db',
+                lineColor: '#555',
+                secondaryColor: '#fff9c4',
+                tertiaryColor: '#e8f5e9'
+            },
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis'
+            },
+            sequence: {
+                diagramMarginX: 50,
+                diagramMarginY: 10,
+                actorMargin: 50,
+                width: 150,
+                height: 65,
+                boxMargin: 10,
+                boxTextMargin: 5,
+                noteMargin: 10,
+                messageMargin: 35
+            }
+        });
+    </script>
+</body>
+</html>

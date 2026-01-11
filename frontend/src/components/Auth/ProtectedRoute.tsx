@@ -4,7 +4,7 @@ import { useAuthStore } from '../../hooks/useAuth'
 
 interface ProtectedRouteProps {
   children: ReactNode
-  requiredType?: 'patient' | 'service_person' | 'admin'
+  requiredType?: 'patient' | 'service_person'
 }
 
 export default function ProtectedRoute({ children, requiredType }: ProtectedRouteProps) {

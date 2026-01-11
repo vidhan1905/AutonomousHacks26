@@ -13,6 +13,64 @@ import asyncio
 import concurrent.futures
 import json
 from backend.src.config import settings
+from datetime import datetime
+
+# Get top N from config
+TOP_N_DOCTORS = getattr(settings, 'top_doctors_count', 5)
+
+
+async def _get_available_service_types_async(session_maker=None) -> List[str]:
+    """Get unique service types from active service persons.
+    
+    Returns a list of unique service_type values from service_persons where is_active = True.
+    This is dynamic and will automatically include any new service types added to the database.
+    
+    Returns:
+        List of unique service type strings (e.g., ['lab test', 'general consultation', 'cardiology'])
+    """
+    if session_maker is None:
+        from backend.src.database.connection import async_session_maker
+        session_maker = async_session_maker
+    
+    async with session_maker() as session:
+        try:
+            # Get distinct service_type values from active and available service persons
+            result = await session.execute(
+                select(ServicePerson.service_type).distinct().where(
+                    ServicePerson.is_active == True,
+                    ServicePerson.is_available == True  # Only include available service persons
+                )
+            )
+            service_types = [row[0] for row in result.fetchall()]
+            print(f"[SCHEMA CHECK] Service types query successful: {len(service_types)} types found")
+            return sorted(service_types) if service_types else []
+        except AttributeError as e:
+            # Likely schema issue - column doesn't exist
+            import traceback
+            error_msg = f"SCHEMA ERROR: Column may not exist in ServicePerson model. Error: {str(e)}\n{traceback.format_exc()}"
+            print(f"[SCHEMA ERROR] {error_msg}")
+            raise Exception(f"Database schema issue: {error_msg}")
+        except Exception as e:
+            import traceback
+            error_msg = f"Error fetching available service types: {str(e)}\n{traceback.format_exc()}"
+            print(f"[ERROR] {error_msg}")
+            # Re-raise to distinguish from "no results" (empty list)
+            raise Exception(f"Database query error: {error_msg}")
+
+
+def get_available_service_types() -> List[str]:
+    """Get unique service types from active service persons (sync wrapper).
+    
+    Returns a list of unique service_type values dynamically from the database.
+    """
+    try:
+        return run_async_safely(
+            _get_available_service_types_async,
+            session_maker_param=True
+        )
+    except Exception as e:
+        print(f"Error fetching available service types: {e}")
+        return []
 
 
 def run_async_safely(async_func, *args, session_maker_param=False, **kwargs):
@@ -46,7 +104,7 @@ class RankedDoctor(BaseModel):
 
 class DoctorRankingResult(BaseModel):
     """Model for doctor ranking results."""
-    ranked_doctors: List[RankedDoctor] = Field(description="Top 5 ranked doctors")
+    ranked_doctors: List[RankedDoctor] = Field(description=f"Top {TOP_N_DOCTORS} ranked doctors")
 
 
 async def _get_service_persons_by_type_async(service_type: str, session_maker=None) -> dict:
@@ -57,13 +115,98 @@ async def _get_service_persons_by_type_async(service_type: str, session_maker=No
     
     async with session_maker() as session:
         try:
+            try:
+                test_query = select(ServicePerson.service_person_id).limit(1)
+                await session.execute(test_query)
+            except (AttributeError, Exception) as schema_error:
+                error_msg = f"SCHEMA ERROR: ServicePerson table or columns may not exist. Error: {str(schema_error)}"
+                print(f"[SCHEMA ERROR] {error_msg}")
+                return {
+                    "status": "schema_error",
+                    "error": error_msg,
+                    "service_type": service_type,
+                    "doctors": [],
+                    "count": 0,
+                    "diagnostic": "Schema validation failed - check database schema"
+                }
+            
+            # Query available doctors: active, available, and with workload capacity
+            print(f"[QUERY] Searching doctors with filters: service_type={service_type}, is_active=True, is_available=True, workload<max")
             result = await session.execute(
                 select(ServicePerson).where(
                     ServicePerson.service_type == service_type,
-                    ServicePerson.is_active == True
+                    ServicePerson.is_active == True,
+                    ServicePerson.is_available == True,  # Check availability flag
+                    ServicePerson.current_workload < ServicePerson.max_workload  # Check workload capacity
                 )
             )
             doctors = result.scalars().all()
+            
+            # Diagnostic: Check how many doctors exist without filters
+            total_result = await session.execute(
+                select(ServicePerson).where(ServicePerson.service_type == service_type)
+            )
+            total_doctors = total_result.scalars().all()
+            
+            print(f"[QUERY RESULT] Found {len(doctors)} available doctors (out of {len(total_doctors)} total for service_type '{service_type}')")
+            
+            # If no doctors found, provide diagnostic information
+            if len(doctors) == 0:
+                # Check why no doctors found
+                active_result = await session.execute(
+                    select(ServicePerson).where(
+                        ServicePerson.service_type == service_type,
+                        ServicePerson.is_active == True
+                    )
+                )
+                active_doctors = active_result.scalars().all()
+                
+                available_result = await session.execute(
+                    select(ServicePerson).where(
+                        ServicePerson.service_type == service_type,
+                        ServicePerson.is_active == True,
+                        ServicePerson.is_available == True
+                    )
+                )
+                available_doctors = available_result.scalars().all()
+                
+                workload_ok_result = await session.execute(
+                    select(ServicePerson).where(
+                        ServicePerson.service_type == service_type,
+                        ServicePerson.is_active == True,
+                        ServicePerson.is_available == True,
+                        ServicePerson.current_workload < ServicePerson.max_workload
+                    )
+                )
+                workload_ok_doctors = workload_ok_result.scalars().all()
+                
+                diagnostic_info = {
+                    "total_with_service_type": len(total_doctors),
+                    "active_count": len(active_doctors),
+                    "available_count": len(available_doctors),
+                    "workload_ok_count": len(workload_ok_doctors),
+                    "reason": "No doctors found matching all criteria"
+                }
+                
+                if len(total_doctors) == 0:
+                    diagnostic_info["reason"] = f"No doctors exist with service_type '{service_type}'"
+                elif len(active_doctors) == 0:
+                    diagnostic_info["reason"] = f"All {len(total_doctors)} doctors with service_type '{service_type}' are inactive"
+                elif len(available_doctors) == 0:
+                    diagnostic_info["reason"] = f"All {len(active_doctors)} active doctors are marked as unavailable"
+                elif len(workload_ok_doctors) == 0:
+                    diagnostic_info["reason"] = f"All {len(available_doctors)} available doctors have reached max workload"
+                
+                print(f"[DIAGNOSTIC] {diagnostic_info['reason']}")
+                
+                return {
+                    "status": "success",  # Still success - no doctors is a valid result
+                    "service_type": service_type,
+                    "doctors": [],
+                    "count": 0,
+                    "diagnostic": diagnostic_info,
+                    "message": diagnostic_info["reason"]
+                }
             
             doctors_list = []
             for doctor in doctors:
@@ -72,7 +215,10 @@ async def _get_service_persons_by_type_async(service_type: str, session_maker=No
                     "name": doctor.name,
                     "service_type": doctor.service_type,
                     "specialization": doctor.specialization,
-                    "email": doctor.email
+                    "email": doctor.email,
+                    "current_workload": doctor.current_workload,
+                    "max_workload": doctor.max_workload,
+                    "is_available": doctor.is_available
                 })
             
             return {
@@ -81,8 +227,30 @@ async def _get_service_persons_by_type_async(service_type: str, session_maker=No
                 "doctors": doctors_list,
                 "count": len(doctors_list)
             }
+        except AttributeError as e:
+            # Schema issue - attribute doesn't exist on model
+            import traceback
+            error_msg = f"SCHEMA ERROR: ServicePerson model attribute may not exist. Error: {str(e)}\n{traceback.format_exc()}"
+            print(f"[SCHEMA ERROR] {error_msg}")
+            return {
+                "status": "schema_error",
+                "error": error_msg,
+                "service_type": service_type,
+                "doctors": [],
+                "count": 0,
+                "diagnostic": "Schema validation failed - check ServicePerson model columns"
+            }
         except Exception as e:
-            return {"status": "error", "error": str(e)}
+            import traceback
+            error_msg = f"Database query error: {str(e)}\n{traceback.format_exc()}"
+            print(f"[ERROR] {error_msg}")
+            return {
+                "status": "error",
+                "error": error_msg,
+                "service_type": service_type,
+                "doctors": [],
+                "count": 0
+            }
 
 
 @tool
@@ -106,11 +274,211 @@ def get_service_persons_by_type(service_type: str) -> dict:
         return {"status": "error", "error": f"Exception in get_service_persons_by_type: {str(e)}\n{traceback.format_exc()}"}
 
 
+async def _get_available_doctors_async(
+    service_type: str,
+    preferred_date_time: Optional[str] = None,
+    session_maker=None
+) -> dict:
+    """Get active doctors available at specific date/time filtered by service_type.
+    
+    ROOT FIX: Filter by both is_active AND service_type.
+    Then rank the filtered doctors and select top N.
+    
+    Args:
+        service_type: Service type to filter by (e.g., 'orthopedics', 'lab test', 'cardiology')
+        preferred_date_time: ISO format datetime (e.g., '2025-01-17T14:00:00')
+                           If None, returns all active doctors in the service type
+    
+    Returns:
+        Dictionary with status, doctors list, and count
+    """
+    if session_maker is None:
+        from backend.src.database.connection import async_session_maker
+        session_maker = async_session_maker
+    
+    async with session_maker() as session:
+        try:
+            # Schema validation - verify table exists and columns are accessible
+            try:
+                test_query = select(ServicePerson.service_person_id).limit(1)
+                await session.execute(test_query)
+            except (AttributeError, Exception) as schema_error:
+                error_msg = f"SCHEMA ERROR: ServicePerson table or columns may not exist. Error: {str(schema_error)}"
+                print(f"[SCHEMA ERROR] {error_msg}")
+                return {
+                    "status": "schema_error",
+                    "error": error_msg,
+                    "service_type": service_type,
+                    "preferred_date_time": preferred_date_time,
+                    "doctors": [],
+                    "count": 0,
+                    "diagnostic": "Schema validation failed - check database schema"
+                }
+            
+            # Query available doctors: active, available, and with workload capacity
+            print(f"[QUERY] Searching doctors with filters: service_type={service_type}, is_active=True, is_available=True, workload<max")
+            result = await session.execute(
+                select(ServicePerson).where(
+                    ServicePerson.is_active == True,
+                    ServicePerson.is_available == True,  # Check availability flag
+                    ServicePerson.service_type == service_type,
+                    ServicePerson.current_workload < ServicePerson.max_workload  # Check workload capacity
+                )
+            )
+            doctors = result.scalars().all()
+            
+            # Diagnostic: Check breakdown of why doctors might not be available
+            total_result = await session.execute(
+                select(ServicePerson).where(ServicePerson.service_type == service_type)
+            )
+            total_doctors = total_result.scalars().all()
+            
+            print(f"[QUERY RESULT] Found {len(doctors)} available doctors (out of {len(total_doctors)} total for service_type '{service_type}')")
+            
+            # If no doctors found, provide diagnostic information
+            if len(doctors) == 0:
+                # Diagnostic queries to understand why no results
+                active_result = await session.execute(
+                    select(ServicePerson).where(
+                        ServicePerson.service_type == service_type,
+                        ServicePerson.is_active == True
+                    )
+                )
+                active_doctors = active_result.scalars().all()
+                
+                available_result = await session.execute(
+                    select(ServicePerson).where(
+                        ServicePerson.service_type == service_type,
+                        ServicePerson.is_active == True,
+                        ServicePerson.is_available == True
+                    )
+                )
+                available_doctors = available_result.scalars().all()
+                
+                # Check workload details
+                workload_details = []
+                for doc in available_doctors:
+                    workload_details.append({
+                        "doctor_id": str(doc.service_person_id),
+                        "name": doc.name,
+                        "current_workload": doc.current_workload,
+                        "max_workload": doc.max_workload,
+                        "overloaded": doc.current_workload >= doc.max_workload
+                    })
+                
+                diagnostic_info = {
+                    "total_with_service_type": len(total_doctors),
+                    "active_count": len(active_doctors),
+                    "available_count": len(available_doctors),
+                    "workload_ok_count": len(doctors),
+                    "workload_details": workload_details,
+                    "reason": "No doctors found matching all criteria"
+                }
+                
+                if len(total_doctors) == 0:
+                    diagnostic_info["reason"] = f"No doctors exist with service_type '{service_type}'. Check if service_type is correct."
+                elif len(active_doctors) == 0:
+                    diagnostic_info["reason"] = f"All {len(total_doctors)} doctors with service_type '{service_type}' are inactive (is_active=False)"
+                elif len(available_doctors) == 0:
+                    diagnostic_info["reason"] = f"All {len(active_doctors)} active doctors are marked as unavailable (is_available=False)"
+                elif len(doctors) == 0:
+                    diagnostic_info["reason"] = f"All {len(available_doctors)} available doctors have reached max workload (current_workload >= max_workload)"
+                
+                print(f"[DIAGNOSTIC] {diagnostic_info['reason']}")
+                print(f"[DIAGNOSTIC] Workload details: {workload_details}")
+                
+                return {
+                    "status": "success",  # No doctors found is a valid result, not an error
+                    "service_type": service_type,
+                    "preferred_date_time": preferred_date_time,
+                    "doctors": [],
+                    "count": 0,
+                    "diagnostic": diagnostic_info,
+                    "message": diagnostic_info["reason"]
+                }
+            
+            doctors_list = []
+            for doctor in doctors:
+                doctors_list.append({
+                    "doctor_id": str(doctor.service_person_id),
+                    "name": doctor.name,
+                    "service_type": doctor.service_type,
+                    "specialization": doctor.specialization,
+                    "email": doctor.email,
+                    "current_workload": doctor.current_workload,
+                    "max_workload": doctor.max_workload,
+                    "is_available": doctor.is_available
+                })
+            
+            return {
+                "status": "success",
+                "service_type": service_type,  # Keep for context
+                "doctors": doctors_list,
+                "count": len(doctors_list),
+                "preferred_date_time": preferred_date_time
+            }
+        except AttributeError as e:
+            # Schema issue - attribute doesn't exist on model
+            import traceback
+            error_msg = f"SCHEMA ERROR: ServicePerson model attribute may not exist. Check if columns (is_active, is_available, current_workload, max_workload) exist. Error: {str(e)}\n{traceback.format_exc()}"
+            print(f"[SCHEMA ERROR] {error_msg}")
+            return {
+                "status": "schema_error",
+                "error": error_msg,
+                "service_type": service_type,
+                "preferred_date_time": preferred_date_time,
+                "doctors": [],
+                "count": 0,
+                "diagnostic": "Schema validation failed - verify ServicePerson model has: is_active, is_available, current_workload, max_workload columns"
+            }
+        except Exception as e:
+            import traceback
+            error_msg = f"Database query error: {str(e)}\n{traceback.format_exc()}"
+            print(f"[ERROR] {error_msg}")
+            return {
+                "status": "error",
+                "error": error_msg,
+                "service_type": service_type,
+                "preferred_date_time": preferred_date_time,
+                "doctors": [],
+                "count": 0
+            }
+
+
+@tool
+def get_available_doctors_by_type_and_time(
+    service_type: str,
+    preferred_date_time: Optional[str] = None
+) -> dict:
+    """Get active doctors filtered by service type and available at specific date/time.
+
+    
+    Args:
+        service_type: The service type to filter by (e.g., 'orthopedics', 'cardiology', 'lab test')
+        preferred_date_time: ISO format datetime (e.g., '2025-01-17T14:00:00')
+                           If None, returns all active doctors in the service type
+    
+    Returns:
+        Dictionary with status, service_type, doctors list, count, and preferred_date_time
+    """
+    try:
+        return run_async_safely(
+            _get_available_doctors_async,
+            service_type,
+            preferred_date_time,
+            session_maker_param=True
+        )
+    except Exception as e:
+        import traceback
+        return {"status": "error", "error": f"Exception in get_available_doctors_by_type_and_time: {str(e)}\n{traceback.format_exc()}"}
+
+
 async def _rank_doctors_with_llm_async(
     patient_history: dict,
     user_request: str,
     doctors: List[dict],
     service_type: str,
+    preferred_date_time: Optional[str] = None,
     session_maker=None
 ) -> dict:
     """Async implementation of rank_doctors_with_llm."""
@@ -124,9 +492,10 @@ async def _rank_doctors_with_llm_async(
         structured_llm = ranking_llm.with_structured_output(DoctorRankingResult)
         
         # Format patient history for prompt
+        # ROOT FIX: Use 'history_records' field (not 'history') from get_patient_history tool
         history_text = "No previous history available."
-        if patient_history and patient_history.get("history"):
-            history_records = patient_history.get("history", [])
+        if patient_history and patient_history.get("history_records"):
+            history_records = patient_history.get("history_records", [])
             if history_records:
                 history_lines = []
                 for record in history_records[:10]:  # Limit to last 10 records
@@ -136,6 +505,10 @@ async def _rank_doctors_with_llm_async(
                         f"{record.get('diagnosis', 'No diagnosis')}"
                     )
                 history_text = "\n".join(history_lines)
+        elif patient_history and patient_history.get("status") == "schema_error":
+            # Schema error - include in prompt for context
+            error_msg = patient_history.get("error", "Schema error retrieving history")
+            history_text = f"Note: Unable to retrieve patient history due to schema issue: {error_msg}"
         
         # Format doctors list for prompt
         doctors_text = "\n".join([
@@ -144,7 +517,9 @@ async def _rank_doctors_with_llm_async(
             for doc in doctors
         ])
         
-        # Create prompt
+        top_n = min(TOP_N_DOCTORS, len(doctors))
+        date_time_context = f"\nPreferred Appointment Time: {preferred_date_time}" if preferred_date_time else ""
+        
         prompt = ChatPromptTemplate.from_messages([
             ("system", """You are a medical assistant helping to rank doctors for a patient.
 Given the patient's medical history, their current request, and available doctors, 
@@ -165,14 +540,20 @@ Prioritize doctors who are most suitable for the patient's specific medical need
             ("human", """Patient Medical History:
 {history}
 
-Current Request: {request}
+Rank ALL {len(doctors)} doctors from most suitable (1) to least suitable ({len(doctors)}).
+Provide clear, concise reasoning for each doctor (1-2 sentences each).
+Then select the top {top_n} from your rankings."""),
+            ("human", f"""Patient Medical History:
+{{history}}
 
-Service Type Needed: {service_type}
+Current Request: {{request}}
 
-Available Doctors:
-{doctors}
+Service Type Needed: {service_type}{date_time_context}
 
-Please rank the top 5 most suitable doctors for this patient with clear reasoning.""")
+Available Doctors ({len(doctors)} active doctors filtered by service_type '{service_type}'):
+{{doctors}}
+
+Please rank ALL {len(doctors)} doctors based on specialization match with patient history and relevance to the current request, then provide the top {top_n} most suitable doctors with clear reasoning.""")
         ])
         
         # Limit to top 10 doctors if more than 10 provided
@@ -189,8 +570,8 @@ Please rank the top 5 most suitable doctors for this patient with clear reasonin
         
         # Convert to dict format
         ranked_list = []
-        # Ensure we rank up to 5 doctors, but handle cases with fewer doctors
-        max_doctors_to_rank = min(5, len(doctors))
+        # Ensure we rank up to top_n doctors (from config), but handle cases with fewer doctors
+        max_doctors_to_rank = min(TOP_N_DOCTORS, len(doctors))
         for ranked_doc in result.ranked_doctors[:max_doctors_to_rank]:
             ranked_list.append({
                 "doctor_id": ranked_doc.doctor_id,
@@ -205,9 +586,9 @@ Please rank the top 5 most suitable doctors for this patient with clear reasonin
         if not ranked_list:
             raise ValueError(f"No doctors could be ranked. Available doctors: {len(doctors)}")
         
-        # Log warning if fewer than 5 doctors
-        if len(ranked_list) < 5:
-            print(f"Warning: Only {len(ranked_list)} doctor(s) available for ranking (requested 5)")
+        # Log warning if fewer than top_n doctors
+        if len(ranked_list) < TOP_N_DOCTORS:
+            print(f"Warning: Only {len(ranked_list)} doctor(s) available for ranking (requested {TOP_N_DOCTORS})")
         
         return {
             "status": "success",
@@ -219,8 +600,8 @@ Please rank the top 5 most suitable doctors for this patient with clear reasonin
     except Exception as e:
         import traceback
         # Fallback: simple ranking by service_type match
-        # Handle cases with fewer than 5 doctors
-        max_doctors = min(5, len(doctors))
+        # Handle cases with fewer than top_n doctors
+        max_doctors = min(TOP_N_DOCTORS, len(doctors))
         if max_doctors == 0:
             return {
                 "status": "error",
@@ -244,8 +625,8 @@ Please rank the top 5 most suitable doctors for this patient with clear reasonin
         
         # Log warning about fallback
         print(f"Warning: Using fallback ranking due to error: {str(e)}")
-        if len(fallback_ranked) < 5:
-            print(f"Warning: Only {len(fallback_ranked)} doctor(s) available (requested 5)")
+        if len(fallback_ranked) < TOP_N_DOCTORS:
+            print(f"Warning: Only {len(fallback_ranked)} doctor(s) available (requested {TOP_N_DOCTORS})")
         
         return {
             "status": "fallback",
@@ -262,18 +643,20 @@ def rank_doctors_with_llm(
     patient_history: dict,
     user_request: str,
     doctors: List[dict],
-    service_type: str
+    service_type: str,
+    preferred_date_time: Optional[str] = None
 ) -> dict:
     """Rank doctors using LLM based on patient history and request.
     
     Args:
         patient_history: Patient's medical history dictionary
         user_request: The user's current request/description of their need
-        doctors: List of doctor dictionaries from get_service_persons_by_type
+        doctors: List of doctor dictionaries from get_available_doctors_by_type_and_time
         service_type: The determined service type
+        preferred_date_time: Optional preferred date/time in ISO format
     
     Returns:
-        Dictionary with status and ranked_doctors list (top 5)
+        Dictionary with status and ranked_doctors list (top N from config)
     """
     try:
         return run_async_safely(
@@ -282,6 +665,7 @@ def rank_doctors_with_llm(
             user_request,
             doctors,
             service_type,
+            preferred_date_time,
             session_maker_param=True
         )
     except Exception as e:
@@ -317,10 +701,11 @@ async def _create_multiple_tickets_async(
                     "tickets": []
                 }
             
-            # Handle cases with fewer than 5 doctors - create tickets for all available
-            doctors_to_process = ranked_doctors[:5]  # Max 5, but can be fewer
-            if len(doctors_to_process) < 5:
-                print(f"Info: Creating tickets for {len(doctors_to_process)} doctor(s) (fewer than 5 available)")
+            # Handle cases with fewer than top_n doctors - create tickets for all available
+            top_n = TOP_N_DOCTORS
+            doctors_to_process = ranked_doctors[:top_n]  # Max top_n, but can be fewer
+            if len(doctors_to_process) < top_n:
+                print(f"Info: Creating tickets for {len(doctors_to_process)} doctor(s) (fewer than {top_n} available)")
             
             created_tickets = []
             errors = []
@@ -336,7 +721,7 @@ async def _create_multiple_tickets_async(
                         service_type=service_type,
                         description=description,
                         priority=priority,
-                        assigned_to=uuid.UUID(doctor["doctor_id"]),
+                        assigned_to=uuid.UUID(doctor["doctor_id"]),  # This is the "offered to" doctor
                         patient_details=patient_details,
                         past_history_summary=past_history_summary,
                         llm_summary=llm_summary,  # Use the patient case summary directly, no doctor ranking info
@@ -352,7 +737,11 @@ async def _create_multiple_tickets_async(
                         "doctor_id": doctor["doctor_id"],
                         "doctor_name": doctor["name"],
                         "rank": doctor["rank"],
-                        "status": "created"
+                        "status": "open",  # Match database status
+                        "service_type": service_type,  # ROOT FIX: Include service_type in ticket data
+                        "assigned_to": str(ticket.assigned_to) if ticket.assigned_to else None,
+                        "priority": priority,
+                        "conversation_id": str(ticket.conversation_id) if ticket.conversation_id else None,
                     })
                 except Exception as e:
                     import traceback
@@ -412,7 +801,7 @@ def create_multiple_tickets(
     llm_summary: str,
     priority: int = 3
 ) -> dict:
-    """Create tickets for multiple doctors (top 5 ranked doctors).
+    """Create tickets for multiple doctors (top N ranked doctors from config).
     
     Args:
         patient_id: Patient UUID

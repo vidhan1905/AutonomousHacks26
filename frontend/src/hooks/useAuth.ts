@@ -7,7 +7,8 @@ interface AuthState {
   token: string | null
   isInitialized: boolean
   login: (username: string, password: string, userType: string) => Promise<void>
-  patientLogin: (phoneNumber: string) => Promise<void>
+  patientLogin: (phoneNumber: string, password: string) => Promise<void>
+  register: (data: { name: string; phone_number: string; email: string; password: string; date_of_birth: string; gender: string }) => Promise<void>
   logout: () => Promise<void>
   loadUser: () => Promise<void>
   initialize: () => Promise<void>
@@ -43,8 +44,8 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     set({ user: response.user, token: response.access_token })
   },
   
-  patientLogin: async (phoneNumber: string) => {
-    const response = await authApi.patientLogin(phoneNumber)
+  register: async (data: { name: string; phone_number: string; email: string; password: string; date_of_birth: string; gender: string }) => {
+    const response = await authApi.register(data)
     localStorage.setItem('token', response.access_token)
     saveUserToStorage(response.user)
     set({ user: response.user, token: response.access_token })

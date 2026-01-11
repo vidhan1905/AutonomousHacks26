@@ -11,7 +11,8 @@ from backend.src.services.auth_service import (
     authenticate_service_person,
     authenticate_admin,
     create_access_token,
-    get_password_hash
+    get_password_hash,
+    verify_password
 )
 from backend.src.api.dependencies import (
     get_current_user,
@@ -32,7 +33,7 @@ class LoginRequest(BaseModel):
 
 class PatientLoginRequest(BaseModel):
     phone_number: str
-    # For patients, we might use OTP instead of password
+    password: str
 
 
 class RegisterRequest(BaseModel):
@@ -105,21 +106,13 @@ async def patient_login(
     request: PatientLoginRequest,
     db: AsyncSession = Depends(get_db)
 ):
-    """Login endpoint for patients (phone-based)."""
-    # In production, implement OTP verification
-    # For now, just verify phone exists
-    from sqlalchemy import select
-    from backend.src.database.models import Patient
-    
-    result = await db.execute(
-        select(Patient).where(Patient.phone_number == request.phone_number)
-    )
-    patient = result.scalar_one_or_none()
+    """Login endpoint for patients (phone and password)."""
+    patient = await authenticate_patient(db, request.phone_number, request.password)
     
     if not patient:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Patient not found"
+            detail="Incorrect phone number or password"
         )
     
     access_token = create_access_token(
@@ -158,10 +151,15 @@ async def register(
         )
     
     dob = datetime.strptime(request.date_of_birth, "%Y-%m-%d").date()
+    
+    # Hash the password before storing
+    password_hash = get_password_hash(request.password)
+    
     patient = Patient(
         name=request.name,
         phone_number=request.phone_number,
         email=request.email,
+        password_hash=password_hash,
         date_of_birth=dob,
         gender=request.gender
     )

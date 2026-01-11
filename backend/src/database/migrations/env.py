@@ -13,9 +13,10 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 
 from backend.src.database.connection import Base
 from backend.src.database.models import (
-    Patient, Admin, ServicePerson, Conversation, Message,
+    Patient, Admin, ServicePerson, Conversation,
     Ticket, Appointment, PatientHistory, TicketUpdate
 )
+# Message model removed - messages now handled by PostgresSaver checkpointer
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

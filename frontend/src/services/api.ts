@@ -30,9 +30,10 @@ export const authApi = {
     return response.data
   },
   
-  patientLogin: async (phoneNumber: string) => {
+  patientLogin: async (phoneNumber: string, password: string) => {
     const response = await api.post('/api/auth/login/patient', {
       phone_number: phoneNumber,
+      password: password,
     })
     return response.data
   },
@@ -62,11 +63,9 @@ export const authApi = {
 
 // Conversation endpoints
 export const conversationApi = {
-  create: async (patientId?: string, anonymous = false) => {
-    const response = await api.post('/api/conversations', {
-      patient_id: patientId,
-      anonymous,
-    })
+  create: async () => {
+    // Backend uses authenticated patient automatically
+    const response = await api.post('/api/conversations', {})
     return response.data
   },
   
@@ -87,9 +86,9 @@ export const conversationApi = {
     return response.data
   },
   
-  list: async (patientId?: string): Promise<Conversation[]> => {
-    const params = patientId ? { patient_id: patientId } : {}
-    const response = await api.get('/api/conversations', { params })
+  list: async (): Promise<Conversation[]> => {
+    // Backend uses authenticated patient automatically
+    const response = await api.get('/api/conversations')
     return response.data
   },
 }
@@ -117,9 +116,10 @@ export const ticketApi = {
     return response.data
   },
   
-  updateStatus: async (ticketId: string, status: string) => {
+  updateStatus: async (ticketId: string, status: string, comment?: string) => {
     const response = await api.put(`/api/tickets/${ticketId}/status`, {
       status,
+      comment,
     })
     return response.data
   },
@@ -147,6 +147,29 @@ export const appointmentApi = {
     status?: string
   }): Promise<Appointment[]> => {
     const response = await api.get('/api/appointments', { params: filters })
+    return response.data
+  },
+}
+
+// Patient endpoints
+export const patientApi = {
+  getProfile: async () => {
+    const response = await api.get('/api/patients/profile')
+    return response.data
+  },
+  
+  updateProfile: async (data: {
+    email?: string
+    address?: string
+    emergency_contact?: {
+      name: string
+      phone: string
+      relationship: string
+    }
+    blood_group?: string
+    gender?: string
+  }) => {
+    const response = await api.put('/api/patients/profile', data)
     return response.data
   },
   

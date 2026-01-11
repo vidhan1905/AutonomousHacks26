@@ -16,7 +16,7 @@ router = APIRouter(prefix="/api/appointments", tags=["appointments"])
 
 class CreateAppointmentRequest(BaseModel):
     patient_id: str
-    service_type: str
+    service_type: str  # Not stored in Appointment model, but used for context/notes if ticket_id not provided
     scheduled_date: str  # ISO format
     service_person_id: Optional[str] = None
     ticket_id: Optional[str] = None
@@ -92,13 +92,22 @@ async def create_appointment(
     except ValueError:
         raise HTTPException(status_code=400, detail="Invalid date format. Use ISO format (YYYY-MM-DDTHH:MM:SS)")
     
+    # Appointment model doesn't have service_type field
+    # If ticket_id is provided, service_type can be retrieved from the related Ticket
+    # Include service_type in notes if provided and not already in notes
+    appointment_notes = request.notes or ""
+    if request.service_type and request.service_type not in (appointment_notes or ""):
+        if appointment_notes:
+            appointment_notes = f"{appointment_notes}\nService type: {request.service_type}"
+        else:
+            appointment_notes = f"Service type: {request.service_type}"
+    
     appointment = Appointment(
         patient_id=uuid.UUID(request.patient_id),
-        service_type=request.service_type,
         scheduled_date=scheduled_date,
         appointment_type="consultation",
         status="scheduled",
-        notes=request.notes
+        notes=appointment_notes if appointment_notes else None
     )
     
     if request.service_person_id:

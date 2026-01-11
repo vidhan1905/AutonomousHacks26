@@ -42,16 +42,16 @@ export default function DoctorRecommendationCard({ doctors, serviceType }: Docto
 
   return (
     <div className="w-full max-w-4xl mx-auto">
-      <div className="bg-white rounded-lg shadow-lg p-6 mb-4">
-        <h3 className="text-xl font-semibold text-gray-800 mb-2">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-4">
+        <h3 className="text-xl font-semibold text-gray-800 dark:text-white mb-2">
           Recommended Doctors
           {serviceType && (
-            <span className="ml-2 text-sm font-normal text-gray-600">
+            <span className="ml-2 text-sm font-normal text-gray-600 dark:text-gray-400">
               ({serviceType.replace('_', ' ')})
             </span>
           )}
         </h3>
-        <p className="text-sm text-gray-600 mb-4">
+        <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
           Based on your medical history and current needs, here are the top {doctors.length} recommended doctors:
         </p>
       </div>
@@ -60,19 +60,19 @@ export default function DoctorRecommendationCard({ doctors, serviceType }: Docto
         {doctors.map((doctor) => (
           <div
             key={doctor.doctor_id}
-            className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow p-5 border-l-4 border-indigo-500"
+            className="bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg transition-shadow p-5 border-l-4 border-teal-500"
           >
             <div className="flex items-start justify-between mb-3">
               <div className="flex-1">
-                <h4 className="text-lg font-semibold text-gray-800 mb-1">
+                <h4 className="text-lg font-semibold text-gray-800 dark:text-white mb-1">
                   {doctor.name}
                 </h4>
                 {doctor.specialization && (
-                  <p className="text-sm text-gray-600 mb-2">
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
                     {doctor.specialization}
                   </p>
                 )}
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-gray-500 dark:text-gray-400">
                   {doctor.service_type.replace('_', ' ')}
                 </p>
               </div>
@@ -88,21 +88,21 @@ export default function DoctorRecommendationCard({ doctors, serviceType }: Docto
             </div>
 
             <div className="mb-3">
-              <p className="text-sm text-gray-700 leading-relaxed">
+              <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
                 {doctor.reason}
               </p>
             </div>
 
             {doctor.ticket_id && (
-              <div className="mt-4 pt-3 border-t border-gray-200">
+              <div className="mt-4 pt-3 border-t border-gray-200 dark:border-gray-700">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs text-gray-500">Ticket ID:</span>
-                  <span className="text-xs font-mono text-indigo-600">
+                  <span className="text-xs text-gray-500 dark:text-gray-400">Ticket ID:</span>
+                  <span className="text-xs font-mono text-teal-600 dark:text-teal-400">
                     {doctor.ticket_id.substring(0, 8)}...
                   </span>
                 </div>
                 <div className="mt-2">
-                  <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-green-100 text-green-800">
+                  <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-health-100 dark:bg-health-900 text-health-800 dark:text-health-200">
                     Ticket Created
                   </span>
                 </div>
@@ -112,8 +112,8 @@ export default function DoctorRecommendationCard({ doctors, serviceType }: Docto
         ))}
       </div>
 
-      <div className="mt-4 bg-blue-50 rounded-lg p-4">
-        <p className="text-sm text-blue-800">
+      <div className="mt-4 bg-teal-50 dark:bg-teal-900/30 rounded-lg p-4">
+        <p className="text-sm text-teal-800 dark:text-teal-200">
           <strong>Note:</strong> Tickets have been created for all {doctors.length} doctors. 
           You can view and manage them in your dashboard.
         </p>

@@ -2,23 +2,33 @@
 from datetime import datetime, timedelta
 from typing import Optional
 from jose import JWTError, jwt
-from passlib.context import CryptContext
+import bcrypt
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from backend.src.database.models import Patient, ServicePerson, Admin
 from backend.src.config import settings
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     """Verify a password against a hash."""
-    return pwd_context.verify(plain_password, hashed_password)
+    try:
+        # Ensure password is bytes for bcrypt
+        password_bytes = plain_password.encode('utf-8')
+        hash_bytes = hashed_password.encode('utf-8')
+        return bcrypt.checkpw(password_bytes, hash_bytes)
+    except Exception:
+        return False
 
 
 def get_password_hash(password: str) -> str:
-    """Hash a password."""
-    return pwd_context.hash(password)
+    """Hash a password using bcrypt."""
+    # Ensure password is bytes for bcrypt
+    password_bytes = password.encode('utf-8')
+    # Generate salt and hash
+    salt = bcrypt.gensalt(rounds=12)
+    hashed = bcrypt.hashpw(password_bytes, salt)
+    # Return as string
+    return hashed.decode('utf-8')
 
 
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:
@@ -39,9 +49,16 @@ async def authenticate_patient(db: AsyncSession, phone_number: str, password: st
     patient = result.scalar_one_or_none()
     if not patient:
         return None
-    # For patients, we might use phone verification instead of password
-    # For now, we'll check if password matches a stored hash if available
-    # In production, use OTP or phone verification
+    
+    # Verify password hash if it exists
+    if patient.password_hash:
+        if not verify_password(password, patient.password_hash):
+            return None
+    else:
+        # For existing patients without password_hash, allow login (backward compatibility)
+        # In production, you might want to require password reset
+        pass
+    
     return patient
 
 
