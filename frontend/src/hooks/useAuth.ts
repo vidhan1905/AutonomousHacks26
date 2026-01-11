@@ -44,13 +44,6 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     set({ user: response.user, token: response.access_token })
   },
   
-  patientLogin: async (phoneNumber: string, password: string) => {
-    const response = await authApi.patientLogin(phoneNumber, password)
-    localStorage.setItem('token', response.access_token)
-    saveUserToStorage(response.user)
-    set({ user: response.user, token: response.access_token })
-  },
-  
   register: async (data: { name: string; phone_number: string; email: string; password: string; date_of_birth: string; gender: string }) => {
     const response = await authApi.register(data)
     localStorage.setItem('token', response.access_token)
