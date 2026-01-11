@@ -551,6 +551,16 @@ def route_to_next_doctor_node(state: AgentState) -> AgentState:
                 await session.commit()
                 await session.refresh(existing_ticket)
                 print(f"[WORKFLOW] ✅ Ticket updated and reassigned - Status: {existing_ticket.status}, Step {step_index + 1}/{total_steps}")
+                
+                # Increment workload for the doctor who was assigned this step
+                try:
+                    from backend.src.agents.tools.doctor_tools import increment_doctor_workload
+                    workload_result = increment_doctor_workload(doctor_id)
+                    if workload_result.get("status") != "success":
+                        print(f"[WARNING] Failed to increment workload for doctor {doctor_id}: {workload_result.get('error')}")
+                except Exception as e:
+                    print(f"[WARNING] Error updating workload for doctor {doctor_id}: {e}")
+                
                 return {"status": "updated", "ticket_id": str(existing_ticket.ticket_id)}
             else:
                 # Create new ticket (first step only)
@@ -577,6 +587,16 @@ def route_to_next_doctor_node(state: AgentState) -> AgentState:
                 await session.commit()
                 await session.refresh(ticket)
                 print(f"[WORKFLOW] ✅ Created new ticket {ticket.ticket_id} - Status: {ticket.status}, Step {step_index + 1}/{total_steps}")
+                
+                # Increment workload for the doctor who was assigned this step
+                try:
+                    from backend.src.agents.tools.doctor_tools import increment_doctor_workload
+                    workload_result = increment_doctor_workload(doctor_id)
+                    if workload_result.get("status") != "success":
+                        print(f"[WARNING] Failed to increment workload for doctor {doctor_id}: {workload_result.get('error')}")
+                except Exception as e:
+                    print(f"[WARNING] Error updating workload for doctor {doctor_id}: {e}")
+                
                 return {"status": "created", "ticket_id": str(ticket.ticket_id)}
     
     # Execute get_or_create_ticket
