@@ -290,8 +290,19 @@ async def send_message(
                     # No tool calls, but no content either - this shouldn't happen
                     llm_response = "I'm here to help. How can I assist you today?"
             else:
-                # No LLM messages at all - shouldn't happen
-                llm_response = "I'm processing your request. Please wait."
+                # No LLM messages at all - check if sequential review ticket was created
+                sequential_review_dict = final_state.get("sequential_review", {})
+                if sequential_review_dict.get("chain_id"):
+                    # Sequential review ticket was created - generate appropriate response
+                    from backend.src.agents.state_models import SequentialReviewState
+                    try:
+                        seq_review = SequentialReviewState(**sequential_review_dict)
+                        if seq_review.chain_id:
+                            llm_response = "I've received your request for a complex case review. The review process has been started with the appropriate specialists. You'll be updated as the review progresses."
+                    except:
+                        llm_response = "I'm processing your request. Please wait."
+                else:
+                    llm_response = "I'm processing your request. Please wait."
         
         # ROOT FIX: If tickets were created but we don't have a proper confirmation message,
         # generate one manually to avoid showing old "can't schedule" messages

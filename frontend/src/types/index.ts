@@ -44,6 +44,29 @@ export interface Conversation {
   summary?: string | null
 }
 
+export interface SequentialReviewStep {
+  step_id: string
+  step_index: number
+  step_number: number
+  doctor_id: string
+  doctor_name: string
+  service_type: string
+  status: string
+  review_notes?: string | null
+  review_summary?: string | null
+  started_at?: string | null
+  completed_at?: string | null
+}
+
+export interface SequentialReviewInfo {
+  chain_id: string
+  current_step_index: number
+  current_step_number: number
+  total_steps: number
+  chain_status: string
+  steps: SequentialReviewStep[]
+}
+
 export interface Ticket {
   ticket_id: string
   conversation_id: string
@@ -62,6 +85,7 @@ export interface Ticket {
   completed_at: string | null
   is_sequential_review?: boolean
   sequential_review_chain_id?: string | null
+  sequential_review_info?: SequentialReviewInfo
 }
 
 export interface Appointment {

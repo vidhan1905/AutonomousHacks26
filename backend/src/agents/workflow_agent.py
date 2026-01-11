@@ -514,58 +514,70 @@ def route_to_next_doctor_node(state: AgentState) -> AgentState:
             past_history_summary = f"Patient has {len(patient_history['history_records'])} previous medical records."
     
     async def get_or_create_ticket_async(session_maker=None):
-        """Get existing ticket for chain or create new one."""
+        """Get existing ticket for chain or create new one. Single ticket per chain."""
         if session_maker is None:
             from backend.src.database.connection import create_async_session_maker
             session_maker = create_async_session_maker()
         
         async with session_maker() as session:
-            # Find existing ticket for this chain
+            # Find existing ticket for this chain (should always exist after first step)
             existing_ticket_result = await session.execute(
                 select(Ticket).where(
                     Ticket.sequential_review_chain_id == uuid.UUID(chain_id),
                     Ticket.status != "cancelled"
-                ).order_by(Ticket.created_at.desc())
+                ).order_by(Ticket.created_at.asc())  # Get first created ticket
             )
             existing_ticket = existing_ticket_result.scalar_one_or_none()
             
             if existing_ticket:
-                # Update existing ticket
-                print(f"[WORKFLOW] Updating existing ticket {existing_ticket.ticket_id} for next doctor")
-                print(f"[WORKFLOW]    Step: {step_index + 1}/{total_steps}")
-                print(f"[WORKFLOW]    Doctor: {doctor_name} ({service_type})")
+                # Update existing ticket - reassign to current step's doctor
+                print(f"[WORKFLOW] Updating existing ticket {existing_ticket.ticket_id} for Step {step_index + 1}/{total_steps}")
+                print(f"[WORKFLOW]    Reassigning to: {doctor_name} ({service_type})")
                 print(f"[WORKFLOW]    Description length: {len(description)} chars")
                 print(f"[WORKFLOW]    Has accumulated context: {accumulated_context and accumulated_context != 'No previous reviews.'}")
+                
                 existing_ticket.assigned_to = uuid.UUID(doctor_id)
                 existing_ticket.description = description
                 existing_ticket.llm_summary = llm_summary
                 existing_ticket.service_type = doctor_info.get("service_type", "general consultation")
-                existing_ticket.status = "open"
-                existing_ticket.assigned_at = None  # Reset assignment time
+                # Set status to "assigned" (skip accept/reject flow for sequential reviews)
+                existing_ticket.status = "assigned"
+                existing_ticket.assigned_at = datetime.utcnow()
                 existing_ticket.completed_at = None
-                existing_ticket.accepted_by = None
-                existing_ticket.accepted_at = None
+                existing_ticket.accepted_by = uuid.UUID(doctor_id)  # Auto-accept
+                existing_ticket.accepted_at = datetime.utcnow()
+                existing_ticket.assignment_status = "accepted"
+                
                 await session.commit()
                 await session.refresh(existing_ticket)
-                print(f"[WORKFLOW] ✅ Ticket updated successfully - Status: {existing_ticket.status}, Step info in description: Step {step_index + 1} of {total_steps}")
+                print(f"[WORKFLOW] ✅ Ticket updated and reassigned - Status: {existing_ticket.status}, Step {step_index + 1}/{total_steps}")
                 return {"status": "updated", "ticket_id": str(existing_ticket.ticket_id)}
             else:
-                # Create new ticket (first doctor)
-                from backend.src.agents.tools.ticket_tools import create_ticket
-                ticket_result = create_ticket.invoke({
-                    "patient_id": patient_id,
-                    "conversation_id": conversation_id,
-                    "service_type": doctor_info.get("service_type", "general consultation"),
-                    "description": description,
-                    "patient_details": patient_details,
-                    "past_history_summary": past_history_summary,
-                    "llm_summary": llm_summary,
-                    "priority": 3,
-                    "assigned_to": doctor_id,
-                    "sequential_review_chain_id": chain_id,
-                    "is_sequential_review": True
-                })
-                return ticket_result
+                # Create new ticket (first step only)
+                print(f"[WORKFLOW] Creating new ticket for Step {step_index + 1}/{total_steps}")
+                ticket = Ticket(
+                    conversation_id=uuid.UUID(conversation_id),
+                    patient_id=uuid.UUID(patient_id),
+                    service_type=doctor_info.get("service_type", "general consultation"),
+                    description=description,
+                    priority=3,
+                    patient_details=patient_details,
+                    past_history_summary=past_history_summary,
+                    llm_summary=llm_summary,
+                    assigned_to=uuid.UUID(doctor_id),
+                    sequential_review_chain_id=uuid.UUID(chain_id),
+                    is_sequential_review=True,
+                    status="assigned",  # Auto-assign (skip accept/reject)
+                    assigned_at=datetime.utcnow(),
+                    accepted_by=uuid.UUID(doctor_id),  # Auto-accept
+                    accepted_at=datetime.utcnow(),
+                    assignment_status="accepted"
+                )
+                session.add(ticket)
+                await session.commit()
+                await session.refresh(ticket)
+                print(f"[WORKFLOW] ✅ Created new ticket {ticket.ticket_id} - Status: {ticket.status}, Step {step_index + 1}/{total_steps}")
+                return {"status": "created", "ticket_id": str(ticket.ticket_id)}
     
     # Execute get_or_create_ticket
     ticket_result = run_async_safely(get_or_create_ticket_async, session_maker_param=True)
@@ -592,7 +604,7 @@ def route_to_next_doctor_node(state: AgentState) -> AgentState:
         from backend.src.database.models import SequentialReviewStep
         
         async def link_ticket_to_step_async(session_maker=None):
-            """Async function to link ticket to step."""
+            """Async function to link ticket to current step."""
             if session_maker is None:
                 from backend.src.database.connection import create_async_session_maker
                 session_maker = create_async_session_maker()
@@ -604,10 +616,10 @@ def route_to_next_doctor_node(state: AgentState) -> AgentState:
                 step = step_result.scalar_one_or_none()
                 if step:
                     step.ticket_id = uuid.UUID(ticket_id)
-                    step.status = "pending"  # Set to pending so doctor can accept it
-                    step.started_at = None  # Don't set started_at until doctor accepts
+                    step.status = "pending"  # Will be set to "in_review" when doctor starts
+                    step.started_at = None  # Will be set when doctor starts working
                     await session.commit()
-                    print(f"[WORKFLOW] ✅ Linked ticket {ticket_id} to step {step_id} (status: pending)")
+                    print(f"[WORKFLOW] ✅ Linked ticket {ticket_id} to step {step_id} (Step {step_index + 1}/{total_steps})")
                 else:
                     print(f"[WORKFLOW] ⚠️  WARNING: Step {step_id} not found for linking ticket")
         
@@ -625,6 +637,22 @@ def route_to_next_doctor_node(state: AgentState) -> AgentState:
         state["sequential_review"] = sequential_review.model_dump()
         
         print(f"[WORKFLOW] ✅ Created ticket {ticket_id} for doctor {doctor_name} ({service_type}) - Step {step_index + 1}/{total_steps}")
+        
+        # Generate a confirmation message for the patient
+        if step_index == 0:
+            # First step - initial ticket creation
+            confirmation_msg = f"I've received your request for a complex case review. Your case requires input from {total_steps} specialist(s). "
+            confirmation_msg += f"The review process has been started with {doctor_name} ({service_type}). "
+            confirmation_msg += "You'll be updated as the review progresses through each specialist."
+        else:
+            # Subsequent step - ticket was reassigned
+            confirmation_msg = f"Your case has been forwarded to the next specialist ({doctor_name} - {service_type}). "
+            confirmation_msg += f"Step {step_index + 1} of {total_steps} is now in progress."
+        
+        # Add AI message to state
+        from langchain_core.messages import AIMessage
+        state["messages"] = state.get("messages", []) + [AIMessage(content=confirmation_msg)]
+        
         state["next_action"] = "end"  # Wait for doctor to review
     else:
         error_msg = ticket_result.get("error", "Unknown error")

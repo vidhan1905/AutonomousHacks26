@@ -338,18 +338,101 @@ export default function TicketDetailPage() {
             )}
 
             {/* Sequential Review Progress Card */}
-            {ticket.is_sequential_review && ticket.llm_summary && (
+            {ticket.is_sequential_review && ticket.sequential_review_info && (
               <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
                 <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-                  Sequential Review Progress
+                  Sequential Review Progress ({ticket.sequential_review_info.current_step_number}/{ticket.sequential_review_info.total_steps})
                 </h2>
-                <div className="bg-blue-50 dark:bg-blue-900/30 rounded-lg p-4 border border-blue-200 dark:border-blue-800">
-                  <p className="text-gray-900 dark:text-gray-100 whitespace-pre-wrap text-sm">
-                    {ticket.llm_summary}
-                  </p>
+                
+                {/* Step Progress Indicator */}
+                <div className="mb-6">
+                  <div className="relative">
+                    {/* Connection line */}
+                    <div className="absolute top-5 left-10 right-10 h-0.5 bg-gray-300 dark:bg-gray-600 z-0" />
+                    {/* Completed steps line - calculate based on number of completed steps */}
+                    {(() => {
+                      const completedSteps = ticket.sequential_review_info.steps.filter(step => step.status === 'completed').length;
+                      const totalSteps = ticket.sequential_review_info.steps.length;
+                      // Only show green line if there are completed steps and more than 1 step total
+                      if (completedSteps > 0 && totalSteps > 1) {
+                        // Calculate width: (completedSteps / (totalSteps - 1)) gives progress between steps
+                        // If all steps are completed, width should be 100%
+                        const progressRatio = totalSteps > 1 ? (completedSteps / (totalSteps - 1)) : 1;
+                        const widthPercent = Math.min(progressRatio * 100, 100);
+                        return (
+                          <div 
+                            className="absolute top-5 left-10 h-0.5 bg-green-500 z-0"
+                            style={{ 
+                              width: `calc(${widthPercent}% - 40px)`
+                            }}
+                          />
+                        );
+                      }
+                      return null;
+                    })()}
+                    
+                    <div className="flex items-start justify-between relative z-10">
+                      {ticket.sequential_review_info.steps.map((step) => (
+                        <div key={step.step_id} className="flex-1 flex flex-col items-center">
+                          <div className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold ${
+                            step.status === 'completed' 
+                              ? 'bg-green-500 text-white' 
+                              : step.status === 'in_review' 
+                              ? 'bg-yellow-500 text-white' 
+                              : step.step_index === ticket.sequential_review_info!.current_step_index && ticket.status === 'assigned'
+                              ? 'bg-blue-500 text-white'
+                              : 'bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-300'
+                          }`}>
+                            {step.step_number}
+                          </div>
+                          <p className="text-xs text-gray-600 dark:text-gray-400 mt-2 text-center max-w-[100px] truncate">
+                            {step.doctor_name}
+                          </p>
+                          <p className="text-xs text-gray-500 dark:text-gray-500 mt-1 text-center">
+                            {step.status === 'completed' ? 'Done' : 
+                             step.status === 'in_review' ? 'In Progress' :
+                             step.step_index === ticket.sequential_review_info!.current_step_index && ticket.status === 'assigned' ? 'Ready' :
+                             'Pending'}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 </div>
-                <p className="text-sm text-gray-600 dark:text-gray-400 mt-3">
-                  This is a multi-doctor sequential review. Your review will be shared with the next doctor in the chain.
+                
+                {/* Previous Steps' Review Notes */}
+                {ticket.sequential_review_info.steps.filter(step => step.status === 'completed' && step.review_notes).length > 0 && (
+                  <div className="mt-6 space-y-4">
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Previous Reviews</h3>
+                    {ticket.sequential_review_info.steps
+                      .filter(step => step.status === 'completed' && step.review_notes)
+                      .map(step => (
+                        <div key={step.step_id} className="bg-blue-50 dark:bg-blue-900/30 rounded-lg p-4 border border-blue-200 dark:border-blue-800">
+                          <div className="flex items-center justify-between mb-2">
+                            <h4 className="font-medium text-gray-900 dark:text-white">
+                              Step {step.step_number}: {step.doctor_name} ({step.service_type})
+                            </h4>
+                            {step.completed_at && (
+                              <p className="text-xs text-gray-600 dark:text-gray-400">
+                                {new Date(step.completed_at).toLocaleDateString()}
+                              </p>
+                            )}
+                          </div>
+                          {step.review_summary && (
+                            <p className="text-sm text-gray-700 dark:text-gray-300 mb-2 italic">
+                              Summary: {step.review_summary}
+                            </p>
+                          )}
+                          <p className="text-sm text-gray-900 dark:text-gray-100 whitespace-pre-wrap">
+                            {step.review_notes}
+                          </p>
+                        </div>
+                      ))}
+                  </div>
+                )}
+                
+                <p className="text-sm text-gray-600 dark:text-gray-400 mt-4">
+                  This is a multi-doctor sequential review. Your review notes will be shared with the next doctor in the chain.
                 </p>
               </div>
             )}
@@ -372,8 +455,8 @@ export default function TicketDetailPage() {
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 sticky top-4">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Actions</h3>
               
-              {/* Accept/Reject Buttons */}
-              {ticket.status === 'open' && (
+              {/* Accept/Reject Buttons - Hidden for sequential review tickets */}
+              {ticket.status === 'open' && !ticket.is_sequential_review && (
                 <div className="space-y-3">
                   <button
                     onClick={() => handleAcceptReject('accept')}
@@ -391,6 +474,15 @@ export default function TicketDetailPage() {
                   </button>
                   <p className="text-xs text-gray-500 dark:text-gray-400 text-center mt-2">
                     Accepting will automatically cancel tickets for other doctors in this recommendation
+                  </p>
+                </div>
+              )}
+              
+              {/* Sequential Review Info */}
+              {ticket.is_sequential_review && ticket.status === 'assigned' && (
+                <div className="mb-4 p-3 bg-blue-50 dark:bg-blue-900/30 rounded-lg border border-blue-200 dark:border-blue-800">
+                  <p className="text-sm text-blue-800 dark:text-blue-200">
+                    This ticket is automatically assigned to you. Click "Start Work" to begin your review.
                   </p>
                 </div>
               )}
