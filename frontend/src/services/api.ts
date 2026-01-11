@@ -10,14 +10,32 @@ const api = axios.create({
   },
 })
 
-// Add token to requests
+// Add token to requests - check both user types
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token')
+  // Try to get token from patient or service_person storage
+  const patientToken = localStorage.getItem('token_patient')
+  const serviceToken = localStorage.getItem('token_service_person')
+  const token = patientToken || serviceToken
+  
   if (token) {
     config.headers.Authorization = `Bearer ${token}`
   }
   return config
 })
+
+// Handle 401 errors (unauthorized) - don't auto-logout as it might be a tab sync issue
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    // Only handle 401 errors
+    if (error.response?.status === 401) {
+      // Don't auto-logout here - let the component handle it
+      // The storage sync will handle state updates across tabs
+      console.warn('Unauthorized request - token may be invalid or expired')
+    }
+    return Promise.reject(error)
+  }
+)
 
 // Auth endpoints
 export const authApi = {
