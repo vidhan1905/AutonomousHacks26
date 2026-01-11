@@ -672,6 +672,15 @@ async def update_ticket_status(
                             ticket.status = "completed"
                             ticket.completed_at = datetime.utcnow()
                             print(f"[API] ✅ All steps completed. Marking ticket as completed.")
+                            
+                            # Decrement workload for the doctor who completed this step
+                            try:
+                                from backend.src.agents.tools.doctor_tools import decrement_doctor_workload
+                                workload_result = decrement_doctor_workload(doctor_id_str)
+                                if workload_result.get("status") != "success":
+                                    print(f"[WARNING] Failed to decrement workload for doctor {doctor_id_str}: {workload_result.get('error')}")
+                            except Exception as e:
+                                print(f"[WARNING] Error decrementing workload for doctor {doctor_id_str}: {e}")
                         else:
                             # More steps remaining - update ticket for next step
                             next_step_result_data = get_next_doctor_in_chain.invoke({"chain_id": str(chain.chain_id)})
@@ -731,6 +740,24 @@ async def update_ticket_status(
                                         next_step.status = "pending"
                                 
                                 print(f"[API] ✅ Step {step.step_index + 1} completed. Ticket reassigned to Step {next_step_index + 1}/{total_steps}")
+                                
+                                # Decrement workload for the doctor who completed this step
+                                try:
+                                    from backend.src.agents.tools.doctor_tools import decrement_doctor_workload
+                                    workload_result = decrement_doctor_workload(doctor_id_str)
+                                    if workload_result.get("status") != "success":
+                                        print(f"[WARNING] Failed to decrement workload for doctor {doctor_id_str}: {workload_result.get('error')}")
+                                except Exception as e:
+                                    print(f"[WARNING] Error decrementing workload for doctor {doctor_id_str}: {e}")
+                                
+                                # Increment workload for the next doctor who is receiving the ticket
+                                try:
+                                    from backend.src.agents.tools.doctor_tools import increment_doctor_workload
+                                    workload_result = increment_doctor_workload(next_doctor_id)
+                                    if workload_result.get("status") != "success":
+                                        print(f"[WARNING] Failed to increment workload for next doctor {next_doctor_id}: {workload_result.get('error')}")
+                                except Exception as e:
+                                    print(f"[WARNING] Error incrementing workload for next doctor {next_doctor_id}: {e}")
                             else:
                                 print(f"[API] ⚠️  Error getting next doctor: {next_step_result_data.get('error')}")
                                 # Fallback: mark ticket as assigned anyway
@@ -752,6 +779,20 @@ async def update_ticket_status(
         
         if request.status == "completed":
             ticket.completed_at = datetime.utcnow()
+            
+            # Decrement workload for the doctor who completed the ticket
+            if user_type == "service_person":
+                # Use ticket's assigned_to or accepted_by to identify the doctor
+                doctor_id = str(ticket.accepted_by) if ticket.accepted_by else str(ticket.assigned_to) if ticket.assigned_to else None
+                
+                if doctor_id:
+                    try:
+                        from backend.src.agents.tools.doctor_tools import decrement_doctor_workload
+                        workload_result = decrement_doctor_workload(doctor_id)
+                        if workload_result.get("status") != "success":
+                            print(f"[WARNING] Failed to decrement workload for doctor {doctor_id}: {workload_result.get('error')}")
+                    except Exception as e:
+                        print(f"[WARNING] Error decrementing workload for doctor {doctor_id}: {e}")
     else:
         # For sequential reviews with status="completed", status was already handled above
         old_status = ticket.status
@@ -931,6 +972,16 @@ async def accept_reject_ticket(
         
         await db.commit()
         await db.refresh(ticket)
+        
+        # Update doctor workload - increment when ticket is accepted
+        try:
+            from backend.src.agents.tools.doctor_tools import increment_doctor_workload
+            workload_result = increment_doctor_workload(str(service_person_id))
+            if workload_result.get("status") != "success":
+                print(f"[WARNING] Failed to increment workload for doctor {service_person_id}: {workload_result.get('error')}")
+        except Exception as e:
+            print(f"[WARNING] Error updating workload for doctor {service_person_id}: {e}")
+            # Don't fail ticket acceptance if workload update fails
         
         return {
             "ticket_id": str(ticket.ticket_id),

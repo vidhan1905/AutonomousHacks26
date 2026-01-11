@@ -494,26 +494,52 @@ async def _rank_doctors_with_llm_async(
         # Format patient history for prompt
         # ROOT FIX: Use 'history_records' field (not 'history') from get_patient_history tool
         history_text = "No previous history available."
+        history_summary = ""
         if patient_history and patient_history.get("history_records"):
             history_records = patient_history.get("history_records", [])
             if history_records:
                 history_lines = []
+                service_types_seen = {}
+                diagnoses_seen = {}
+                
                 for record in history_records[:10]:  # Limit to last 10 records
-                    history_lines.append(
-                        f"- {record.get('visit_date', 'Unknown date')}: "
-                        f"{record.get('service_type', 'Unknown')} - "
-                        f"{record.get('diagnosis', 'No diagnosis')}"
-                    )
+                    service_type = record.get('service_type', 'Unknown')
+                    diagnosis = record.get('diagnosis', 'No diagnosis')
+                    treatment = record.get('treatment', '')
+                    
+                    # Track service types and diagnoses for pattern analysis
+                    service_types_seen[service_type] = service_types_seen.get(service_type, 0) + 1
+                    if diagnosis and diagnosis != 'No diagnosis':
+                        diagnoses_seen[diagnosis] = diagnoses_seen.get(diagnosis, 0) + 1
+                    
+                    history_line = f"- {record.get('visit_date', 'Unknown date')}: {service_type}"
+                    if diagnosis and diagnosis != 'No diagnosis':
+                        history_line += f" - Diagnosis: {diagnosis}"
+                    if treatment:
+                        history_line += f" - Treatment: {treatment[:100]}"  # Limit treatment length
+                    history_lines.append(history_line)
+                
                 history_text = "\n".join(history_lines)
+                
+                # Add summary of patterns
+                if service_types_seen:
+                    common_services = sorted(service_types_seen.items(), key=lambda x: x[1], reverse=True)[:3]
+                    history_summary = f"\n\nPatient History Patterns:\n"
+                    history_summary += f"- Most frequent service types: {', '.join([f'{s} ({c}x)' for s, c in common_services])}\n"
+                    if diagnoses_seen:
+                        common_diagnoses = sorted(diagnoses_seen.items(), key=lambda x: x[1], reverse=True)[:3]
+                        history_summary += f"- Recurring conditions: {', '.join([f'{d} ({c}x)' for d, c in common_diagnoses])}"
         elif patient_history and patient_history.get("status") == "schema_error":
             # Schema error - include in prompt for context
             error_msg = patient_history.get("error", "Schema error retrieving history")
             history_text = f"Note: Unable to retrieve patient history due to schema issue: {error_msg}"
         
-        # Format doctors list for prompt
+        # Format doctors list for prompt with workload information
         doctors_text = "\n".join([
             f"- {doc['name']} (ID: {doc['doctor_id']}): {doc['service_type']}"
             f"{' - ' + doc['specialization'] if doc.get('specialization') else ''}"
+            f" | Workload: {doc.get('current_workload', 0)}/{doc.get('max_workload', 10)} "
+            f"({(doc.get('current_workload', 0) / doc.get('max_workload', 10) * 100) if doc.get('max_workload', 10) > 0 else 0:.0f}% capacity)"
             for doc in doctors
         ])
         
@@ -523,31 +549,43 @@ async def _rank_doctors_with_llm_async(
         prompt = ChatPromptTemplate.from_messages([
             ("system", f"""You are a medical assistant helping to rank available doctors for a patient.
 
-ROOT FIX: All doctors are already filtered by service_type ({service_type}) and are active.
+All doctors are already filtered by service_type ({service_type}) and are active with available capacity.
 Rank these filtered doctors based on:
 1. **Specialization match with patient history** - Doctors whose specialization matches patient's past conditions get higher priority
 2. **Patient's current symptoms/needs** - Relevance to the specific medical condition
-3. **Doctor expertise and experience** - Consider the doctor's background and specialization details
+3. **Workload capacity** - Doctors with lower current_workload relative to max_workload get priority (prevents overload and ensures fair distribution)
+4. **Doctor expertise and experience** - Consider the doctor's background and specialization details
 
 IMPORTANT RANKING CRITERIA (in priority order):
 1. Specialization directly matching patient history (highest priority)
 2. Specialization relevant to current symptoms and needs
-3. General expertise and experience in the service area
+3. Workload capacity - doctors with lower workload percentage (current_workload/max_workload) get higher rank when specialization match is similar
+4. General expertise and experience in the service area
+
+WORKLOAD CONSIDERATION:
+- When two doctors have similar specialization match, prefer the one with lower workload
+- Workload is shown as "current_workload/max_workload (X% capacity)" for each doctor
+- Lower percentage means more available capacity and should be ranked higher when other factors are equal
 
 Rank ALL {len(doctors)} doctors from most suitable (1) to least suitable ({len(doctors)}).
-Provide clear, concise reasoning for each doctor (1-2 sentences each).
+Provide clear, concise reasoning for each doctor (1-2 sentences each), mentioning specialization match, workload capacity, and expertise.
 Then select the top {top_n} from your rankings."""),
             ("human", f"""Patient Medical History:
-{{history}}
+{{history}}{{history_summary}}
 
 Current Request: {{request}}
 
 Service Type Needed: {service_type}{date_time_context}
 
-Available Doctors ({len(doctors)} active doctors filtered by service_type '{service_type}'):
+Available Doctors ({len(doctors)} active doctors filtered by service_type '{service_type}' with available capacity):
 {{doctors}}
 
-Please rank ALL {len(doctors)} doctors based on specialization match with patient history and relevance to the current request, then provide the top {top_n} most suitable doctors with clear reasoning.""")
+Please rank ALL {len(doctors)} doctors based on:
+1. Specialization match with patient history and current symptoms
+2. Workload capacity (prefer doctors with lower workload when specialization match is similar)
+3. General expertise
+
+Then provide the top {top_n} most suitable doctors with clear reasoning that includes workload consideration.""")
         ])
         
         # Limit to top 10 doctors if more than 10 provided
@@ -557,6 +595,7 @@ Please rank ALL {len(doctors)} doctors based on specialization match with patien
         chain = prompt | structured_llm
         result = chain.invoke({
             "history": history_text,
+            "history_summary": history_summary,
             "request": user_request,
             "service_type": service_type,
             "doctors": doctors_text
@@ -818,3 +857,154 @@ def create_multiple_tickets(
     except Exception as e:
         import traceback
         return {"status": "error", "error": f"Exception in create_multiple_tickets: {str(e)}\n{traceback.format_exc()}"}
+
+
+async def _increment_doctor_workload_async(doctor_id: str, session_maker=None) -> dict:
+    """Increment doctor's current workload by 1.
+    
+    Args:
+        doctor_id: Service person UUID string
+        session_maker: Optional async session maker
+    
+    Returns:
+        Dictionary with status and updated workload info
+    """
+    if session_maker is None:
+        from backend.src.database.connection import async_session_maker
+        session_maker = async_session_maker
+    
+    async with session_maker() as session:
+        try:
+            # Get doctor
+            result = await session.execute(
+                select(ServicePerson).where(ServicePerson.service_person_id == uuid.UUID(doctor_id))
+            )
+            doctor = result.scalar_one_or_none()
+            
+            if not doctor:
+                return {"status": "error", "error": f"Doctor {doctor_id} not found"}
+            
+            # Check if workload would exceed max
+            if doctor.current_workload >= doctor.max_workload:
+                return {
+                    "status": "error",
+                    "error": f"Doctor {doctor_id} already at max workload ({doctor.current_workload}/{doctor.max_workload})",
+                    "current_workload": doctor.current_workload,
+                    "max_workload": doctor.max_workload
+                }
+            
+            # Increment workload
+            doctor.current_workload += 1
+            doctor.workload_updated_at = datetime.utcnow()
+            
+            await session.commit()
+            await session.refresh(doctor)
+            
+            print(f"[WORKLOAD] Incremented workload for doctor {doctor_id} ({doctor.name}): {doctor.current_workload - 1} -> {doctor.current_workload}/{doctor.max_workload}")
+            
+            return {
+                "status": "success",
+                "doctor_id": doctor_id,
+                "current_workload": doctor.current_workload,
+                "max_workload": doctor.max_workload,
+                "updated_at": doctor.workload_updated_at.isoformat() if doctor.workload_updated_at else None
+            }
+        except Exception as e:
+            await session.rollback()
+            import traceback
+            error_msg = f"Error incrementing workload for doctor {doctor_id}: {str(e)}\n{traceback.format_exc()}"
+            print(f"[ERROR] {error_msg}")
+            return {"status": "error", "error": error_msg}
+
+
+async def _decrement_doctor_workload_async(doctor_id: str, session_maker=None) -> dict:
+    """Decrement doctor's current workload by 1 (minimum 0).
+    
+    Args:
+        doctor_id: Service person UUID string
+        session_maker: Optional async session maker
+    
+    Returns:
+        Dictionary with status and updated workload info
+    """
+    if session_maker is None:
+        from backend.src.database.connection import async_session_maker
+        session_maker = async_session_maker
+    
+    async with session_maker() as session:
+        try:
+            # Get doctor
+            result = await session.execute(
+                select(ServicePerson).where(ServicePerson.service_person_id == uuid.UUID(doctor_id))
+            )
+            doctor = result.scalar_one_or_none()
+            
+            if not doctor:
+                return {"status": "error", "error": f"Doctor {doctor_id} not found"}
+            
+            # Decrement workload (minimum 0)
+            old_workload = doctor.current_workload
+            doctor.current_workload = max(0, doctor.current_workload - 1)
+            doctor.workload_updated_at = datetime.utcnow()
+            
+            await session.commit()
+            await session.refresh(doctor)
+            
+            if old_workload != doctor.current_workload:
+                print(f"[WORKLOAD] Decremented workload for doctor {doctor_id} ({doctor.name}): {old_workload} -> {doctor.current_workload}/{doctor.max_workload}")
+            else:
+                print(f"[WORKLOAD] Workload already at minimum (0) for doctor {doctor_id} ({doctor.name})")
+            
+            return {
+                "status": "success",
+                "doctor_id": doctor_id,
+                "current_workload": doctor.current_workload,
+                "max_workload": doctor.max_workload,
+                "updated_at": doctor.workload_updated_at.isoformat() if doctor.workload_updated_at else None
+            }
+        except Exception as e:
+            await session.rollback()
+            import traceback
+            error_msg = f"Error decrementing workload for doctor {doctor_id}: {str(e)}\n{traceback.format_exc()}"
+            print(f"[ERROR] {error_msg}")
+            return {"status": "error", "error": error_msg}
+
+
+def increment_doctor_workload(doctor_id: str) -> dict:
+    """Increment a doctor's current workload by 1.
+    
+    Args:
+        doctor_id: Service person UUID string
+    
+    Returns:
+        Dictionary with status and updated workload info
+    """
+    try:
+        return run_async_safely(
+            _increment_doctor_workload_async,
+            doctor_id,
+            session_maker_param=True
+        )
+    except Exception as e:
+        import traceback
+        return {"status": "error", "error": f"Exception in increment_doctor_workload: {str(e)}\n{traceback.format_exc()}"}
+
+
+def decrement_doctor_workload(doctor_id: str) -> dict:
+    """Decrement a doctor's current workload by 1 (minimum 0).
+    
+    Args:
+        doctor_id: Service person UUID string
+    
+    Returns:
+        Dictionary with status and updated workload info
+    """
+    try:
+        return run_async_safely(
+            _decrement_doctor_workload_async,
+            doctor_id,
+            session_maker_param=True
+        )
+    except Exception as e:
+        import traceback
+        return {"status": "error", "error": f"Exception in decrement_doctor_workload: {str(e)}\n{traceback.format_exc()}"}
