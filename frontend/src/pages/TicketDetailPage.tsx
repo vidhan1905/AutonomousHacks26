@@ -23,7 +23,7 @@ const statusColors = {
 export default function TicketDetailPage() {
   const { ticketId } = useParams<{ ticketId: string }>()
   const navigate = useNavigate()
-  const { logout } = useAuthStore()
+  const { logout, user } = useAuthStore()
   const [ticket, setTicket] = useState<Ticket | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -479,23 +479,78 @@ export default function TicketDetailPage() {
               )}
               
               {/* Sequential Review Info */}
-              {ticket.is_sequential_review && ticket.status === 'assigned' && (
-                <div className="mb-4 p-3 bg-blue-50 dark:bg-blue-900/30 rounded-lg border border-blue-200 dark:border-blue-800">
-                  <p className="text-sm text-blue-800 dark:text-blue-200">
-                    This ticket is automatically assigned to you. Click "Start Work" to begin your review.
-                  </p>
-                </div>
-              )}
+              {ticket.is_sequential_review && ticket.status === 'assigned' && (() => {
+                // Only show message if ticket is assigned to current user and current step is not completed
+                if (ticket.sequential_review_info && user && user.type === 'service_person') {
+                  // Check if ticket is assigned to current user
+                  if (ticket.assigned_to && ticket.assigned_to !== user.id) {
+                    return null
+                  }
+                  
+                  const currentStep = ticket.sequential_review_info.steps.find(
+                    step => step.step_index === ticket.sequential_review_info!.current_step_index
+                  )
+                  if (currentStep && currentStep.status === 'completed') {
+                    return null
+                  }
+                  
+                  // Only show if current user's step is the current step
+                  const userStep = ticket.sequential_review_info.steps.find(
+                    step => step.doctor_id === user.id
+                  )
+                  if (userStep && userStep.step_index !== ticket.sequential_review_info.current_step_index) {
+                    return null
+                  }
+                }
+                return (
+                  <div className="mb-4 p-3 bg-blue-50 dark:bg-blue-900/30 rounded-lg border border-blue-200 dark:border-blue-800">
+                    <p className="text-sm text-blue-800 dark:text-blue-200">
+                      This ticket is automatically assigned to you. Click "Start Work" to begin your review.
+                    </p>
+                  </div>
+                )
+              })()}
 
               {/* Status Update Buttons */}
               {ticket.status === 'assigned' && (
-                <button
-                  onClick={() => handleUpdateStatus('in_progress')}
-                  disabled={actionLoading}
-                  className="w-full px-4 py-3 bg-yellow-600 text-white rounded-md hover:bg-yellow-700 font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                >
-                  {actionLoading ? 'Processing...' : 'Start Work'}
-                </button>
+                (() => {
+                  // For sequential review tickets, only show "Start Work" if:
+                  // 1. The ticket is assigned to the current user
+                  // 2. The current step is not completed
+                  if (ticket.is_sequential_review && ticket.sequential_review_info && user && user.type === 'service_person') {
+                    // Check if ticket is assigned to current user
+                    if (ticket.assigned_to && ticket.assigned_to !== user.id) {
+                      return null
+                    }
+                    
+                    // Find the current step
+                    const currentStep = ticket.sequential_review_info.steps.find(
+                      step => step.step_index === ticket.sequential_review_info!.current_step_index
+                    )
+                    
+                    // Don't show button if current step is already completed
+                    if (currentStep && currentStep.status === 'completed') {
+                      return null
+                    }
+                    
+                    // Only show if current user's step is the current step
+                    const userStep = ticket.sequential_review_info.steps.find(
+                      step => step.doctor_id === user.id
+                    )
+                    if (userStep && userStep.step_index !== ticket.sequential_review_info.current_step_index) {
+                      return null
+                    }
+                  }
+                  return (
+                    <button
+                      onClick={() => handleUpdateStatus('in_progress')}
+                      disabled={actionLoading}
+                      className="w-full px-4 py-3 bg-yellow-600 text-white rounded-md hover:bg-yellow-700 font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    >
+                      {actionLoading ? 'Processing...' : 'Start Work'}
+                    </button>
+                  )
+                })()
               )}
 
               {ticket.status === 'in_progress' && (

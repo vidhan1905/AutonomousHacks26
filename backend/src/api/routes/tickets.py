@@ -451,6 +451,14 @@ async def update_ticket_status(
             step = step_result.scalar_one_or_none()
             
             if step:
+                # Verify that the current doctor is assigned to this step
+                current_doctor_id = current_user["user"].service_person_id
+                if step.doctor_id != current_doctor_id:
+                    raise HTTPException(
+                        status_code=403,
+                        detail=f"This step is assigned to a different doctor. Step {step.step_index + 1} is assigned to another doctor, not you."
+                    )
+                
                 # Current doctor is reviewing - extract review notes and trigger workflow
                 review_notes = request.comment or ""
                 
@@ -472,8 +480,25 @@ async def update_ticket_status(
                     
                     if review_result.get("status") == "success":
                         # Step is now completed, chain is advanced
-                        # Refresh chain to get updated current_step_index
-                        await db.refresh(chain)
+                        # Re-query step and chain to get updated values from submit_doctor_review (which uses separate session)
+                        chain_result_after = await db.execute(
+                            select(SequentialReviewChain).where(
+                                SequentialReviewChain.chain_id == chain.chain_id
+                            )
+                        )
+                        chain_after = chain_result_after.scalar_one_or_none()
+                        
+                        step_result_after = await db.execute(
+                            select(SequentialReviewStep).where(
+                                SequentialReviewStep.step_id == step.step_id
+                            )
+                        )
+                        step_after = step_result_after.scalar_one_or_none()
+                        
+                        if chain_after:
+                            chain = chain_after
+                        if step_after:
+                            step = step_after
                         
                         # Check if more steps remain
                         total_steps = review_result.get("total_steps", 0)
