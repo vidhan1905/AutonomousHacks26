@@ -123,23 +123,63 @@ async def send_message(
     checkpointer = await get_checkpointer()
     graph = await get_graph()
     
-    # Configure for checkpointer: use conversation_id as thread_id
-    config = {
-        "configurable": {"thread_id": conversation_id},
-        "recursion_limit": 100
-    }
+    # Patient is only verified if verification has been completed in THIS conversation
+    # For the first message, always start with False - LLM must verify first
+    # Even if conversation.patient_id exists (from login), we still need to verify in this conversation
+    if is_first_message:
+        patient_verified = False  # Always False for first message, must verify
+    else:
+        patient_verified = verification_completed and conversation.patient_id is not None
     
-    # Try to load existing state from checkpointer
-    existing_state = None
-    try:
-        checkpoint = await checkpointer.aget({"configurable": {"thread_id": conversation_id}})
-        if checkpoint and checkpoint.get("channel_values"):
-            existing_state = checkpoint["channel_values"]
-            print(f"[STATE LOAD] Loaded existing state from checkpointer")
-    except Exception as e:
-        # No existing checkpoint - this is a new conversation
-        print(f"[STATE LOAD] No existing state found (new conversation): {e}")
-        existing_state = None
+    # Extract patient info from previous messages if available
+    history_shown = False  # Detect if history was already shown
+    waiting_for_datetime = False  # Detect if we're waiting for date/time
+    ranked_doctors = None  # Detect if doctors were already ranked
+    service_type_determined = None  # Detect if service type was determined
+    appointment_datetime = None  # Detect if appointment datetime was provided
+    user_request = None  # Detect user's original request
+    
+    for msg in previous_messages:
+        if msg.sender_type == "patient":
+            message_history.append(HumanMessage(content=msg.content))
+            # Try to extract datetime from patient messages if we're waiting for it
+            if waiting_for_datetime and not appointment_datetime:
+                # Try to extract datetime using the same logic as the agent
+                from backend.src.agents.conversation_agent import extract_datetime_from_message
+                extracted = extract_datetime_from_message(msg.content)
+                if extracted:
+                    appointment_datetime = extracted
+        elif msg.sender_type == "llm":
+            message_history.append(AIMessage(content=msg.content))
+            # Check if this LLM message shows history
+            if patient_verified and msg.content:
+                history_indicators = ["medical history", "visit history", "previous", "past history", "history summary", "what help do you need"]
+                if any(indicator.lower() in msg.content.lower() for indicator in history_indicators):
+                    history_shown = True
+                # Check if we're waiting for date/time
+                if "what date and time would work best" in msg.content.lower() or "provide your preferred date and time" in msg.content.lower() or "date and time would work" in msg.content.lower() or "preferred date and time" in msg.content.lower():
+                    waiting_for_datetime = True
+                # Check if doctors were ranked (look for ranking indicators or metadata)
+                if msg.message_metadata and isinstance(msg.message_metadata, dict):
+                    # Try to extract ranked doctors from metadata if available
+                    if msg.message_metadata.get("ranked_doctors"):
+                        ranked_doctors = msg.message_metadata.get("ranked_doctors")
+                    if msg.message_metadata.get("service_type"):
+                        service_type_determined = msg.message_metadata.get("service_type")
+                    if msg.message_metadata.get("waiting_for_datetime"):
+                        waiting_for_datetime = msg.message_metadata.get("waiting_for_datetime")
+                    if msg.message_metadata.get("appointment_datetime"):
+                        appointment_datetime = msg.message_metadata.get("appointment_datetime")
+                    if msg.message_metadata.get("user_request"):
+                        user_request = msg.message_metadata.get("user_request")
+                # Also check message content for indicators
+                if "rank #" in msg.content.lower() or ("top" in msg.content.lower() and "doctor" in msg.content.lower()):
+                    # If metadata doesn't have it, at least mark that we're in doctor recommendation flow
+                    if not ranked_doctors:
+                        # We can't extract from content, but we know doctors were ranked
+                        pass
+                if "what date and time would work best" in msg.content.lower() or "provide your preferred date and time" in msg.content.lower():
+                    waiting_for_datetime = True
     
     # Create base initial state with authenticated patient info
     base_state = create_initial_state(
@@ -207,12 +247,27 @@ async def send_message(
         initial_state = base_state
         print(f"[STATE MERGE] New conversation - starting fresh with authenticated patient")
     
-    # Log user input
-    print(f"\n{'='*80}")
-    print(f"[USER INPUT] Conversation: {conversation_id}")
-    print(f"[USER INPUT] Patient ID: {conversation.patient_id}")
-    print(f"[USER INPUT] Message: {request.content}")
-    print(f"{'='*80}\n")
+    # Initialize agent state with conversation history
+    initial_state: AgentState = {
+        "conversation_id": conversation_id,
+        "patient_id": str(conversation.patient_id) if conversation.patient_id else None,
+        "patient_verified": patient_verified,
+        "messages": message_history,
+        "collected_info": collected_info,
+        "required_fields_missing": [] if patient_verified else ["name", "phone", "date_of_birth"],
+        "retry_count": {},
+        "patient_history": None,
+        "summary": None,
+        "ticket_created": False,
+        "next_action": "continue" if patient_verified else "collect_info",
+        "history_shown": history_shown,  # Preserve history_shown from previous messages
+        "service_type_determined": service_type_determined,  # Preserve service_type from previous messages
+        "ranked_doctors": ranked_doctors,  # Preserve ranked_doctors from previous messages
+        "doctor_tickets_created": False,
+        "waiting_for_appointment_datetime": waiting_for_datetime,  # Preserve waiting_for_datetime from previous messages
+        "appointment_datetime": appointment_datetime,  # Preserve appointment_datetime from previous messages
+        "user_request": user_request  # Preserve user_request from previous messages
+    }
     
     try:
         # Run agent - checkpointer will save state automatically
@@ -357,11 +412,9 @@ async def send_message(
         doctor_tickets = ticket_creation.doctor_tickets or []
         
         doctor_tickets_created = final_state.get("doctor_tickets_created", False)
-        
-        appointment_prefs_dict = final_state.get("appointment_preferences", {})
-        from backend.src.agents.state_models import AppointmentPreferences
-        appointment_prefs = AppointmentPreferences(**appointment_prefs_dict)
-        service_type_determined = appointment_prefs.service_type
+        service_type_determined = final_state.get("service_type_determined")
+        doctor_tickets = final_state.get("doctor_tickets", [])
+        waiting_for_datetime = final_state.get("waiting_for_appointment_datetime", False)
         
         is_doctor_recommendation = (
             doctor_tickets_created and 
@@ -369,39 +422,17 @@ async def send_message(
             len(ranked_doctors) > 0
         )
         
-        # Log tool calls and state information
-        from langchain_core.messages import ToolMessage
-        patient_verified = final_state.get("patient_verified", False)
-        all_messages = final_state.get("messages", [])
-        tool_messages = [msg for msg in all_messages if isinstance(msg, ToolMessage)]
-        
-        if tool_messages:
-            tool_names = []
-            for tool_msg in tool_messages[-5:]:  # Last 5 tool calls
-                tool_name = str(getattr(tool_msg, 'name', 'unknown'))
-                if tool_name and tool_name not in tool_names:
-                    tool_names.append(tool_name)
-            
-            if tool_names:
-                print(f"[TOOL CALLS] Tools used: {', '.join(tool_names)}")
-        
-        print(f"[STATE] Patient verified: {patient_verified}")
-        if service_type_determined:
-            print(f"[STATE] Service type: {service_type_determined}")
-        if doctor_tickets_created:
-            print(f"[STATE] Doctor tickets created: {len(doctor_tickets)}")
-        
-        # Log LLM output
-        print(f"\n{'='*80}")
-        print(f"[LLM OUTPUT] Conversation: {conversation_id}")
-        print(f"[LLM OUTPUT] Response: {llm_response[:500]}{'...' if len(llm_response) > 500 else ''}")
-        if is_doctor_recommendation:
-            print(f"[LLM OUTPUT] Doctor recommendation: {len(ranked_doctors)} doctors recommended")
-        print(f"{'='*80}\n")
+        # Also check if we're asking for date/time (before tickets are created)
+        is_asking_for_datetime = (
+            waiting_for_datetime and 
+            ranked_doctors and 
+            len(ranked_doctors) > 0 and
+            not doctor_tickets_created
+        )
         
         # Prepare message metadata
         message_metadata = None
-        if is_doctor_recommendation:
+        if is_doctor_recommendation or is_asking_for_datetime:
             # Format doctor recommendations with ticket IDs
             doctors_with_tickets = []
             ticket_map = {t["doctor_id"]: t["ticket_id"] for t in doctor_tickets}
@@ -420,12 +451,38 @@ async def send_message(
                     "ticket_id": ticket_map.get(doctor["doctor_id"])
                 })
             
-            message_metadata = {
-                "type": "doctor_recommendation",
-                "doctors": doctors_with_tickets,
-                "service_type": service_type_determined,
-                "tickets_created": len(doctor_tickets)
-            }
+            if is_doctor_recommendation:
+                # Tickets already created
+                message_metadata = {
+                    "type": "doctor_recommendation",
+                    "doctors": doctors_with_tickets,
+                    "service_type": service_type_determined,
+                    "ranked_doctors": ranked_doctors,  # Store raw ranked_doctors for state restoration
+                    "tickets_created": len(doctor_tickets)
+                }
+            else:
+                # Asking for date/time - store ranked_doctors for state restoration
+                doctors_list = []
+                for doctor in ranked_doctors[:5]:
+                    doctors_list.append({
+                        "doctor_id": doctor.get("doctor_id") or doctor.get("doctor_id"),
+                        "name": doctor.get("name"),
+                        "service_type": doctor.get("service_type"),
+                        "specialization": doctor.get("specialization"),
+                        "rank": doctor.get("rank"),
+                        "reason": doctor.get("reason")
+                    })
+                
+                user_request_from_state = final_state.get("user_request")
+                message_metadata = {
+                    "type": "doctor_recommendation",
+                    "doctors": doctors_list,
+                    "service_type": service_type_determined,
+                    "ranked_doctors": ranked_doctors,  # Store raw ranked_doctors for state restoration
+                    "waiting_for_datetime": True,
+                    "user_request": user_request_from_state,  # Store user request for state restoration
+                    "tickets_created": 0
+                }
         
     
         all_messages = final_state.get("messages", [])

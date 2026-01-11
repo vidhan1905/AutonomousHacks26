@@ -55,257 +55,50 @@ async def list_tickets(
     query = select(Ticket)
     
     # Filter based on user type
-    try:
-        if user_type == "patient":
-            # For patients, we'll aggregate tickets by conversation_id
-            # Get all tickets first, then aggregate
-            query = query.where(Ticket.patient_id == user.patient_id)
-            result = await db.execute(query.order_by(Ticket.created_at.desc()))
-            all_tickets = result.scalars().all()
-            
-            # Group tickets by conversation_id
-            tickets_by_conversation = {}
-            for ticket in all_tickets:
-                conv_id = str(ticket.conversation_id)
-                if conv_id not in tickets_by_conversation:
-                    tickets_by_conversation[conv_id] = []
-                tickets_by_conversation[conv_id].append(ticket)
-            
-            # Aggregate: one ticket per conversation
-            aggregated_tickets = []
-            for conv_id, tickets in tickets_by_conversation.items():
-                # Sort tickets: accepted first, then by created_at
-                tickets_sorted = sorted(
-                    tickets,
-                    key=lambda t: (
-                        0 if t.accepted_by else 1,  # Accepted tickets first
-                        t.created_at  # Then by creation time
-                    )
-                )
-                primary_ticket = tickets_sorted[0]
-                
-                # Build list of all doctors/statuses for this conversation
-                all_doctors_info = []
-                for t in tickets:
-                    if t.assigned_to:
-                        doctor_result = await db.execute(
-                            select(ServicePerson).where(ServicePerson.service_person_id == t.assigned_to)
-                        )
-                        doctor = doctor_result.scalar_one_or_none()
-                        all_doctors_info.append({
-                            "ticket_id": str(t.ticket_id),
-                            "doctor_id": str(t.assigned_to),
-                            "doctor_name": doctor.name if doctor else "Unknown",
-                            "service_type": doctor.service_type if doctor else "Unknown",
-                            "status": t.status,
-                            "assignment_status": t.assignment_status,
-                            "accepted": t.accepted_by is not None,
-                            "accepted_at": t.accepted_at.isoformat() if t.accepted_at else None
-                        })
-                
-                # Calculate aggregated status (best status among all tickets)
-                statuses = [t.status for t in tickets]
-                aggregated_status = primary_ticket.status
-                if "completed" in statuses:
-                    aggregated_status = "completed"
-                elif "in_progress" in statuses:
-                    aggregated_status = "in_progress"
-                elif any(t.accepted_by for t in tickets):
-                    aggregated_status = "accepted"
-                elif "assigned" in statuses:
-                    aggregated_status = "assigned"
-                
-                # Build ticket data
-                ticket_data = {
-                    "ticket_id": str(primary_ticket.ticket_id),
-                    "conversation_id": conv_id,
-                    "patient_id": str(primary_ticket.patient_id),
-                    "service_type": primary_ticket.service_type,
-                    "status": aggregated_status,
-                    "priority": primary_ticket.priority,
-                    "assigned_to": str(primary_ticket.assigned_to) if primary_ticket.assigned_to else None,
-                    "description": primary_ticket.description,
-                    "patient_details": primary_ticket.patient_details,
-                    "past_history_summary": primary_ticket.past_history_summary,
-                    "llm_summary": primary_ticket.llm_summary,
-                    "current_symptoms": primary_ticket.current_symptoms,
-                    "assignment_status": primary_ticket.assignment_status,
-                    "accepted_by": str(primary_ticket.accepted_by) if primary_ticket.accepted_by else None,
-                    "accepted_at": primary_ticket.accepted_at.isoformat() if primary_ticket.accepted_at else None,
-                    "offered_to_count": primary_ticket.offered_to_count,
-                    "created_at": primary_ticket.created_at.isoformat(),
-                    "assigned_at": primary_ticket.assigned_at.isoformat() if primary_ticket.assigned_at else None,
-                    "completed_at": primary_ticket.completed_at.isoformat() if primary_ticket.completed_at else None,
-                    "is_sequential_review": primary_ticket.is_sequential_review if hasattr(primary_ticket, 'is_sequential_review') else False,
-                    "sequential_review_chain_id": str(primary_ticket.sequential_review_chain_id) if hasattr(primary_ticket, 'sequential_review_chain_id') and primary_ticket.sequential_review_chain_id else None,
-                    "all_doctors": all_doctors_info,
-                    "total_tickets": len(tickets)
-                }
-                
-                # Add sequential review info if applicable
-                if primary_ticket.is_sequential_review and primary_ticket.sequential_review_chain_id:
-                    chain_result = await db.execute(
-                        select(SequentialReviewChain).where(
-                            SequentialReviewChain.chain_id == primary_ticket.sequential_review_chain_id
-                        )
-                    )
-                    chain = chain_result.scalar_one_or_none()
-                    
-                    if chain:
-                        # Get all steps
-                        steps_result = await db.execute(
-                            select(SequentialReviewStep).where(
-                                SequentialReviewStep.chain_id == chain.chain_id
-                            ).order_by(SequentialReviewStep.step_index)
-                        )
-                        steps = steps_result.scalars().all()
-                        
-                        # Get doctor info for each step
-                        steps_info = []
-                        for step in steps:
-                            doctor_result = await db.execute(
-                                select(ServicePerson).where(ServicePerson.service_person_id == step.doctor_id)
-                            )
-                            doctor = doctor_result.scalar_one_or_none()
-                            
-                            steps_info.append({
-                                "step_id": str(step.step_id),
-                                "step_index": step.step_index,
-                                "step_number": step.step_index + 1,
-                                "doctor_id": str(step.doctor_id),
-                                "doctor_name": doctor.name if doctor else "Unknown",
-                                "service_type": doctor.service_type if doctor else "Unknown",
-                                "status": step.status,
-                                "review_notes": step.review_notes,
-                                "review_summary": step.review_summary,
-                                "started_at": step.started_at.isoformat() if step.started_at else None,
-                                "completed_at": step.completed_at.isoformat() if step.completed_at else None,
-                            })
-                        
-                        # Calculate current_step_number
-                        if chain.status == "completed":
-                            current_step_number = chain.required_doctors_count
-                        else:
-                            current_step_number = min(chain.current_step_index + 1, chain.required_doctors_count)
-                        
-                        ticket_data["sequential_review_info"] = {
-                            "chain_id": str(chain.chain_id),
-                            "current_step_index": chain.current_step_index,
-                            "current_step_number": current_step_number,
-                            "total_steps": chain.required_doctors_count,
-                            "chain_status": chain.status,
-                            "steps": steps_info
-                        }
-                
-                aggregated_tickets.append(ticket_data)
-            
-            # Apply filters to aggregated tickets
-            if status:
-                aggregated_tickets = [t for t in aggregated_tickets if t["status"] == status]
-            if service_type:
-                aggregated_tickets = [t for t in aggregated_tickets if t["service_type"] == service_type]
-            if priority:
-                aggregated_tickets = [t for t in aggregated_tickets if t["priority"] == priority]
-            
-            return aggregated_tickets
-            
-        elif user_type == "service_person":
-            # Service persons see tickets assigned to them OR offered to them (via assignment_status)
-            # OR tickets that are part of sequential review chains where they are a reviewer
-            # Check both assigned_to and accepted_by for service person
-            # Also check if ticket is part of sequential review and user is in the chain
-            from sqlalchemy import or_, and_
-            
-            # Get chain IDs where user is a reviewer
-            chain_ids_subquery = select(SequentialReviewStep.chain_id).where(
-                SequentialReviewStep.doctor_id == user.service_person_id
-            ).distinct()
-            
-            query = query.where(
-                or_(
-                    Ticket.assigned_to == user.service_person_id,
-                    Ticket.accepted_by == user.service_person_id,
-                    and_(
-                        Ticket.sequential_review_chain_id.isnot(None),
-                        Ticket.sequential_review_chain_id.in_(chain_ids_subquery)
-                    )
-                ),
-                Ticket.status != "cancelled"
-            )
-        # Admins see all tickets
+    if user_type == "patient":
+        query = query.where(Ticket.patient_id == user.patient_id)
+    elif user_type == "service_person":
+        # Service persons ONLY see tickets assigned to them (excluding cancelled)
+        # Ensure both are UUID objects for proper comparison
+        service_person_uuid = user.service_person_id
+        if isinstance(service_person_uuid, str):
+            service_person_uuid = uuid.UUID(service_person_uuid)
         
-        # Apply filters
-        if status:
-            query = query.where(Ticket.status == status)
-        if service_type:
-            query = query.where(Ticket.service_type == service_type)
-        if priority:
-            query = query.where(Ticket.priority == priority)
+        print(f"DEBUG list_tickets: Filtering tickets for service_person_id: {service_person_uuid} (type: {type(service_person_uuid)})")
         
-        result = await db.execute(query.order_by(Ticket.created_at.desc()))
-        tickets = result.scalars().all()
-    except AttributeError as e:
-        # Schema error - column may not exist
-        import traceback
-        error_msg = f"SCHEMA ERROR: Ticket model column may not exist. Error: {str(e)}\n{traceback.format_exc()}"
-        print(f"[SCHEMA ERROR] {error_msg}")
-        raise HTTPException(status_code=500, detail=f"Database schema issue: {error_msg}")
-    except Exception as e:
-        import traceback
-        error_msg = f"Database query error: {str(e)}\n{traceback.format_exc()}"
-        print(f"[ERROR] {error_msg}")
-        raise HTTPException(status_code=500, detail=f"Database error: {error_msg}")
+        query = query.where(
+            Ticket.assigned_to == service_person_uuid,
+            Ticket.status != "cancelled"
+        )
+    # Admins see all tickets
     
-    # Filter sequential review tickets to only show when it's the doctor's turn
-    filtered_tickets = []
-    for ticket in tickets:
-        if ticket.is_sequential_review and ticket.sequential_review_chain_id:
-            # Get chain first to find current step
-            chain_result = await db.execute(
-                select(SequentialReviewChain).where(
-                    SequentialReviewChain.chain_id == ticket.sequential_review_chain_id
-                )
-            )
-            chain = chain_result.scalar_one_or_none()
+    # Apply filters
+    if status:
+        query = query.where(Ticket.status == status)
+    if service_type:
+        query = query.where(Ticket.service_type == service_type)
+    if priority:
+        query = query.where(Ticket.priority == priority)
+    
+    result = await db.execute(query.order_by(Ticket.created_at.desc()))
+    tickets = result.scalars().all()
+    
+    # Debug logging and verification for service persons
+    if user_type == "service_person":
+        print(f"DEBUG list_tickets: Found {len(tickets)} tickets")
+        verified_tickets = []
+        for ticket in tickets:
+            ticket_assigned_uuid = ticket.assigned_to
+            if isinstance(ticket_assigned_uuid, str):
+                ticket_assigned_uuid = uuid.UUID(ticket_assigned_uuid)
             
-            if chain:
-                # Get current step for this chain
-                current_step_result = await db.execute(
-                    select(SequentialReviewStep).where(
-                        SequentialReviewStep.chain_id == chain.chain_id,
-                        SequentialReviewStep.step_index == chain.current_step_index
-                    )
-                )
-                current_step = current_step_result.scalar_one_or_none()
-                
-                if current_step:
-                    # Check if it's their turn (current step's doctor matches user)
-                    if current_step.doctor_id == user.service_person_id:
-                        # It's their turn, include ticket
-                        filtered_tickets.append(ticket)
-                    else:
-                        # Not their turn yet - check if all previous steps are completed
-                        previous_steps_result = await db.execute(
-                            select(SequentialReviewStep).where(
-                                SequentialReviewStep.chain_id == chain.chain_id,
-                                SequentialReviewStep.step_index < chain.current_step_index,
-                                SequentialReviewStep.status != "completed"
-                            )
-                        )
-                        incomplete = previous_steps_result.scalars().all()
-                        if not incomplete:
-                            # All previous steps completed, show ticket (they'll be next)
-                            filtered_tickets.append(ticket)
-                        # Otherwise, don't add to filtered_tickets (it's not their turn yet)
-                else:
-                    # Current step not found, include ticket (shouldn't happen but be safe)
-                    filtered_tickets.append(ticket)
+            # Verify the ticket is actually assigned to this user (safety check)
+            if ticket_assigned_uuid == service_person_uuid:
+                verified_tickets.append(ticket)
+                print(f"  - Ticket {ticket.ticket_id}: assigned_to={ticket.assigned_to} (type: {type(ticket.assigned_to)}), status={ticket.status} ✓")
             else:
-                # Chain not found, include ticket (shouldn't happen but be safe)
-                filtered_tickets.append(ticket)
-        else:
-            # Not sequential review, include ticket
-            filtered_tickets.append(ticket)
+                print(f"  - WARNING: Ticket {ticket.ticket_id} assigned_to={ticket.assigned_to} does NOT match service_person_id={service_person_uuid} - FILTERING OUT")
+        tickets = verified_tickets
     
     return [
         {
@@ -882,13 +675,50 @@ async def accept_reject_ticket(
     if not ticket:
         raise HTTPException(status_code=404, detail="Ticket not found")
     
-    # Check if ticket is part of sequential review - skip accept/reject for sequential reviews
-    is_sequential_review = ticket.is_sequential_review and ticket.sequential_review_chain_id
-    if is_sequential_review:
+    # Verify ticket is assigned to this service person
+    # Compare UUIDs properly - convert both to UUID if needed
+    current_service_person_id = current_user["user"].service_person_id
+    ticket_assigned_to = ticket.assigned_to
+    
+    # Debug logging
+    print(f"DEBUG accept_reject_ticket:")
+    print(f"  - current_service_person_id: {current_service_person_id} (type: {type(current_service_person_id)})")
+    print(f"  - ticket_assigned_to: {ticket_assigned_to} (type: {type(ticket_assigned_to)})")
+    print(f"  - ticket_id: {ticket_id}")
+    print(f"  - ticket status: {ticket.status}")
+    
+    # Check if ticket is assigned
+    if ticket_assigned_to is None:
+        raise HTTPException(status_code=400, detail="Ticket is not assigned to anyone. Cannot accept/reject unassigned ticket.")
+    
+    # Ensure both are UUID objects for comparison
+    if isinstance(current_service_person_id, str):
+        current_service_person_id = uuid.UUID(current_service_person_id)
+    if isinstance(ticket_assigned_to, str):
+        ticket_assigned_to = uuid.UUID(ticket_assigned_to)
+    
+    # Normalize both to UUID strings for comparison (most reliable)
+    current_id_str = str(current_service_person_id) if current_service_person_id else None
+    ticket_id_str = str(ticket_assigned_to) if ticket_assigned_to else None
+    
+    print(f"  - After UUID conversion:")
+    print(f"    - current_service_person_id: {current_service_person_id} (type: {type(current_service_person_id)})")
+    print(f"    - ticket_assigned_to: {ticket_assigned_to} (type: {type(ticket_assigned_to)})")
+    print(f"    - current_id_str: {current_id_str}")
+    print(f"    - ticket_id_str: {ticket_id_str}")
+    print(f"    - UUID comparison: {ticket_assigned_to == current_service_person_id}")
+    print(f"    - String comparison: {current_id_str == ticket_id_str}")
+    
+    # Compare as UUIDs first, then fallback to strings
+    if ticket_assigned_to != current_service_person_id:
         raise HTTPException(
-            status_code=400, 
-            detail="Sequential review tickets are automatically assigned. Use the status update endpoint to start working on the ticket."
+            status_code=403, 
+            detail=f"You can only accept/reject tickets assigned to you. Ticket is assigned to {ticket_id_str}, but you are {current_id_str}"
         )
+    
+    # Verify ticket is in open status
+    if ticket.status != "open":
+        raise HTTPException(status_code=400, detail=f"Ticket is already {ticket.status}. Cannot accept/reject.")
     
     # Verify ticket is assigned/offered to this service person
     # Check both assigned_to (initial assignment) and accepted_by (if already accepted by someone else)

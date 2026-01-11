@@ -5,7 +5,6 @@ import ChatPage from './pages/ChatPage'
 import PatientDashboard from './pages/PatientDashboard'
 import ServicePersonDashboard from './pages/ServicePersonDashboard'
 import TicketDetailPage from './pages/TicketDetailPage'
-import EditProfilePage from './pages/EditProfilePage'
 import ProtectedRoute from './components/Auth/ProtectedRoute'
 import { useAuthStore } from './hooks/useAuth'
 
@@ -40,10 +39,10 @@ function App() {
   // Show loading state while initializing
   if (!isInitialized) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-teal-500 dark:border-teal-400 mx-auto"></div>
-          <p className="mt-4 text-gray-600 dark:text-gray-400">Loading...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading...</p>
         </div>
       </div>
     )
@@ -93,7 +92,7 @@ function App() {
             </ProtectedRoute>
           }
         />
-        <Route path="/" element={<Navigate to={user ? (user.type === 'patient' ? "/dashboard/patient" : user.type === 'service_person' ? "/dashboard/service-person" : "/login") : "/login"} replace />} />
+        <Route path="/" element={<Navigate to={user ? (user.type === 'patient' ? "/dashboard/patient" : "/dashboard/service-person") : "/login"} replace />} />
       </Routes>
     </Router>
   )

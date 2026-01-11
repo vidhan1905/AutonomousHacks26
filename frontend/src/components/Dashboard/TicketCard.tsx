@@ -33,6 +33,7 @@ export default function TicketCard({ ticket, onClick }: TicketCardProps) {
     if (onClick) {
       onClick(ticket)
     } else {
+      // Navigate to ticket detail page
       navigate(`/tickets/${ticket.ticket_id}`)
     }
   }
