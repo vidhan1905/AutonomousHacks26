@@ -22,36 +22,24 @@ This architecture matches the actual implementation in `backend/src/agents/workf
 
 ```mermaid
 graph TB
-    subgraph "Client Layer"
-        FE[Frontend React App]
-        API[REST API Endpoints<br/>FastAPI]
+    subgraph Frontend["Frontend"]
+        FE[React Application<br/>TypeScript + Vite]
+        UI[UI Components<br/>Chat, Dashboard,<br/>Ticket Management]
     end
     
-    subgraph "Application Layer"
+    subgraph Backend["Backend"]
+        API_GW[REST API Endpoints<br/>FastAPI]
         CA[Conversation API<br/>routes/conversations.py]
-        WA[Workflow Agent<br/>workflow_agent.py<br/>16 nodes]
         TA[Ticket API<br/>routes/tickets.py]
-    end
-    
-    subgraph "LangGraph Engine"
+        PA[Patient API<br/>routes/patients.py]
+        WA[Workflow Agent<br/>workflow_agent.py<br/>17 nodes]
         GE[StateGraph<br/>create_graph]
         CP[PostgresSaver Checkpointer<br/>Auto-save state]
-        Nodes[16 Workflow Nodes<br/>route_entry, extract_info,<br/>validate, verify, fetch,<br/>show, understand, find,<br/>rank, create_tickets, etc.]
-    end
-    
-    subgraph "Tool Layer - backend/src/agents/tools/"
-        ET[extraction_tools.py<br/>extract_patient_info]
-        PT[patient_tools.py<br/>verify_patient, create_patient,<br/>get_patient_history]
-        DT[doctor_tools.py<br/>get_available_doctors_by_type_and_time,<br/>rank_doctors_with_llm]
+        Nodes[17 Workflow Nodes<br/>route_entry, fetch, show,<br/>understand, detect_complex,<br/>create_chain, route_doctor,<br/>collect_review, find, rank,<br/>create_tickets, etc.]
+        PT[patient_tools.py<br/>get_patient_history]
+        DT[doctor_tools.py<br/>get_available_doctors,<br/>rank_doctors_with_llm]
         TT[ticket_tools.py<br/>create_multiple_tickets]
-    end
-    
-    subgraph "LLM Services"
-        LLM[ChatOpenAI<br/>model: gpt-4o-mini<br/>temperature: 0.7]
-        Struct[Structured Output<br/>Pydantic RequestInfo,<br/>PatientInfo models]
-    end
-    
-    subgraph "Database - PostgreSQL"
+        CCT[complex_case_tools.py<br/>detect_complex_case,<br/>create_sequential_review_chain,<br/>submit_doctor_review]
         PG[(PostgreSQL)]
         PC[patients]
         DC[service_persons]
@@ -60,41 +48,58 @@ graph TB
         CH[checkpoints]
     end
     
-    FE -->|HTTP/REST| API
-    API --> CA
-    API --> TA
+    subgraph AI["AI Services"]
+        LLM[ChatOpenAI<br/>model: gpt-4o-mini<br/>temperature: 0.7]
+        Struct[Structured Output<br/>Pydantic Models<br/>RequestInfo, PatientInfo]
+        LS[LangSmith<br/>Observability & Debugging]
+    end
+    
+    FE -->|HTTP/REST| API_GW
+    UI --> FE
+    
+    API_GW --> CA
+    API_GW --> TA
+    API_GW --> PA
     
     CA -->|await get_graph()| WA
     CA -->|graph.ainvoke(state, config)| WA
+    TA -->|Ticket operations| PG
+    PA -->|Patient operations| PG
     
     WA -->|compile with checkpointer| GE
     GE -->|Execute nodes sequentially| Nodes
     GE -->|After each node| CP
     
-    Nodes -->|Call tools| ET
     Nodes -->|Call tools| PT
     Nodes -->|Call tools| DT
     Nodes -->|Call tools| TT
+    Nodes -->|Call tools| CCT
     Nodes -->|Direct LLM calls| LLM
     
-    ET -->|Uses| LLM
-    ET -->|Structured output| Struct
     DT -->|Uses LLM for ranking| LLM
+    CCT -->|Uses LLM for detection| LLM
     
     PT -->|SQL queries| PC
     DT -->|SQL queries| DC
     TT -->|SQL INSERT| TC
+    CA -->|Create/Load| CT
     
     CP -->|Save state| CH
     CH -->|Load on resume| CP
     CH -.->|State recovery| CP
     
-    CA -->|Create/Load| CT
+    LLM -->|Traces| LS
+    Struct -->|Used by| LLM
     
-    LLM -->|Traces| LS[LangSmith<br/>Observability & Debugging]
-    
+    style Frontend fill:#e1f5ff,stroke:#2196F3,stroke-width:3px
+    style Backend fill:#fff4e1,stroke:#FF9800,stroke-width:3px
+    style AI fill:#f3e5f5,stroke:#9C27B0,stroke-width:3px
     style FE fill:#e1f5ff
+    style UI fill:#e1f5ff
+    style API_GW fill:#fff4e1
     style CA fill:#fff4e1
+    style TA fill:#fff4e1
+    style PA fill:#fff4e1
     style WA fill:#fff4e1
     style GE fill:#e8f5e9
     style Nodes fill:#e8f5e9
@@ -123,14 +128,13 @@ graph TB
 
 #### LLM Layer
 - **ChatOpenAI**: Language model for extraction, understanding, and formatting
-- **Extraction Tools**: Structured output for patient info extraction
 - **Ranking Tools**: LLM-based doctor ranking
 
 #### Tool Layer
 - **Patient Tools**: Database operations for patient management
 - **Doctor Tools**: Doctor search and ranking
 - **Ticket Tools**: Ticket creation and management
-- **Appointment Tools**: Appointment scheduling
+- **Complex Case Tools**: Sequential review chain management
 
 #### Database Layer
 - **PostgreSQL Database**: Persistent storage
@@ -153,14 +157,12 @@ sequenceDiagram
     participant API as Conversation API
     participant Graph as LangGraph Engine
     participant Entry as route_entry
-    participant Extract as extract_patient_info
-    participant Validate as validate_info
-    participant AskMissing as ask_for_missing
-    participant Verify as verify_patient
-    participant Create as create_patient
     participant Fetch as fetch_history
     participant Show as show_history
     participant Understand as understand_request
+    participant Detect as detect_complex_case
+    participant CreateChain as create_sequential_chain
+    participant RouteDoc as route_to_next_doctor
     participant VReq as validate_request
     participant AskRequest as ask_for_request_info
     participant Find as find_doctors
@@ -181,85 +183,81 @@ sequenceDiagram
     
     Graph->>Entry: Execute route_entry_node
     
-    alt Patient Not Verified
-        Entry->>Extract: Execute extract_patient_info_node
-        Extract->>LLM: extract_patient_info tool (structured)
-        LLM-->>Extract: PatientInfo Pydantic object
-        Extract->>Validate: Execute validate_info_node
-        
-        alt Missing Info
-            Validate->>AskMissing: Execute ask_for_missing_node
-            AskMissing->>LLM: Generate question prompt
-            LLM-->>AskMissing: Question message
-            AskMissing-->>API: Add AI message to state
-            API-->>User: Response: Ask for missing fields
-            Graph->>Checkpoint: Save checkpoint
-            Checkpoint->>DB: Save state
-            Note over User,Checkpoint: Wait for user response
-        else All Info Present
-            Validate->>Verify: Execute verify_patient_node
-            Verify->>DB: verify_patient tool: SELECT by phone/DOB
-            DB-->>Verify: Patient record (or null)
-            
-            alt Patient Not Found
-                Verify->>Create: Execute create_patient_node
-                Create->>DB: create_patient tool: INSERT patient
-                DB-->>Create: Patient ID
-                Create->>Fetch: Execute fetch_history_node
-            else Patient Found
-                Verify->>Fetch: Execute fetch_history_node
-            end
-            
-            Fetch->>DB: get_patient_history tool: SELECT history_records
-            DB-->>Fetch: History records array
-            Fetch->>Show: Execute show_history_node
-            Show->>LLM: Generate formatted history
-            LLM-->>Show: Formatted history message
-            Show-->>API: Add AI message to state
-            API-->>User: Display history
-            Graph->>Checkpoint: Save checkpoint
-            Note over User,Checkpoint: Wait for user request
-        end
+    alt History Not Shown
+        Entry->>Fetch: Execute fetch_history_node
+        Fetch->>DB: get_patient_history tool: SELECT history_records
+        DB-->>Fetch: History records array
+        Fetch->>Show: Execute show_history_node
+        Show->>LLM: Generate formatted history
+        LLM-->>Show: Formatted history message
+        Show-->>API: Add AI message to state
+        API-->>User: Display history
+        Graph->>Checkpoint: Save checkpoint automatically
+        Checkpoint->>DB: INSERT/UPDATE checkpoint
+        Note over User,API: Wait for user request
     end
     
-    alt Patient Verified - New Request
+    alt History Shown - New Request
         Entry->>Understand: Execute understand_request_node
         Understand->>LLM: Structured extraction (service_type, date)
         LLM-->>Understand: RequestInfo object
-        Understand->>VReq: Execute validate_request_node
+        Understand->>Detect: Execute detect_complex_case_node
+        Detect->>LLM: Analyze case complexity
+        LLM-->>Detect: Complex or normal case
         
-        alt Missing Request Info
-            VReq->>AskRequest: Execute ask_for_request_info_node
-            AskRequest->>LLM: Generate question prompt
-            LLM-->>AskRequest: Question message
-            AskRequest-->>API: Add AI message to state
-            API-->>User: Ask for service type/date
-            Graph->>Checkpoint: Save checkpoint
-            Note over User,Checkpoint: Wait for user response
-        else All Request Info Present
-            VReq->>Find: Execute find_doctors_node
-            Find->>DB: get_available_doctors_by_type_and_time: SELECT WHERE service_type AND is_active
-            DB-->>Find: Available doctors list
+        alt Complex Case
+            Detect->>CreateChain: Execute create_sequential_chain_node
+            CreateChain->>DB: Create SequentialReviewChain and Steps
+            DB-->>CreateChain: Chain ID
+            CreateChain->>RouteDoc: Execute route_to_next_doctor_node
+            RouteDoc->>DB: Create/Update ticket for first step
+            DB-->>RouteDoc: Ticket ID
+            RouteDoc-->>API: Add confirmation message
+            API-->>User: Sequential review started
+            Graph->>Checkpoint: Save checkpoint automatically
+            Checkpoint->>DB: INSERT/UPDATE checkpoint
+            Note over User,API: Wait for doctor review
+        else Normal Case
+            Detect->>VReq: Execute validate_request_node
             
-            alt No Doctors Found
-                Find->>NoDoctors: Execute inform_no_doctors_node
-                NoDoctors->>LLM: Generate message prompt
-                LLM-->>NoDoctors: No doctors message
-                NoDoctors-->>API: Add AI message to state
-                API-->>User: Inform no availability
-                Graph->>Checkpoint: Save checkpoint
-            else Doctors Found
-                Find->>Rank: Execute rank_doctors_node
-                Rank->>LLM: rank_doctors_with_llm tool (with patient history & criteria)
-                LLM-->>Rank: Ranked doctor list with reasons
-                Rank->>Tickets: Execute create_tickets_node
-                Tickets->>DB: create_multiple_tickets tool: INSERT tickets (top N)
-                DB-->>Tickets: Ticket IDs array
-                Tickets->>Confirm: Execute confirm_booking_node
-                Confirm->>LLM: Generate simple confirmation (no doctor details)
-                LLM-->>Confirm: Confirmation message
-                Confirm-->>API: Add AI message to state
-                API-->>User: Booking confirmed
+            alt Missing Request Info
+                VReq->>AskRequest: Execute ask_for_request_info_node
+                AskRequest->>LLM: Generate question prompt
+                LLM-->>AskRequest: Question message
+                AskRequest-->>API: Add AI message to state
+                API-->>User: Ask for service type/date
+                Graph->>Checkpoint: Save checkpoint automatically
+                Checkpoint->>DB: INSERT/UPDATE checkpoint
+                Note over User,API: Wait for user response
+            else All Request Info Present
+                VReq->>Find: Execute find_doctors_node
+                Find->>DB: get_available_doctors_by_type_and_time: SELECT WHERE service_type AND is_active
+                DB-->>Find: Available doctors list
+                
+                alt No Doctors Found
+                    Find->>NoDoctors: Execute inform_no_doctors_node
+                    NoDoctors->>LLM: Generate message prompt
+                    LLM-->>NoDoctors: No doctors message
+                    NoDoctors-->>API: Add AI message to state
+                    API-->>User: Inform no availability
+                    Graph->>Checkpoint: Save checkpoint automatically
+                    Checkpoint->>DB: INSERT/UPDATE checkpoint
+                else Doctors Found
+                    Find->>Rank: Execute rank_doctors_node
+                    Rank->>LLM: rank_doctors_with_llm tool (with patient history & criteria)
+                    LLM-->>Rank: Ranked doctor list with reasons
+                    Rank->>Tickets: Execute create_tickets_node
+                    Tickets->>DB: create_multiple_tickets tool: INSERT tickets (top N)
+                    DB-->>Tickets: Ticket IDs array
+                    Tickets->>Confirm: Execute confirm_booking_node
+                    Confirm->>LLM: Generate simple confirmation (no doctor details)
+                    LLM-->>Confirm: Confirmation message
+                    Confirm-->>Graph: Add AI message to state
+                    Graph->>Checkpoint: Save checkpoint automatically
+                    Checkpoint->>DB: INSERT/UPDATE checkpoint
+                    Graph-->>API: Return final state
+                    API-->>User: Booking confirmed
+                end
             end
         end
     end
@@ -276,45 +274,47 @@ sequenceDiagram
 graph TD
     Start([User Message]) --> Entry[route_entry]
     
-    Entry -->|Not Verified + New Message| Extract[extract_patient_info]
-    Entry -->|Verified + History Not Shown| Fetch[fetch_history]
-    Entry -->|Verified + History Shown + New Message| Understand[understand_request]
+    Entry -->|History Not Shown| Fetch[fetch_history]
+    Entry -->|History Shown + New Message| Understand[understand_request]
     Entry -->|Waiting| End1([END - Wait for User])
-    
-    Extract --> Validate[validate_info]
-    Validate -->|Missing Fields| AskMissing[ask_for_missing]
-    Validate -->|All Fields Present| Verify[verify_patient]
-    AskMissing --> End2([END - Wait for User])
-    
-    Verify -->|Not Found| Create[create_patient]
-    Verify -->|Found| Fetch
-    Create --> Fetch
     
     Fetch --> Show[show_history]
     Fetch -->|Error| Show
-    Show --> End3([END - Wait for User])
+    Show --> End2([END - Wait for User])
     
-    Understand --> VRequest[validate_request]
+    Understand --> Detect[detect_complex_case]
+    Detect -->|Normal Case| VRequest[validate_request]
+    Detect -->|Complex Case| CreateChain[create_sequential_chain]
+    
     VRequest -->|Missing Fields| AskRequest[ask_for_request_info]
     VRequest -->|All Fields Present| Find[find_doctors]
-    AskRequest --> End4([END - Wait for User])
+    AskRequest --> End3([END - Wait for User])
     
     Find -->|No Doctors| NoDoctors[inform_no_doctors]
     Find -->|Doctors Found| Rank[rank_doctors]
-    NoDoctors --> End5([END])
+    NoDoctors --> End4([END])
     
     Rank --> Tickets[create_tickets]
     Tickets -->|Success| Confirm[confirm_booking]
-    Tickets -->|Error| End6([END])
-    Confirm --> End7([END])
+    Tickets -->|Error| End5([END])
+    Confirm --> End6([END])
+    
+    CreateChain --> RouteDoc[route_to_next_doctor]
+    RouteDoc --> WaitReview[Wait for Doctor Review]
+    WaitReview -->|Doctor Completes| CollectReview[collect_doctor_review]
+    CollectReview -->|More Steps| RouteDoc
+    CollectReview -->|All Complete| FinalSummary[generate_final_summary]
+    FinalSummary --> End7([END])
     
     style Entry fill:#fff4e1
-    style Extract fill:#e3f2fd
-    style Validate fill:#fff9c4
-    style Verify fill:#e8f5e9
     style Fetch fill:#e8f5e9
     style Show fill:#e1f5ff
     style Understand fill:#e3f2fd
+    style Detect fill:#f3e5f5
+    style CreateChain fill:#ffebee
+    style RouteDoc fill:#ffebee
+    style CollectReview fill:#e8f5e9
+    style FinalSummary fill:#e1f5ff
     style VRequest fill:#fff9c4
     style Find fill:#e8f5e9
     style Rank fill:#f3e5f5
@@ -326,21 +326,28 @@ graph TD
 
 ## Node Descriptions
 
+### Complex Case (Sequential Review) Nodes
+
+See [Complex Case (Sequential Review) Flow](#complex-case-sequential-review-flow) section above for detailed descriptions of:
+- `detect_complex_case`
+- `create_sequential_chain`
+- `route_to_next_doctor`
+- `collect_doctor_review`
+- `generate_final_summary`
+
 ### Entry Nodes
 
 #### `route_entry`
 **Purpose**: Initial routing node that determines workflow entry point based on current state
 
 **Inputs**:
-- `patient_verified`: Boolean indicating if patient is verified
 - `history_shown`: Boolean indicating if history has been shown
 - `messages`: List of messages to detect new user input
 - `next_action`: Previously set next action (if continuing workflow)
 
 **Logic**:
-- If patient not verified and new user message → route to `extract_patient_info`
-- If patient verified but history not shown → route to `fetch_history`
-- If patient verified and history shown and new message → route to `understand_request`
+- If history not shown → route to `fetch_history`
+- If history shown and new message → route to `understand_request`
 - Otherwise → END (wait for user)
 
 **Outputs**:
@@ -348,104 +355,7 @@ graph TD
 
 ---
 
-### Patient Verification Flow
-
-#### `extract_patient_info`
-**Purpose**: Extract patient information (name, phone, DOB) from user message using LLM with structured output
-
-**Type**: LLM Node (structured extraction)
-
-**Inputs**:
-- `messages`: Conversation messages
-- Existing `patient_info` (if any)
-
-**Process**:
-1. Uses ChatOpenAI with structured output (Pydantic model)
-2. Extracts name, phone, date_of_birth from last user message
-3. Merges with existing patient info if present
-
-**Outputs**:
-- Updates `patient_info` state with extracted fields
-- Sets `next_action` to "validate_info"
-
----
-
-#### `validate_info`
-**Purpose**: Validate that all required patient information is present
-
-**Type**: Validation Node
-
-**Inputs**:
-- `patient_info`: PatientInfo object from state
-
-**Process**:
-1. Checks for missing required fields (name, phone, date_of_birth)
-2. If missing, sets HITL state with pending questions
-3. Routes accordingly
-
-**Outputs**:
-- Sets `next_action` to "ask_for_missing" or "verify_patient"
-
----
-
-#### `ask_for_missing`
-**Purpose**: Generate LLM message asking for missing patient information
-
-**Type**: LLM Node (conversational)
-
-**Inputs**:
-- `hitl.pending_questions`: List of missing fields
-- `patient_info`: Currently collected info
-- `messages`: Conversation history
-
-**Process**:
-1. Builds system prompt with available info and missing fields
-2. Calls LLM to generate friendly question
-3. Adds response to messages
-
-**Outputs**:
-- Adds AI message to conversation
-- Sets `next_action` to END (wait for user)
-
----
-
-#### `verify_patient`
-**Purpose**: Verify if patient exists in database
-
-**Type**: Tool Node (database query)
-
-**Inputs**:
-- `patient_info`: PatientInfo with name, phone, DOB
-
-**Process**:
-1. Calls `verify_patient` tool to query database
-2. If found, updates state with `patient_id` and sets `patient_verified = True`
-3. If not found, sets `next_action` to "create_patient"
-
-**Outputs**:
-- Updates `patient_id` and `patient_verified`
-- Sets `next_action` to "fetch_history" or "create_patient"
-
----
-
-#### `create_patient`
-**Purpose**: Create new patient record in database
-
-**Type**: Tool Node (database insert)
-
-**Inputs**:
-- `patient_info`: PatientInfo object
-
-**Process**:
-1. Calls `create_patient` tool
-2. Updates state with new `patient_id`
-3. Sets `patient_verified = True`
-
-**Outputs**:
-- Updates `patient_id` and `patient_verified`
-- Sets `next_action` to "fetch_history"
-
----
+### Patient History Flow
 
 #### `fetch_history`
 **Purpose**: Fetch patient medical history from database
@@ -453,7 +363,7 @@ graph TD
 **Type**: Tool Node (database query)
 
 **Inputs**:
-- `patient_id`: UUID of verified patient
+- `patient_id`: UUID of authenticated patient
 
 **Process**:
 1. Calls `get_patient_history` tool
@@ -509,7 +419,29 @@ graph TD
 
 **Outputs**:
 - Updates `appointment_preferences` state
-- Sets `next_action` to "validate_request"
+- Sets `next_action` to "detect_complex_case"
+
+---
+
+#### `detect_complex_case`
+**Purpose**: Detect if case requires sequential multi-doctor review
+
+**Type**: Tool Node (LLM-based detection)
+
+**Inputs**:
+- `messages`: Conversation messages (especially last user message)
+- `patient_history`: Patient medical history
+- `current_symptoms`: Current symptoms (if available)
+
+**Process**:
+1. Calls `detect_complex_case` tool
+2. LLM analyzes case complexity and determines if multiple service types are needed
+3. Returns: `is_complex`, `complexity_score`, `complexity_reason`, `suggested_service_types`
+
+**Outputs**:
+- Updates `sequential_review` state with detection results
+- Sets `case_type` to "complex" or "normal"
+- Sets `next_action` to "create_sequential_chain" (if complex) or "validate_request" (if normal)
 
 ---
 
@@ -671,6 +603,228 @@ graph TD
 
 ---
 
+## Complex Case (Sequential Review) Flow
+
+### Overview
+
+For complex cases that require multiple specialists, the system uses a **sequential review chain** where a **single ticket** progresses through multiple doctors in sequence. Each doctor reviews the case and provides notes that are visible to subsequent doctors.
+
+### Key Features
+
+- **Single Ticket**: Only ONE ticket is created for the entire sequential review chain
+- **Step Progression**: The ticket progresses through sequential steps (Step 1, Step 2, Step 3, etc.)
+- **Auto-Assignment**: Steps are auto-assigned (no accept/reject for sequential review tickets)
+- **Review Notes Accumulation**: Review notes from completed steps are visible to subsequent doctors
+- **UI Progress Tracking**: The UI shows step progression and review notes from previous doctors
+
+### Sequential Review Nodes
+
+#### `detect_complex_case`
+**Purpose**: Detect if case requires sequential multi-doctor review
+
+**Type**: Tool Node (LLM-based detection)
+
+**Inputs**:
+- `messages`: Conversation messages (especially last user message)
+- `patient_history`: Patient medical history
+- `current_symptoms`: Current symptoms (if available)
+
+**Process**:
+1. Calls `detect_complex_case` tool
+2. LLM analyzes case complexity and determines if multiple service types are needed
+3. Returns: `is_complex`, `complexity_score`, `complexity_reason`, `suggested_service_types`
+
+**Outputs**:
+- Updates `sequential_review` state with detection results
+- Sets `case_type` to "complex" or "normal"
+- Sets `next_action` to "create_sequential_chain" (if complex) or "validate_request" (if normal)
+
+---
+
+#### `create_sequential_chain`
+**Purpose**: Create sequential review chain with steps for each doctor
+
+**Type**: Tool Node (database insert)
+
+**Inputs**:
+- `sequential_review.required_doctors`: List of required service types
+- `patient_id`: Patient ID
+- `conversation_id`: Current conversation ID
+
+**Process**:
+1. Calls `create_sequential_review_chain` tool
+2. Creates `SequentialReviewChain` record
+3. Creates `SequentialReviewStep` records for each required service type
+4. Each step has: `step_index`, `doctor_id` (to be assigned), `status` ("pending")
+
+**Outputs**:
+- Updates `sequential_review` state with `chain_id`
+- Sets `next_action` to "route_to_next_doctor"
+
+---
+
+#### `route_to_next_doctor`
+**Purpose**: Create or update ticket for current step in sequential review chain
+
+**Type**: Tool Node (database insert/update)
+
+**Inputs**:
+- `sequential_review.chain_id`: Sequential review chain ID
+- `sequential_review.current_step_index`: Current step index
+- `patient_info`: Patient information
+- `appointment_preferences`: Service type and date/time preferences
+
+**Process**:
+1. Gets current step from chain
+2. Finds available doctors for the current step's service type
+3. **For first step (step_index == 0)**:
+   - Creates a NEW ticket assigned to the first doctor
+   - Sets ticket status to "assigned" (auto-accepted)
+   - Sets `is_sequential_review = True`
+   - Sets `sequential_review_chain_id`
+   - Links ticket to the step
+4. **For subsequent steps (step_index > 0)**:
+   - Finds the existing ticket for this chain
+   - **Updates** the ticket (reassigns to next doctor):
+     - Updates `assigned_to` to next doctor
+     - Updates `description` and `llm_summary` with accumulated context from previous steps
+     - Sets status to "assigned" (auto-accepted)
+     - Updates `assignment_status` to "accepted"
+     - Updates `accepted_by` and `accepted_at`
+   - Links ticket to the current step
+5. Updates chain `current_step_index`
+
+**Outputs**:
+- Creates/updates ticket for current step
+- Adds confirmation message to state
+- Sets `next_action` to "end" (wait for doctor to review)
+
+**Key Design**: Only ONE ticket is used for the entire chain. The ticket is reassigned to subsequent doctors as steps progress.
+
+---
+
+#### `collect_doctor_review`
+**Purpose**: Collect doctor review notes and advance chain to next step
+
+**Type**: Tool Node (database update)
+
+**Note**: This node is typically called directly from the API endpoint (`tickets.py`) when a doctor marks the ticket as "completed", not through the workflow graph.
+
+**Inputs**:
+- `current_step_id`: Current step ID
+- `current_review_notes`: Doctor's review notes
+- `current_doctor_id`: Doctor ID
+
+**Process**:
+1. Calls `submit_doctor_review` tool
+2. Updates current `SequentialReviewStep`:
+   - Sets `status` to "completed"
+   - Stores `review_notes` and `review_summary`
+   - Sets `completed_at`
+3. Advances `SequentialReviewChain.current_step_index`
+4. Updates chain status (if all steps completed, sets status to "completed")
+5. If more steps remain, prepares to route to next doctor
+
+**Outputs**:
+- Updates step status to "completed"
+- Advances chain to next step
+- Sets `next_action` to "route_to_next_doctor" (if more steps) or "generate_final_summary" (if all complete)
+
+---
+
+#### `generate_final_summary`
+**Purpose**: Generate final summary when all sequential review steps are complete
+
+**Type**: LLM Node (summary generation)
+
+**Inputs**:
+- `sequential_review`: Sequential review state with all steps
+- `patient_info`: Patient information
+- All review notes from completed steps
+
+**Process**:
+1. Collects all review notes and summaries from all steps
+2. Calls LLM to generate comprehensive summary
+3. Adds summary message to state
+
+**Outputs**:
+- Adds final summary AI message
+- Sets `next_action` to "end"
+
+---
+
+### Sequential Review Flow Diagram
+
+```
+User Request
+  ↓
+[Understand Request] → LLM extraction
+  ↓
+[Detect Complex Case] → LLM detection
+  ├─→ Normal Case → [Validate Request] → [Find Doctors] → [Rank Doctors] → [Create Tickets] → [Confirm Booking]
+  └─→ Complex Case → [Create Sequential Chain] → [Route to Next Doctor]
+       ↓
+    [Create/Update Ticket] → Single ticket created/updated
+       ↓
+    [Wait for Doctor Review] → Doctor marks ticket as "completed"
+       ↓
+    [Collect Doctor Review] → API endpoint (tickets.py) calls submit_doctor_review
+       ↓
+    [Route to Next Doctor] → Ticket reassigned to next doctor
+       ↓
+    [Wait for Doctor Review] → Repeat for each step
+       ↓
+    [All Steps Complete] → [Generate Final Summary] → END
+```
+
+### Sequential Review State
+
+```python
+{
+    "sequential_review": {
+        "chain_id": str,
+        "is_complex_case": bool,
+        "complexity_score": float,
+        "complexity_reason": str,
+        "required_doctors": List[Dict],  # [{"service_type": "...", "step_index": 0}, ...]
+        "current_step_index": int,
+        "status": "pending" | "in_progress" | "completed"
+    },
+    "case_type": "normal" | "complex"
+}
+```
+
+### Database Tables
+
+**SequentialReviewChain**:
+- `chain_id`: Primary key
+- `patient_id`: Patient ID
+- `conversation_id`: Conversation ID
+- `required_doctors_count`: Number of steps
+- `current_step_index`: Current step (0-indexed)
+- `status`: "pending", "in_progress", "completed"
+
+**SequentialReviewStep**:
+- `step_id`: Primary key
+- `chain_id`: Foreign key to chain
+- `step_index`: Position in sequence (0, 1, 2, ...)
+- `doctor_id`: Assigned doctor ID
+- `ticket_id`: **Same ticket ID for all steps** (single ticket approach)
+- `status`: "pending", "in_review", "completed"
+- `review_notes`: Doctor's review notes
+- `review_summary`: AI-generated summary
+- `started_at`, `completed_at`: Timestamps
+
+**Ticket** (for sequential reviews):
+- `ticket_id`: Single ticket ID for entire chain
+- `is_sequential_review`: True
+- `sequential_review_chain_id`: Foreign key to chain
+- `assigned_to`: Current doctor (reassigned as steps progress)
+- `status`: "assigned", "in_progress", "completed"
+- `assignment_status`: "accepted" (auto-accepted for sequential reviews)
+
+---
+
 ## State Management
 
 ### State Structure
@@ -718,6 +872,16 @@ The `AgentState` maintains the following key fields:
         "case_summary": Optional[str]
     },
     
+    "sequential_review": {
+        "chain_id": Optional[str],
+        "is_complex_case": bool,
+        "complexity_score": float,
+        "complexity_reason": str,
+        "required_doctors": List[Dict],
+        "current_step_index": int,
+        "status": str
+    },
+    
     "hitl": {
         "is_waiting_for_input": bool,
         "validation_complete": bool,
@@ -741,19 +905,13 @@ The `AgentState` maintains the following key fields:
 
 ## Data Flow
 
-### Patient Verification Flow
+### Patient History Flow
 
 ```
-User Message
+Authenticated Patient
   ↓
-[Extract Patient Info] → LLM structured extraction
+[Fetch History] → Database query
   ↓
-[Validate Info] → Check required fields
-  ├─→ Missing → [Ask for Missing] → User
-  └─→ Complete → [Verify Patient] → Database query
-       ├─→ Found → [Fetch History]
-       └─→ Not Found → [Create Patient] → [Fetch History]
-            ↓
 [Show History] → LLM formatting → User
 ```
 
@@ -764,43 +922,66 @@ User Request
   ↓
 [Understand Request] → LLM structured extraction
   ↓
-[Validate Request] → Check required fields
-  ├─→ Missing → [Ask for Request Info] → User
-  └─→ Complete → [Find Doctors] → Database query
-       ├─→ None → [Inform No Doctors] → User
-       └─→ Found → [Rank Doctors] → LLM ranking
-            ↓
-[Create Tickets] → Database insert (multiple tickets)
-  ↓
-[Confirm Booking] → LLM simple confirmation → User
+[Detect Complex Case] → LLM detection
+  ├─→ Normal Case → [Validate Request] → Check required fields
+  │    ├─→ Missing → [Ask for Request Info] → User
+  │    └─→ Complete → [Find Doctors] → Database query
+  │         ├─→ None → [Inform No Doctors] → User
+  │         └─→ Found → [Rank Doctors] → LLM ranking
+  │              ↓
+  │         [Create Tickets] → Database insert (multiple tickets)
+  │              ↓
+  │         [Confirm Booking] → LLM simple confirmation → User
+  │
+  └─→ Complex Case → [Create Sequential Chain] → Database insert (chain + steps)
+       ↓
+    [Route to Next Doctor] → Create/update single ticket
+       ↓
+    [Wait for Doctor Review] → Doctor marks ticket as "completed"
+       ↓
+    [Collect Doctor Review] → Update step, advance chain
+       ↓
+    [Route to Next Doctor] → Reassign ticket to next doctor
+       ↓
+    [Repeat for each step] → All steps complete
+       ↓
+    [Generate Final Summary] → LLM summary → User
 ```
 
 ---
 
 ## Key Design Decisions
 
-### 1. Hybrid Workflow Pattern
+### 1. Sequential Review Design (Complex Cases)
+- **Single Ticket Approach**: Only ONE ticket is created for the entire sequential review chain
+- **Ticket Reassignment**: The ticket is reassigned to subsequent doctors as steps progress
+- **Auto-Assignment**: Sequential review tickets are auto-assigned (no accept/reject required)
+- **Review Notes Accumulation**: Review notes from completed steps are visible to subsequent doctors
+- **UI Progress Tracking**: The UI displays step progression and review notes from previous doctors
+- **State Persistence**: Sequential review state is persisted in checkpoints, allowing recovery if interrupted
+
+### 2. Hybrid Workflow Pattern
 - **Explicit nodes** for predictable execution
 - **LLM nodes** only for extraction, understanding, and formatting
 - **Tool nodes** for all database operations
 - **Conditional routing** based on validation checks
 
-### 2. State Management
+### 3. State Management
 - **PostgresSaver checkpointer** for persistence
 - **State helpers** for type-safe access to nested state
 - **Automatic state recovery** on conversation continuation
 
-### 3. Patient Privacy
+### 4. Patient Privacy
 - **No doctor details** shown to patients after booking
 - **Simple confirmation** messages only
 - **Ticket IDs and doctor names** excluded from patient-facing responses
 
-### 4. Error Handling
+### 5. Error Handling
 - **Validation nodes** prevent invalid state transitions
 - **Tool errors** handled gracefully with informative messages
 - **LLM failures** fall back to default messages
 
-### 5. Observability
+### 6. Observability
 - **LangSmith integration** for tracing all LLM calls
 - **Detailed logging** of state transitions and decisions
 - **Checkpoint inspection** for debugging
@@ -818,7 +999,6 @@ Workflow nodes execute **sequentially** in a single invocation cycle:
 
 ### User Interaction Points
 The workflow **ends** (waits for user) at:
-- `ask_for_missing` - Waiting for patient info
 - `show_history` - After displaying history, waiting for request
 - `ask_for_request_info` - Waiting for appointment details
 
