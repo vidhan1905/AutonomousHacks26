@@ -13,6 +13,9 @@ RUN apt-get update && apt-get install -y \
 # Copy dependency files and README (required by pyproject.toml)
 COPY pyproject.toml README.md ./
 
+# Install uv for running setup commands
+RUN pip install --no-cache-dir uv
+
 # Install Python dependencies
 RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir -e .

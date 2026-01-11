@@ -19,9 +19,10 @@ That's it! The script handles everything automatically:
 - Creates `.env` from `docker/env.example` if needed
 - Builds and starts all Docker containers
 - Waits for PostgreSQL to be ready
-- Runs database migrations
-- Sets up checkpointer tables (for LangGraph state persistence)
-- Loads sample data into PostgreSQL
+- Runs complete database setup using `uv run setup`:
+  - Initializes database (creates all tables)
+  - Sets up checkpointer tables (for LangGraph state persistence)
+  - Loads sample data into PostgreSQL
 - Shows you access URLs and test credentials
 
 ### First Time Setup
@@ -46,7 +47,7 @@ That's it! The script handles everything automatically:
 
 The `./docker-start.sh` script automatically:
 
-1. **Sets up the database** - Creates tables via migrations
+1. **Sets up the database** - Creates all tables using `uv run setup`
 2. **Configures checkpointer** - Sets up LangGraph state persistence tables
 3. **Loads sample data** - Creates 500 patients, 54 service persons, 3 admins, and historical records
 
@@ -120,7 +121,7 @@ The application uses environment variables from `.env` file (see `docker/env.exa
 - **Port:** 8000 (mapped to host)
 - **Dependencies:** PostgreSQL (waits for health check)
 - **Hot reload:** Enabled via volume mount (`./backend:/app/backend`)
-- **Includes:** Alembic for database migrations
+- **Setup:** Uses `uv run setup` for database initialization, checkpointer setup, and data loading
 
 ### Frontend
 - **Service name:** `frontend`
@@ -168,6 +169,14 @@ docker compose exec postgres psql -U postgres -d hospital_ai_assistant
 # Host (from containers): postgres
 # Host (from host): localhost
 # Port: 5432
+
+# Run complete database setup (init-db, checkpointer, insert-data)
+docker compose exec backend uv run setup
+
+# Run individual setup commands
+docker compose exec backend uv run init-db           # Initialize database (create tables)
+docker compose exec backend uv run setup-checkpointer  # Setup checkpointer tables
+docker compose exec backend uv run insert-data       # Insert sample data
 
 # Verify data was loaded
 docker compose exec postgres psql -U postgres -d hospital_ai_assistant -c "SELECT 'patients' as table_name, COUNT(*) FROM patients UNION ALL SELECT 'service_persons', COUNT(*) FROM service_persons UNION ALL SELECT 'admins', COUNT(*) FROM admins;"

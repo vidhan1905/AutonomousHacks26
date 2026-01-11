@@ -56,34 +56,15 @@ if [ $WAIT_COUNT -ge $MAX_WAIT ]; then
     echo "⚠️  PostgreSQL may not be ready, but continuing..."
 fi
 
-# Run migrations
+# Run complete setup using uv run setup
 echo ""
-echo "📊 Step 1/3: Running database migrations..."
-if docker compose exec -T backend alembic upgrade head; then
-    echo "✓ Migrations completed successfully"
-else
-    echo "⚠️  Migration had issues, but continuing..."
-fi
-
-# Setup checkpointer tables
-echo ""
-echo "🔧 Step 2/3: Setting up checkpointer tables..."
+echo "🔧 Running complete database setup (init-db, checkpointer, insert-data)..."
 echo "   (This may take 30-60 seconds on first run...)"
-if docker compose exec -T backend python backend/scripts/setup_checkpointer.py; then
-    echo "✓ Checkpointer tables setup complete"
-else
-    echo "⚠️  Checkpointer setup had issues, but continuing..."
-    echo "   Note: Checkpointer will auto-setup on first use if needed"
-fi
-
-# Automatically load sample data
-echo ""
-echo "📦 Step 3/3: Loading sample data into PostgreSQL..."
-if docker compose exec -T backend python scripts/generate_dataset.py; then
-    echo "✓ Sample data loaded successfully"
+if docker compose exec -T backend uv run setup; then
+    echo "✓ Complete setup finished successfully"
     DATA_LOADED=true
 else
-    echo "⚠️  Data loading had issues, but continuing..."
+    echo "⚠️  Setup had issues, but continuing..."
     DATA_LOADED=false
 fi
 

@@ -44,13 +44,10 @@ asyncio.run(check())
     sleep 5
 }
 
-# Ensure checkpointer tables are set up
-echo "🔧 Ensuring checkpointer tables are set up..."
-docker compose exec -T backend python backend/scripts/setup_checkpointer.py || echo "⚠️  Checkpointer setup failed, but continuing..."
-
-# Load data
+# Load data using uv run
 echo "📊 Loading sample data..."
-docker compose exec -T backend python scripts/generate_dataset.py
+echo "   Note: This assumes database tables are already created (run 'uv run setup' or 'uv run init-db' first)"
+docker compose exec -T backend uv run insert-data
 
 echo ""
 echo "✅ Sample data loaded successfully!"
