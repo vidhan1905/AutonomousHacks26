@@ -213,6 +213,39 @@ async def get_ticket(
                 "steps": steps_info
             }
     
+    # For patients, include information about all tickets in the same conversation
+    all_doctors_info = None
+    total_tickets = None
+    if user_type == "patient":
+        # Get all tickets for this conversation
+        all_tickets_result = await db.execute(
+            select(Ticket).where(
+                Ticket.conversation_id == ticket.conversation_id,
+                Ticket.patient_id == ticket.patient_id
+            ).order_by(Ticket.created_at)
+        )
+        all_tickets = all_tickets_result.scalars().all()
+        total_tickets = len(all_tickets)
+        
+        # Build list of all doctors/statuses
+        all_doctors_info = []
+        for t in all_tickets:
+            if t.assigned_to:
+                doctor_result = await db.execute(
+                    select(ServicePerson).where(ServicePerson.service_person_id == t.assigned_to)
+                )
+                doctor = doctor_result.scalar_one_or_none()
+                all_doctors_info.append({
+                    "ticket_id": str(t.ticket_id),
+                    "doctor_id": str(t.assigned_to),
+                    "doctor_name": doctor.name if doctor else "Unknown",
+                    "service_type": doctor.service_type if doctor else "Unknown",
+                    "status": t.status,
+                    "assignment_status": t.assignment_status,
+                    "accepted": t.accepted_by is not None,
+                    "accepted_at": t.accepted_at.isoformat() if t.accepted_at else None
+                })
+    
     response = {
         "ticket_id": str(ticket.ticket_id),
         "conversation_id": str(ticket.conversation_id),
@@ -237,6 +270,10 @@ async def get_ticket(
         "is_sequential_review": is_sequential_review,
         "sequential_review_chain_id": str(ticket.sequential_review_chain_id) if hasattr(ticket, 'sequential_review_chain_id') and ticket.sequential_review_chain_id else None
     }
+    
+    if all_doctors_info is not None:
+        response["all_doctors"] = all_doctors_info
+        response["total_tickets"] = total_tickets
     
     if sequential_review_info:
         response["sequential_review_info"] = sequential_review_info
@@ -395,14 +432,6 @@ async def update_ticket_status(
             step = step_result.scalar_one_or_none()
             
             if step:
-                # Verify that the current doctor is assigned to this step
-                current_doctor_id = current_user["user"].service_person_id
-                if step.doctor_id != current_doctor_id:
-                    raise HTTPException(
-                        status_code=403,
-                        detail=f"This step is assigned to a different doctor. Step {step.step_index + 1} is assigned to another doctor, not you."
-                    )
-                
                 # Current doctor is reviewing - extract review notes and trigger workflow
                 review_notes = request.comment or ""
                 
@@ -424,25 +453,8 @@ async def update_ticket_status(
                     
                     if review_result.get("status") == "success":
                         # Step is now completed, chain is advanced
-                        # Re-query step and chain to get updated values from submit_doctor_review (which uses separate session)
-                        chain_result_after = await db.execute(
-                            select(SequentialReviewChain).where(
-                                SequentialReviewChain.chain_id == chain.chain_id
-                            )
-                        )
-                        chain_after = chain_result_after.scalar_one_or_none()
-                        
-                        step_result_after = await db.execute(
-                            select(SequentialReviewStep).where(
-                                SequentialReviewStep.step_id == step.step_id
-                            )
-                        )
-                        step_after = step_result_after.scalar_one_or_none()
-                        
-                        if chain_after:
-                            chain = chain_after
-                        if step_after:
-                            step = step_after
+                        # Refresh chain to get updated current_step_index
+                        await db.refresh(chain)
                         
                         # Check if more steps remain
                         total_steps = review_result.get("total_steps", 0)
@@ -453,6 +465,15 @@ async def update_ticket_status(
                             ticket.status = "completed"
                             ticket.completed_at = datetime.utcnow()
                             print(f"[API] ✅ All steps completed. Marking ticket as completed.")
+                            
+                            # Decrement workload for the doctor who completed this step
+                            try:
+                                from backend.src.agents.tools.doctor_tools import decrement_doctor_workload
+                                workload_result = decrement_doctor_workload(doctor_id_str)
+                                if workload_result.get("status") != "success":
+                                    print(f"[WARNING] Failed to decrement workload for doctor {doctor_id_str}: {workload_result.get('error')}")
+                            except Exception as e:
+                                print(f"[WARNING] Error decrementing workload for doctor {doctor_id_str}: {e}")
                         else:
                             # More steps remaining - update ticket for next step
                             next_step_result_data = get_next_doctor_in_chain.invoke({"chain_id": str(chain.chain_id)})
@@ -512,6 +533,24 @@ async def update_ticket_status(
                                         next_step.status = "pending"
                                 
                                 print(f"[API] ✅ Step {step.step_index + 1} completed. Ticket reassigned to Step {next_step_index + 1}/{total_steps}")
+                                
+                                # Decrement workload for the doctor who completed this step
+                                try:
+                                    from backend.src.agents.tools.doctor_tools import decrement_doctor_workload
+                                    workload_result = decrement_doctor_workload(doctor_id_str)
+                                    if workload_result.get("status") != "success":
+                                        print(f"[WARNING] Failed to decrement workload for doctor {doctor_id_str}: {workload_result.get('error')}")
+                                except Exception as e:
+                                    print(f"[WARNING] Error decrementing workload for doctor {doctor_id_str}: {e}")
+                                
+                                # Increment workload for the next doctor who is receiving the ticket
+                                try:
+                                    from backend.src.agents.tools.doctor_tools import increment_doctor_workload
+                                    workload_result = increment_doctor_workload(next_doctor_id)
+                                    if workload_result.get("status") != "success":
+                                        print(f"[WARNING] Failed to increment workload for next doctor {next_doctor_id}: {workload_result.get('error')}")
+                                except Exception as e:
+                                    print(f"[WARNING] Error incrementing workload for next doctor {next_doctor_id}: {e}")
                             else:
                                 print(f"[API] ⚠️  Error getting next doctor: {next_step_result_data.get('error')}")
                                 # Fallback: mark ticket as assigned anyway
@@ -533,6 +572,20 @@ async def update_ticket_status(
         
         if request.status == "completed":
             ticket.completed_at = datetime.utcnow()
+            
+            # Decrement workload for the doctor who completed the ticket
+            if user_type == "service_person":
+                # Use ticket's assigned_to or accepted_by to identify the doctor
+                doctor_id = str(ticket.accepted_by) if ticket.accepted_by else str(ticket.assigned_to) if ticket.assigned_to else None
+                
+                if doctor_id:
+                    try:
+                        from backend.src.agents.tools.doctor_tools import decrement_doctor_workload
+                        workload_result = decrement_doctor_workload(doctor_id)
+                        if workload_result.get("status") != "success":
+                            print(f"[WARNING] Failed to decrement workload for doctor {doctor_id}: {workload_result.get('error')}")
+                    except Exception as e:
+                        print(f"[WARNING] Error decrementing workload for doctor {doctor_id}: {e}")
     else:
         # For sequential reviews with status="completed", status was already handled above
         old_status = ticket.status
@@ -749,6 +802,16 @@ async def accept_reject_ticket(
         
         await db.commit()
         await db.refresh(ticket)
+        
+        # Update doctor workload - increment when ticket is accepted
+        try:
+            from backend.src.agents.tools.doctor_tools import increment_doctor_workload
+            workload_result = increment_doctor_workload(str(service_person_id))
+            if workload_result.get("status") != "success":
+                print(f"[WARNING] Failed to increment workload for doctor {service_person_id}: {workload_result.get('error')}")
+        except Exception as e:
+            print(f"[WARNING] Error updating workload for doctor {service_person_id}: {e}")
+            # Don't fail ticket acceptance if workload update fails
         
         return {
             "ticket_id": str(ticket.ticket_id),

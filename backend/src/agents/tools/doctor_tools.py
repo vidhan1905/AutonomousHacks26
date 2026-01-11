@@ -494,26 +494,52 @@ async def _rank_doctors_with_llm_async(
         # Format patient history for prompt
         # ROOT FIX: Use 'history_records' field (not 'history') from get_patient_history tool
         history_text = "No previous history available."
+        history_summary = ""
         if patient_history and patient_history.get("history_records"):
             history_records = patient_history.get("history_records", [])
             if history_records:
                 history_lines = []
+                service_types_seen = {}
+                diagnoses_seen = {}
+                
                 for record in history_records[:10]:  # Limit to last 10 records
-                    history_lines.append(
-                        f"- {record.get('visit_date', 'Unknown date')}: "
-                        f"{record.get('service_type', 'Unknown')} - "
-                        f"{record.get('diagnosis', 'No diagnosis')}"
-                    )
+                    service_type = record.get('service_type', 'Unknown')
+                    diagnosis = record.get('diagnosis', 'No diagnosis')
+                    treatment = record.get('treatment', '')
+                    
+                    # Track service types and diagnoses for pattern analysis
+                    service_types_seen[service_type] = service_types_seen.get(service_type, 0) + 1
+                    if diagnosis and diagnosis != 'No diagnosis':
+                        diagnoses_seen[diagnosis] = diagnoses_seen.get(diagnosis, 0) + 1
+                    
+                    history_line = f"- {record.get('visit_date', 'Unknown date')}: {service_type}"
+                    if diagnosis and diagnosis != 'No diagnosis':
+                        history_line += f" - Diagnosis: {diagnosis}"
+                    if treatment:
+                        history_line += f" - Treatment: {treatment[:100]}"  # Limit treatment length
+                    history_lines.append(history_line)
+                
                 history_text = "\n".join(history_lines)
+                
+                # Add summary of patterns
+                if service_types_seen:
+                    common_services = sorted(service_types_seen.items(), key=lambda x: x[1], reverse=True)[:3]
+                    history_summary = f"\n\nPatient History Patterns:\n"
+                    history_summary += f"- Most frequent service types: {', '.join([f'{s} ({c}x)' for s, c in common_services])}\n"
+                    if diagnoses_seen:
+                        common_diagnoses = sorted(diagnoses_seen.items(), key=lambda x: x[1], reverse=True)[:3]
+                        history_summary += f"- Recurring conditions: {', '.join([f'{d} ({c}x)' for d, c in common_diagnoses])}"
         elif patient_history and patient_history.get("status") == "schema_error":
             # Schema error - include in prompt for context
             error_msg = patient_history.get("error", "Schema error retrieving history")
             history_text = f"Note: Unable to retrieve patient history due to schema issue: {error_msg}"
         
-        # Format doctors list for prompt
+        # Format doctors list for prompt with workload information
         doctors_text = "\n".join([
             f"- {doc['name']} (ID: {doc['doctor_id']}): {doc['service_type']}"
             f"{' - ' + doc['specialization'] if doc.get('specialization') else ''}"
+            f" | Workload: {doc.get('current_workload', 0)}/{doc.get('max_workload', 10)} "
+            f"({(doc.get('current_workload', 0) / doc.get('max_workload', 10) * 100) if doc.get('max_workload', 10) > 0 else 0:.0f}% capacity)"
             for doc in doctors
         ])
         
@@ -541,19 +567,24 @@ Prioritize doctors who are most suitable for the patient's specific medical need
 {history}
 
 Rank ALL {len(doctors)} doctors from most suitable (1) to least suitable ({len(doctors)}).
-Provide clear, concise reasoning for each doctor (1-2 sentences each).
+Provide clear, concise reasoning for each doctor (1-2 sentences each), mentioning specialization match, workload capacity, and expertise.
 Then select the top {top_n} from your rankings."""),
             ("human", f"""Patient Medical History:
-{{history}}
+{{history}}{{history_summary}}
 
 Current Request: {{request}}
 
 Service Type Needed: {service_type}{date_time_context}
 
-Available Doctors ({len(doctors)} active doctors filtered by service_type '{service_type}'):
+Available Doctors ({len(doctors)} active doctors filtered by service_type '{service_type}' with available capacity):
 {{doctors}}
 
-Please rank ALL {len(doctors)} doctors based on specialization match with patient history and relevance to the current request, then provide the top {top_n} most suitable doctors with clear reasoning.""")
+Please rank ALL {len(doctors)} doctors based on:
+1. Specialization match with patient history and current symptoms
+2. Workload capacity (prefer doctors with lower workload when specialization match is similar)
+3. General expertise
+
+Then provide the top {top_n} most suitable doctors with clear reasoning that includes workload consideration.""")
         ])
         
         # Limit to top 10 doctors if more than 10 provided
@@ -563,6 +594,7 @@ Please rank ALL {len(doctors)} doctors based on specialization match with patien
         chain = prompt | structured_llm
         result = chain.invoke({
             "history": history_text,
+            "history_summary": history_summary,
             "request": user_request,
             "service_type": service_type,
             "doctors": doctors_text

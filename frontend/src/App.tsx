@@ -9,7 +9,7 @@ import ProtectedRoute from './components/Auth/ProtectedRoute'
 import { useAuthStore } from './hooks/useAuth'
 
 function App() {
-  const { user, initialize, isInitialized } = useAuthStore()
+  const { user, initialize, isInitialized, syncFromStorage } = useAuthStore()
 
   // Initialize auth state on app mount
   useEffect(() => {
@@ -17,6 +17,24 @@ function App() {
       initialize()
     }
   }, [initialize, isInitialized])
+
+  // Sync auth state across browser tabs when localStorage changes
+  useEffect(() => {
+    const handleStorageChange = (e: StorageEvent) => {
+      // Only react to token or user changes from other tabs
+      // Storage events only fire for changes in OTHER tabs, not the current tab
+      if (e.key === 'token' || e.key === 'user') {
+        syncFromStorage()
+      }
+    }
+
+    // Listen for storage events from other tabs
+    window.addEventListener('storage', handleStorageChange)
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange)
+    }
+  }, [syncFromStorage])
 
   // Show loading state while initializing
   if (!isInitialized) {
@@ -51,14 +69,6 @@ function App() {
           }
         />
         <Route
-          path="/profile/edit"
-          element={
-            <ProtectedRoute requiredType="patient">
-              <EditProfilePage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
           path="/dashboard/service-person"
           element={
             <ProtectedRoute requiredType="service_person">
@@ -69,7 +79,7 @@ function App() {
         <Route
           path="/tickets/:ticketId"
           element={
-            <ProtectedRoute requiredType="service_person">
+            <ProtectedRoute>
               <TicketDetailPage />
             </ProtectedRoute>
           }

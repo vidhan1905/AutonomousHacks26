@@ -1,7 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { useAuthStore } from '../hooks/useAuth'
 import TicketDashboard from '../components/Dashboard/TicketDashboard'
-import type { Ticket } from '../types'
 
 export default function ServicePersonDashboard() {
   const { user, logout } = useAuthStore()

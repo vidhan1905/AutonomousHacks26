@@ -23,7 +23,7 @@ const statusColors = {
 export default function TicketDetailPage() {
   const { ticketId } = useParams<{ ticketId: string }>()
   const navigate = useNavigate()
-  const { user, logout } = useAuthStore()
+  const { logout } = useAuthStore()
   const [ticket, setTicket] = useState<Ticket | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -120,7 +120,6 @@ export default function TicketDetailPage() {
   }
 
   const patientDetails = ticket.patient_details as any
-  const pastHistory = ticket.past_history_summary
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -185,6 +184,62 @@ export default function TicketDetailPage() {
                 <h3 className="text-sm font-medium text-gray-700 mb-2">Description</h3>
                 <p className="text-gray-900 whitespace-pre-wrap">{ticket.description}</p>
               </div>
+              
+              {/* All Doctors Section - for regular requests with multiple tickets */}
+              {ticket.all_doctors && ticket.all_doctors.length > 0 && !ticket.is_sequential_review && (
+                <div className="border-t border-gray-200 dark:border-gray-700 pt-4 mt-4">
+                  <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                    All Doctors ({ticket.total_tickets || ticket.all_doctors.length} {ticket.total_tickets === 1 ? 'doctor' : 'doctors'} offered)
+                  </h3>
+                  <div className="space-y-2">
+                    {ticket.all_doctors.map((doctor, idx) => (
+                      <div
+                        key={doctor.ticket_id}
+                        className={`p-3 rounded-lg border ${
+                          doctor.accepted
+                            ? 'bg-green-50 dark:bg-green-900/30 border-green-200 dark:border-green-800'
+                            : doctor.status === 'cancelled' || doctor.assignment_status === 'rejected'
+                            ? 'bg-red-50 dark:bg-red-900/30 border-red-200 dark:border-red-800'
+                            : 'bg-gray-50 dark:bg-gray-700/50 border-gray-200 dark:border-gray-600'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <p className="font-medium text-gray-900 dark:text-gray-100">
+                              {idx + 1}. {doctor.doctor_name}
+                            </p>
+                            <p className="text-xs text-gray-600 dark:text-gray-400">
+                              {doctor.service_type}
+                            </p>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            {doctor.accepted && (
+                              <span className="px-2 py-1 rounded text-xs font-medium bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200">
+                                ✓ Accepted
+                              </span>
+                            )}
+                            {!doctor.accepted && doctor.status === 'cancelled' && (
+                              <span className="px-2 py-1 rounded text-xs font-medium bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200">
+                                Rejected
+                              </span>
+                            )}
+                            {!doctor.accepted && doctor.status !== 'cancelled' && (
+                              <span className="px-2 py-1 rounded text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200">
+                                Pending
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                        {doctor.accepted && doctor.accepted_at && (
+                          <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                            Accepted: {new Date(doctor.accepted_at).toLocaleString()}
+                          </p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               {ticket.current_symptoms && (
                 <div className="border-t border-gray-200 pt-4 mt-4">

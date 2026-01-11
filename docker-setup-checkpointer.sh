@@ -50,8 +50,8 @@ echo "📊 Creating checkpointer tables..."
 echo "   Note: This may take 30-60 seconds on first run, or may auto-complete if tables exist"
 echo ""
 
-# Run the setup script (it has its own timeout handling)
-docker compose exec -T backend python backend/scripts/setup_checkpointer.py
+# Run the setup script using uv run
+docker compose exec -T backend uv run setup-checkpointer
 
 EXIT_CODE=$?
 
