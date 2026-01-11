@@ -128,6 +128,13 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     set({ user: response.user, token: response.access_token })
   },
   
+  patientLogin: async (phoneNumber: string, password: string) => {
+    const response = await authApi.patientLogin(phoneNumber, password)
+    saveTokenToStorage(response.access_token, 'patient')
+    saveUserToStorage(response.user)
+    set({ user: response.user, token: response.access_token })
+  },
+  
   logout: async () => {
     const currentState = get()
     const currentUserType = currentState.user?.type as 'patient' | 'service_person' | null

@@ -23,7 +23,7 @@ const statusColors = {
 export default function TicketDetailPage() {
   const { ticketId } = useParams<{ ticketId: string }>()
   const navigate = useNavigate()
-  const { user, logout } = useAuthStore()
+  const { logout } = useAuthStore()
   const [ticket, setTicket] = useState<Ticket | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -120,7 +120,6 @@ export default function TicketDetailPage() {
   }
 
   const patientDetails = ticket.patient_details as any
-  const pastHistory = ticket.past_history_summary
 
   return (
     <div className="min-h-screen bg-gray-50">

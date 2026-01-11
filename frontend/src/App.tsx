@@ -69,14 +69,6 @@ function App() {
           }
         />
         <Route
-          path="/profile/edit"
-          element={
-            <ProtectedRoute requiredType="patient">
-              <EditProfilePage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
           path="/dashboard/service-person"
           element={
             <ProtectedRoute requiredType="service_person">
