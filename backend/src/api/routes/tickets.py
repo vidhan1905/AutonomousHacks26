@@ -232,7 +232,9 @@ async def list_tickets(
                 ),
                 Ticket.status != "cancelled"
             )
-        # Admins see all tickets
+        elif user_type == "admin":
+            # Admins see all tickets (no additional filtering needed)
+            pass
         
         # Apply filters
         if status:
@@ -256,57 +258,66 @@ async def list_tickets(
         print(f"[ERROR] {error_msg}")
         raise HTTPException(status_code=500, detail=f"Database error: {error_msg}")
     
-    # Filter sequential review tickets to only show when it's the doctor's turn
+    # Initialize filtered_tickets - ensure it's always defined
     filtered_tickets = []
-    for ticket in tickets:
-        if ticket.is_sequential_review and ticket.sequential_review_chain_id:
-            # Get chain first to find current step
-            chain_result = await db.execute(
-                select(SequentialReviewChain).where(
-                    SequentialReviewChain.chain_id == ticket.sequential_review_chain_id
-                )
-            )
-            chain = chain_result.scalar_one_or_none()
-            
-            if chain:
-                # Get current step for this chain
-                current_step_result = await db.execute(
-                    select(SequentialReviewStep).where(
-                        SequentialReviewStep.chain_id == chain.chain_id,
-                        SequentialReviewStep.step_index == chain.current_step_index
+    
+    # Only process tickets if we have any (for service_person/admin users)
+    if user_type != "patient" and tickets:
+        # For admins, show all tickets without filtering
+        if user_type == "admin":
+            filtered_tickets = tickets
+        else:
+            # For service_person users, filter sequential review tickets to only show when it's their turn
+            for ticket in tickets:
+                if ticket.is_sequential_review and ticket.sequential_review_chain_id:
+                    # Get chain first to find current step
+                    chain_result = await db.execute(
+                        select(SequentialReviewChain).where(
+                            SequentialReviewChain.chain_id == ticket.sequential_review_chain_id
+                        )
                     )
-                )
-                current_step = current_step_result.scalar_one_or_none()
-                
-                if current_step:
-                    # Check if it's their turn (current step's doctor matches user)
-                    if current_step.doctor_id == user.service_person_id:
-                        # It's their turn, include ticket
-                        filtered_tickets.append(ticket)
-                    else:
-                        # Not their turn yet - check if all previous steps are completed
-                        previous_steps_result = await db.execute(
+                    chain = chain_result.scalar_one_or_none()
+                    
+                    if chain:
+                        # Get current step for this chain
+                        current_step_result = await db.execute(
                             select(SequentialReviewStep).where(
                                 SequentialReviewStep.chain_id == chain.chain_id,
-                                SequentialReviewStep.step_index < chain.current_step_index,
-                                SequentialReviewStep.status != "completed"
+                                SequentialReviewStep.step_index == chain.current_step_index
                             )
                         )
-                        incomplete = previous_steps_result.scalars().all()
-                        if not incomplete:
-                            # All previous steps completed, show ticket (they'll be next)
+                        current_step = current_step_result.scalar_one_or_none()
+                        
+                        if current_step:
+                            # Check if it's their turn (current step's doctor matches user)
+                            if current_step.doctor_id == user.service_person_id:
+                                # It's their turn, include ticket
+                                filtered_tickets.append(ticket)
+                            else:
+                                # Not their turn yet - check if all previous steps are completed
+                                previous_steps_result = await db.execute(
+                                    select(SequentialReviewStep).where(
+                                        SequentialReviewStep.chain_id == chain.chain_id,
+                                        SequentialReviewStep.step_index < chain.current_step_index,
+                                        SequentialReviewStep.status != "completed"
+                                    )
+                                )
+                                incomplete = previous_steps_result.scalars().all()
+                                if not incomplete:
+                                    # All previous steps completed, show ticket (they'll be next)
+                                    filtered_tickets.append(ticket)
+                                # Otherwise, don't add to filtered_tickets (it's not their turn yet)
+                        else:
+                            # Current step not found, include ticket (shouldn't happen but be safe)
                             filtered_tickets.append(ticket)
-                        # Otherwise, don't add to filtered_tickets (it's not their turn yet)
+                    else:
+                        # Chain not found, include ticket (shouldn't happen but be safe)
+                        filtered_tickets.append(ticket)
                 else:
-                    # Current step not found, include ticket (shouldn't happen but be safe)
+                    # Not sequential review, include ticket
                     filtered_tickets.append(ticket)
-            else:
-                # Chain not found, include ticket (shouldn't happen but be safe)
-                filtered_tickets.append(ticket)
-        else:
-            # Not sequential review, include ticket
-            filtered_tickets.append(ticket)
     
+    # Return filtered tickets (for service_person/admin) or empty list
     return [
         {
             "ticket_id": str(ticket.ticket_id),
